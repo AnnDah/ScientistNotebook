@@ -1,0 +1,31 @@
+API
+Authentication
+Scientist Notebook API uses OAuth 2.0 protocol for authentication.
+
+Errors
+Scientist Notebook API make use of the standard HTTP Status Codes.
+
+Endpoints
+All requests are sent to: 
+
+POST username, password (login) --> get token
+
+POST file
+GET file
+DELETE file
+PUT file
+
+POST user
+GET user
+PUT user
+DELETE user
+
+POST connection
+GET connection
+DELETE connection
+
+Examples
+
+
+Change log
+

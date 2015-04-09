@@ -14,6 +14,22 @@ def get_user():
 		return jsonify({'error': 'Bad Request', 'code': 400, 'message': 'No username parameter was provided'}), 400
 
 
+#POST username, password (login) --> get token
+
+#POST file
+#GET file
+#DELETE file
+#PUT file
+
+#POST user
+#GET user
+#PUT user
+#DELETE user
+
+#POST connection
+#GET connection
+#DELETE connection
+
 if __name__ == "__main__":
 	app.debug = True
 	app.run()

@@ -13,46 +13,39 @@
 	
 <h1>SciNote</h1>
 
-<div style="margin-top:5px; margin-left:px; margin-right:auto"
 
-<!--top border-- float center -->
-	<div class="container-fluid" style="width:30%"">  
-		
+<!--top border-->
+<div id="top_border" style="margin-top:5px; margin-left:auto; margin-right:auto; width:30%"
+	<div class="container-fluid">  		
 		<ul class="nav nav-pills">
 			<!--<li class="active"><a href="#">Home</a></li> use active class for indicating current page-->
-			<li><a href="#">New note</a></li>
-			<li><a href="#">New project</a></li>		
-			<li><a href="#">Search</a></li>
-		</ul>	
-		
-	</div>	
-	
-</div> <!--end of container-->
+			<li><a href="note.html" target="cont_holder">New note</a></li>
+			<li><a href="project.html" target="cont_holder">New project</a></li>		
+			<li><a href="search.html" target="cont_holder">Search</a></li>
+		</ul>			
+	</div>	<!--end of container-->	
+</div> 
     
   
   
-	<!--left border-->
-<div class="container" style="margin-left:5px; border:2px solid;">	
-	
-    <div class="col-md-2">
-      <ul class="nav nav-pills nav-stacked"">
-        <li class="active"><a href="#">Projects</a></li>
-        <li><a href="#">Project 1</a></li>
-        <li><a href="#">Project 2</a></li>
-        <li><a href="#">Project 3</a></li>
-      </ul>
-    </div>
-    
-</div> <!--end of container-->
+<!--left border-->
+<div id="left_border" style=" float:left; margin-left:5px; border:2px solid; display:inline-block; width:10%; height:500px; padding-top:10px; position:relative;">
+	<div class="container-fluid">	
+		<div class="col-md-2" style="width:100%">
+			<ul class="nav nav-pills nav-stacked">
+				<li class="active"><a href="#">Projects</a></li>
+				<li><a href="#">Project 1</a></li>
+				<li><a href="#">Project 2</a></li>
+				<li><a href="#">Project 3</a></li>
+			</ul>
+		</div>
+	</div> <!--end of container-->
+</div>
 
-<!--main content holder--> <!--test setting one container for all of the document-->
-<div class="container-fluid" style="float:left; display:inline-block; float:left;">
-	
-	<div id="main_content_area">
-		<p>content</p>
+<div class="container-fluid" style="display:inline-block;">				
+		<iframe name="cont_holder" src="" style="width:1000px;" height="500px" frameBorder="0"></iframe>
 		
-	</div>
+</div><!--end of container-->
 
-</div> <!--end of container-->
-	</body>
+</body>
 </html>

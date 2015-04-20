@@ -10,6 +10,7 @@ public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
 
+        // Routes for files
         Spark.get(new Route("/files") {
             @Override
             public Object handle(Request request, Response response) {
@@ -38,11 +39,56 @@ public class Api {
             }
         });
 
+        // Routes for users
         Spark.post(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
                 new UserController().createUser("Laban", "Labansson");
                 return "User created";
+            }
+        });
+
+        Spark.get(new Route("/users") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return "Get user";
+            }
+        });
+
+        Spark.delete(new Route("/users") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return "Delete user";
+            }
+        });
+
+        // Routes for groups
+        Spark.post(new Route("/groups") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return null;
+            }
+        });
+
+        Spark.get(new Route("/groups") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return null;
+            }
+        });
+
+        Spark.delete(new Route("/groups") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return null;
+            }
+        });
+
+        // Routes for login
+        Spark.get(new Route("/login") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return null;
             }
         });
 

@@ -43,7 +43,7 @@ public class Api {
         Spark.post(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
-                new UserController().createUser("Laban", "Labansson");
+                new UserController().createUser("Laban", "Labansson", "id", "email@email.email", "password");
                 return "User created";
             }
         });

@@ -6,7 +6,7 @@ import controllers.UserController;
  */
 import models.User;
 import spark.*;
-public class API {
+public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
 

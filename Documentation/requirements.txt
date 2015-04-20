@@ -1,3 +1,0 @@
-ScientistNotebook
-flask==0.10.1
-pymongo==3.0

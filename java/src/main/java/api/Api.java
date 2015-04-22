@@ -52,7 +52,8 @@ public class Api {
         Spark.get(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
-                return "Get user";
+                response.header("Content-Type", "Application/JSON");
+                return new UserController().CreateJson();
             }
         });
 

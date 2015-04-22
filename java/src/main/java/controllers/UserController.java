@@ -1,6 +1,8 @@
 package controllers;
 import models.User;
 import java.io.StringWriter;
+import java.util.Objects;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,7 +21,7 @@ public class UserController {
         //System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
     }
 
-    public void CreateJson(){
+    public JSONObject CreateJson(){
         JSONObject jObj = new JSONObject();
         jObj.put("firstName", "Annika");
         jObj.put("lastName", "Magnusson");
@@ -29,5 +31,6 @@ public class UserController {
         JSONObject mainObj = new JSONObject();
         mainObj.put("users", ja);
         System.out.println(mainObj);
+        return mainObj;
     }
 }

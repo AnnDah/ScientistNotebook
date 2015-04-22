@@ -23,6 +23,6 @@ public class LoginController {
         }
         JSONObject error = new JSONObject();
         error.put("error", "Wrong username");
-        return error;;
+        return error;
     }
 }

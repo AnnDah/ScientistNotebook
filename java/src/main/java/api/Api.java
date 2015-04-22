@@ -11,28 +11,28 @@ public class Api {
         Spark.setPort(9090);
 
         // Routes for files
-        Spark.get(new Route("/files") {
+        Spark.get(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
                 return "get file";
             }
         });
 
-        Spark.post(new Route("/files") {
+        Spark.post(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
                 return "post file";
             }
         });
 
-        Spark.delete(new Route("/files") {
+        Spark.delete(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
                 return "delete file";
             }
         });
 
-        Spark.put(new Route("/files") {
+        Spark.put(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
                 return "put file";

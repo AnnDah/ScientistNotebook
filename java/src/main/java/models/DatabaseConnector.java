@@ -1,22 +1,25 @@
 package models;
 
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
 import org.json.simple.JSONObject;
 
 /**
  * Created by annikamagnusson on 20/04/15.
  */
 public class DatabaseConnector {
-    //Cluster cluster;
-    //Session session;
+    Cluster cluster;
+    Session session;
 
-    private String dbaddress = "";
-    private String keyspace = "";
-
-    // Connect to the cluster and keyspace "demo"
-    //cluster = Cluster.builder().addContactPoint(dbaddress).build();
-    //session = cluster.connect(keyspace);
+    private final String dbaddress = "81.170.233.123:9160";
+    private final String keyspace = "scinotes";
 
     public JSONObject GetData(String query){
+        cluster = Cluster.builder().addContactPoint(dbaddress).build();
+        session = cluster.connect(keyspace);
+
+        session.execute(query);
+        cluster.close();
         return null;
     }
 }

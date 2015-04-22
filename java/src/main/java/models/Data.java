@@ -16,7 +16,7 @@ public class Data {
         this.visibility = visibility;
     }
 
-    public String GetId(){ return this.id; }
+    public String GetId() { return this.id; }
 
     public String GetContent() { return this.content; }
 

@@ -8,8 +8,8 @@ import org.json.simple.JSONObject;
  * Created by annikamagnusson on 20/04/15.
  */
 public class DatabaseConnector {
-    Cluster cluster;
-    Session session;
+    private Cluster cluster;
+    private Session session;
 
     private final String dbaddress = "81.170.233.123:9160";
     private final String keyspace = "scinotes";

@@ -5,8 +5,10 @@ import java.util.Objects;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 
 
 
@@ -15,10 +17,25 @@ import org.json.simple.parser.ParseException;
  */
 public class UserController {
 
-    public void createUser(String firstName, String lastName, String id, String email, String password){
+    public void createUser(String jsonString){
+        JSONObject jObj = null;
+        try{
+            jObj = (JSONObject) new JSONParser().parse(jsonString);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        try{
+        String firstName = (String) jObj.get("firstName");
+        String lastName = (String) jObj.get("lastName");
+        String email = (String) jObj.get("email");
+        String password = (String) jObj.get("password");
+
         User user;
-        user = new User(firstName, lastName, id, email, password);
-        //System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
+        user = new User(firstName, lastName, email, password);
+        System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
+        } catch (Exception e){
+            
+        }
     }
 
     public JSONObject CreateJson(){

@@ -5,6 +5,7 @@ import controllers.UserController;
  * Created by annikamagnusson on 17/04/15.
  */
 import models.User;
+import org.json.simple.JSONObject;
 import spark.*;
 public class Api {
     public static void main(String[] args){
@@ -43,8 +44,9 @@ public class Api {
         Spark.post(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
-                new UserController().createUser("Laban", "Labansson", "id", "email@email.email", "password");
-                new UserController().CreateJson();
+                String body = request.body();
+                System.out.println(body);
+                new UserController().createUser(body);
                 return "User created";
             }
         });

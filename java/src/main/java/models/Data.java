@@ -22,5 +22,5 @@ public class Data {
 
     public String GetAuthor() { return this.author; }
 
-    public String GetVisibility { return this.visibility; }
+    public String GetVisibility() { return this.visibility; }
 }

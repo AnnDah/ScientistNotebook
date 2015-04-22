@@ -1,5 +1,7 @@
 package models;
 
+import org.json.simple.JSONObject;
+
 /**
  * Created by annikamagnusson on 20/04/15.
  */
@@ -14,11 +16,7 @@ public class DatabaseConnector {
     //cluster = Cluster.builder().addContactPoint(dbaddress).build();
     //session = cluster.connect(keyspace);
 
-    public User GetUser(){
-        return null;
-    }
-
-    public Data GetData(){
+    public JSONObject GetData(String query){
         return null;
     }
 }

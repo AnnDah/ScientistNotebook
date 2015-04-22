@@ -44,6 +44,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 new UserController().createUser("Laban", "Labansson", "id", "email@email.email", "password");
+                new UserController().CreateJson();
                 return "User created";
             }
         });

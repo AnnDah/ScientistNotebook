@@ -1,13 +1,8 @@
 package controllers;
 import models.User;
-import java.io.StringWriter;
-import java.util.Objects;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.*;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 
 
@@ -17,10 +12,10 @@ import org.json.simple.parser.ParseException;
  */
 public class UserController {
 
-    public void createUser(String jsonString){
+    public void createUser(String strUser){
         JSONObject jObj = null;
         try{
-            jObj = (JSONObject) new JSONParser().parse(jsonString);
+            jObj = (JSONObject) new JSONParser().parse(strUser);
         } catch (Exception e){
             System.out.println(e);
         }

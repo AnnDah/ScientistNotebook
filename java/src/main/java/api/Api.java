@@ -1,5 +1,5 @@
 package api;
-import controllers.UserController;
+import controllers.*;
 
 /**
  * Created by annikamagnusson on 17/04/15.
@@ -11,7 +11,7 @@ public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
 
-        // Routes for files
+        // Routes for data
         Spark.get(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
@@ -22,7 +22,8 @@ public class Api {
         Spark.post(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
-                return "post file";
+                new DataController().createData(request.body());
+                return "data posted";
             }
         });
 

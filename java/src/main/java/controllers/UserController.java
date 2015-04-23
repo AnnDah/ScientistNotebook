@@ -33,10 +33,11 @@ public class UserController {
         }
     }
 
-    public JSONObject CreateJson(){
+    public JSONObject createUserJson(String firstName, String lastName, String email){
         JSONObject jObj = new JSONObject();
-        jObj.put("firstName", "Annika");
-        jObj.put("lastName", "Magnusson");
+        jObj.put("firstName", firstName);
+        jObj.put("lastName", lastName);
+        jObj.put("email", email);
 
         JSONArray ja = new JSONArray();
         ja.add(jObj);
@@ -44,5 +45,14 @@ public class UserController {
         mainObj.put("users", ja);
         System.out.println(mainObj);
         return mainObj;
+    }
+
+    public JSONObject getUser(String userId){
+        String firstName = "Annika";
+        String lastName = "Magnusson";
+        String email = "email@email.com";
+
+        JSONObject user = createUserJson(firstName, lastName, email);
+        return user;
     }
 }

@@ -56,7 +56,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                return new UserController().CreateJson();
+                return new UserController().getUser("1");
             }
         });
 

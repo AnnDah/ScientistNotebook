@@ -18,7 +18,7 @@ public class DataController {
             System.out.println(e);
         }
         try{
-            String content  = (String) jObj.get("data");
+            String content  = (String) jObj.get("content");
             String date = (String) jObj.get("date");
             String author = (String) jObj.get("author");
             String visibility = (String) jObj.get("visibilty");

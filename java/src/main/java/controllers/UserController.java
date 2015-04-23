@@ -34,10 +34,10 @@ public class UserController {
     }
 
     public JSONObject createUserJson(String firstName, String lastName, String email){
-        JSONObject userObj = new JSONObject();
-        userObj.put("firstName", firstName);
-        userObj.put("lastName", lastName);
-        userObj.put("email", email);
+        JSONObject userJson = new JSONObject();
+        userJson.put("firstName", firstName);
+        userJson.put("lastName", lastName);
+        userJson.put("email", email);
 
         //Only needs to be implementet when we need to get multiple users
         //JSONArray ja = new JSONArray();
@@ -45,10 +45,12 @@ public class UserController {
         //JSONObject mainObj = new JSONObject();
         //mainObj.put("users", ja);
         //System.out.println(mainObj);
-        return userObj;
+        return userJson;
     }
 
     public JSONObject getUser(String userId){
+        //Contact DB to get user
+
         String firstName = "Annika";
         String lastName = "Magnusson";
         String email = "email@email.com";

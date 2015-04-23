@@ -7,15 +7,15 @@ import java.util.List;
  */
 public class Data {
     private String id;
-    private String date;
     private String content;
+    private String created;
     private String author;
     private String visibility;
     private List<String> tags = new ArrayList<String>();
 
-    public Data(String date, String content, String author, String visibility, List<String> tags){
-        this.date = date;
+    public Data(String content, String created, String author, String visibility, List<String> tags){
         this.content = content;
+        this.created = created;
         this.author = author;
         this.visibility = visibility;
         this.tags = tags;
@@ -29,8 +29,8 @@ public class Data {
 
     public String getVisibility() { return this.visibility; }
 
-    public String getDate(){
-        return this.date;
+    public String getCreated(){
+        return this.created;
     }
 
     public List<String> getTags(){

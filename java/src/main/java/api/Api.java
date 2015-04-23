@@ -15,7 +15,7 @@ public class Api {
         Spark.get(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
-                return "get file";
+                return new DataController().getData("1");
             }
         });
 

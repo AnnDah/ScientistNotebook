@@ -30,4 +30,25 @@ public class DataController {
 
         }
     }
+
+    public JSONObject getData(String dataId){
+        String content = "Some data";
+        String created = "20150910";
+        String author = "Annika Magnusson";
+        String visibilty = "1";
+
+        JSONObject data = createDataJson(content, created, author, visibilty);
+        return data;
+
+    }
+
+    public JSONObject createDataJson(String content, String created, String author, String visibility){
+        //Tags should be included here as well
+        JSONObject dataJson = new JSONObject();
+        dataJson.put("content", content);
+        dataJson.put("created", created);
+        dataJson.put("author", author);
+        dataJson.put("visibility", visibility);
+        return dataJson;
+    }
 }

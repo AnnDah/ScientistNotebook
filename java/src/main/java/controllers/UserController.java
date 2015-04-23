@@ -34,17 +34,18 @@ public class UserController {
     }
 
     public JSONObject createUserJson(String firstName, String lastName, String email){
-        JSONObject jObj = new JSONObject();
-        jObj.put("firstName", firstName);
-        jObj.put("lastName", lastName);
-        jObj.put("email", email);
+        JSONObject userObj = new JSONObject();
+        userObj.put("firstName", firstName);
+        userObj.put("lastName", lastName);
+        userObj.put("email", email);
 
-        JSONArray ja = new JSONArray();
-        ja.add(jObj);
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("users", ja);
-        System.out.println(mainObj);
-        return mainObj;
+        //Only needs to be implementet when we need to get multiple users
+        //JSONArray ja = new JSONArray();
+        //ja.add(jObj);
+        //JSONObject mainObj = new JSONObject();
+        //mainObj.put("users", ja);
+        //System.out.println(mainObj);
+        return userObj;
     }
 
     public JSONObject getUser(String userId){

@@ -1,12 +1,11 @@
 package api;
 import controllers.*;
+import spark.*;
 
 /**
  * Created by annikamagnusson on 17/04/15.
  */
-import models.User;
-import org.json.simple.JSONObject;
-import spark.*;
+
 public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
@@ -15,6 +14,7 @@ public class Api {
         Spark.get(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
+                response.header("Content-Type", "Application/JSON");
                 return new DataController().getData("1");
             }
         });

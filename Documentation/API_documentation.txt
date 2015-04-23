@@ -1,31 +1,55 @@
-API
+--API--
 Authentication
 Scientist Notebook API uses OAuth 2.0 protocol for authentication.
 
-Errors
+--Errors--
 Scientist Notebook API make use of the standard HTTP Status Codes.
 
-Endpoints
-All requests are sent to: 
+--Endpoints--
+All requests are sent to: http://localhost:9090
 
-POST username, password (login) --> get token
+//Requests for login
+GET /login
 
-POST file
-GET file
-DELETE file
-PUT file
+// Requests for data
+POST /data
+JSON format in request body: 
+{"content":"some data","created":"20150209","author":"Annika Magnusson","visibility":"1","tags":[{"tag1":"some tag","tag2":"some tag"}]}
 
-POST user
-GET user
-PUT user
-DELETE user
+GET /data
+Incude data id in request
+Respone will be a JSON Object
 
-POST connection
-GET connection
-DELETE connection
+DELETE /data
+Include data id in request
 
-Examples
+PUT /data
+ 
+
+// Requests for users
+POST /users
+JSON format in request body: 
+{"firstName":"Annika","lastName":"Magnusson","email":"mail@gmail.com","password":"1234"}
+
+GET /users
+Include user id in request
+Response will be a JSON Object
+
+PUT /users
+
+DELETE /users
+Include user id in request
+
+// Requests for groups
+POST /groups
+
+GET /groups
+
+DELETE /groups
+
+--Examples--
+
+--Change log--
 
 
-Change log
 

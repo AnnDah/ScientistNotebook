@@ -13,9 +13,15 @@ public class LoginController {
         DatabaseConnector db = new DatabaseConnector();
 
         //JSONObject user = db.GetData("");
-        JSONObject user = new UserController().createUserJson("Kristoffer", "Olsson", email);
+        JSONObject user = new JSONObject();
+        user.put("firstName", "Kristoffer");
+        user.put("lastName", "Olsson");
+        user.put("email", "email@mail.com");
+        user.put("password", "test");
+        //String pw = user.get("password").toString();
+
         if(user != null) {
-            if (user.get("password") == password) {
+            if (user.get("password").toString().equals(password)) {
                 user.put("password", "OMITTED!");
                 return user;
             }

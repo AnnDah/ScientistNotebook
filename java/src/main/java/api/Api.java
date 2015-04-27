@@ -96,7 +96,6 @@ public class Api {
 
                 String email = request.queryParams("email");
                 String password = request.queryParams("password");
-                System.out.println(email);
                 return new LoginController().Login(email, password);
             }
         });

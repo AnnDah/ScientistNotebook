@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>Varhelst</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<!-- Latest compiled JavaScript -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		
+	</head>
+	<body>			
+	
+<div class="container" style="display:block;">
+
+	<div class="form-group">
+		<label for="search">Search for:</label> <!--"for usr" maybe not so optimal -- this is search input!-->
+		<input type="search" class="form-control" id="search_string" placeholder="Words to search for">	
+		<input type="submit" value=Search>
+	</div>
+</div>
+		
+	<div class="container">
+			
+		
+		<h2>Where to search:</h2>      
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Project
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Unfished</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Finished</a></li>          
+        </ul>
+      </div>
+	  
+		
+		<h2>Field to search:</h2>      
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Type
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Computer Science</a></li> <!--set href to alter page title-->
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Chemistry</a></li>                
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Math</a></li>                
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Physicis</a></li>                
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Social sciences</a></li>                
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">and so on</a></li>                
+        </ul>
+      </div>
+	  	  	 
+	  
+	  <!--Save button-->
+	  <button type="button" class="btn btn-success" style="margin-top:30px;">Search</button>
+	  
+    </div> <!--end of container-->
+			
+			
+				
+		
+		
+			
+		
+		 
+		 
+
+
+	</body>
+</html>

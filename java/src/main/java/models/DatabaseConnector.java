@@ -11,8 +11,8 @@ public class DatabaseConnector {
     private Cluster cluster;
     private Session session;
 
-    private final String dbaddress = "81.170.233.123:9160";
-    private final String keyspace = "scinotes";
+    private final String dbaddress = "52.17.214.10";
+    private final String keyspace = "scinote";
     private final int dbport = 9160;
 
     public JSONObject GetData(String query){

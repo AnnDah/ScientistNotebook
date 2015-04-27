@@ -1,0 +1,11 @@
+# maven
+target/
+*.class
+
+# eclipse
+.settings
+
+# Package Files #
+*.jar
+*.war
+*.ear

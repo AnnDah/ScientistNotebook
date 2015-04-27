@@ -93,7 +93,10 @@ public class Api {
         Spark.get(new Route("/login") {
             @Override
             public Object handle(Request request, Response response) {
-                return null;
+
+                String email = request.params("email");
+                String password = request.params("password");
+                return new LoginController().Login(email, password);
             }
         });
 

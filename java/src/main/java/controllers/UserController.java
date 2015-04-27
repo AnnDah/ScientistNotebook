@@ -20,16 +20,15 @@ public class UserController {
             System.out.println(e);
         }
         try{
-        String firstName = (String) jObj.get("firstName");
-        String lastName = (String) jObj.get("lastName");
-        String email = (String) jObj.get("email");
-        String password = (String) jObj.get("password");
+            String firstName = (String) jObj.get("firstName");
+            String lastName = (String) jObj.get("lastName");
+            String email = (String) jObj.get("email");
+            String password = (String) jObj.get("password");
 
-        User user;
-        user = new User(firstName, lastName, email, password);
-        System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
+            User user = new User(firstName, lastName, email, password);
+            System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
         } catch (Exception e){
-            
+            System.out.println(e);
         }
     }
 

@@ -13,12 +13,14 @@ public class LoginController {
         DatabaseConnector db = new DatabaseConnector();
 
         //JSONObject user = db.GetData("");
-        JSONObject user = new JSONObject();
-        user.put("firstName", "Kristoffer");
-        user.put("lastName", "Olsson");
-        user.put("email", "email@mail.com");
-        user.put("password", "test");
-        //String pw = user.get("password").toString();
+        JSONObject user = null;
+        if(email.equals("email@mail.com")){
+            user = new JSONObject();
+            user.put("firstName", "Kristoffer");
+            user.put("lastName", "Olsson");
+            user.put("email", "email@mail.com");
+            user.put("password", "test");
+        }
 
         if(user != null) {
             if (user.get("password").toString().equals(password)) {
@@ -30,7 +32,7 @@ public class LoginController {
             return error;
         }
         JSONObject error = new JSONObject();
-        error.put("error", "Wrong username");
+        error.put("error", "Wrong email");
         return error;
     }
 }

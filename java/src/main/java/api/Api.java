@@ -94,8 +94,9 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
 
-                String email = request.params("email");
-                String password = request.params("password");
+                String email = request.queryParams("email");
+                String password = request.queryParams("password");
+                System.out.println(email);
                 return new LoginController().Login(email, password);
             }
         });

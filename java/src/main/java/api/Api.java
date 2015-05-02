@@ -1,5 +1,6 @@
 package api;
 import controllers.*;
+import models.DatabaseConnector;
 import spark.*;
 
 /**
@@ -9,6 +10,12 @@ import spark.*;
 public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
+
+        //Start: Database connection test
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+        db.close();
+        //End
 
         // Routes for data
         Spark.get(new Route("/data") {

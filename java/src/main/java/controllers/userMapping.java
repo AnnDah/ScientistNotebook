@@ -10,23 +10,25 @@ import java.util.Objects;
  * Created by annikamagnusson on 04/05/15.
  * Test class for mapping cassandra objects
  */
-@Table(keyspace = "complex", name = "accounts")
+@Table(keyspace = "account", name = "users")
 public class userMapping {
     @PartitionKey
     private String email;
-    private String name;
     @Column(name = "addr")
     @Frozen
-    private String address;
+    private String firstName;
+    private String lastName;
+    private String password;
 
     public userMapping(){
 
     }
 
-    public userMapping(String name, String email, String address){
-        this.name = name;
+    public userMapping(String FirstName, String lastName, String email, String password){
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.address = address;
+        this.password = password;
     }
 
     public String getEmail(){
@@ -37,27 +39,36 @@ public class userMapping {
         this.email = email;
     }
 
-    public String getName(){
-        return this.name;
+    public String getFirstName(){
+        return this.firstName;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setFirstName(String firstName){
+        this.firstName = firstName;
     }
 
-    public String getAddress(){
-        return this.address;
+    public String getLastName(){
+        return this.lastName;
     }
 
-    public void setAddress(String address){
-        this. address = address;
+    public void setLastName(String lastName){
+        this.lastName = lastName;
+    }
+
+    public String getPassword(){
+        return this.password;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
     }
 
     @Override
     public boolean equals(Object other){
         if(other instanceof userMapping){
             userMapping that = (userMapping) other;
-            return Objects.equals(this.name, that.name) &&
+            return Objects.equals(this.firstName, that.firstName) &&
+                    Objects.equals(this.lastName, that.lastName) &&
                     Objects.equals(this.email, that.email);
         }
         return false;

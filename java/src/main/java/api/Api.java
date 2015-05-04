@@ -111,7 +111,7 @@ public class Api {
         Spark.post(new Route("/mapping") {
             @Override
             public Object handle(Request request, Response response) {
-                return new userMapping("Annika", "annika@mail.com", "Onsala");
+                return new userMapping("Annika", "Magnusson", "annika@mail.com", "password");
             }
         });
 

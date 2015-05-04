@@ -12,6 +12,8 @@ import org.json.simple.parser.JSONParser;
  */
 public class UserController {
 
+
+
     public void createUser(String strUser){
         JSONObject jObj = null;
         try{

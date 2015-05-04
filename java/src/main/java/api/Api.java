@@ -107,6 +107,14 @@ public class Api {
             }
         });
 
+        // Test route for user mapping
+        Spark.post(new Route("/mapping") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return new userMapping("Annika", "annika@mail.com", "Onsala");
+            }
+        });
+
 
     }
 }

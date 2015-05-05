@@ -10,7 +10,7 @@ public class DatabaseConnector {
     private Cluster cluster;
     private Session session;
 
-    private final String dbaddress = "52.17.214.10";
+    private final String dbaddress = "52.28.87.178";
     private final int dbport = 9042;
 
 
@@ -25,10 +25,10 @@ public class DatabaseConnector {
         cluster = Cluster.builder().addContactPoint(node).withRetryPolicy(DefaultRetryPolicy.INSTANCE).withPort(port).build();
         final Metadata metadata = cluster.getMetadata();
 
-        System.out.println(String.format("Connected to cluster: %s\n", metadata.getClusterName()));
+        System.out.println(String.format("Connected to cluster: %s", metadata.getClusterName()));
         for (final Host host : metadata.getAllHosts())
         {
-            System.out.println(String.format("Host: %s\n", host.getAddress()));
+            System.out.println(String.format("Host: %s", host.getAddress()));
         }
         session = cluster.connect();
     }
@@ -41,7 +41,15 @@ public class DatabaseConnector {
     public void close()
     {
         final Metadata metadata = cluster.getMetadata();
-        System.out.println(String.format("Closing connection: %s\n", metadata.getClusterName()));
+        System.out.println(String.format("Closing connection: %s", metadata.getClusterName()));
         cluster.close();
+    }
+
+    public void execute(String query){
+        connectDefault();
+        final Metadata metadata = cluster.getMetadata();
+        session.execute(query);
+        System.out.println(String.format("Executed query: %s\nCluster: %s", query, metadata.getClusterName()));
+        close();
     }
 }

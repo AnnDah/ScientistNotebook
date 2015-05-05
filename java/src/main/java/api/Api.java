@@ -106,7 +106,7 @@ public class Api {
                 return new LoginController().Login(email, password);
             }
         });
-
+/**
         // Test route for user mapping
         Spark.post(new Route("/mapping") {
             @Override
@@ -114,7 +114,7 @@ public class Api {
                 return new userMapping("Annika", "Magnusson", "annika@mail.com", "password");
             }
         });
-
+*/
         // Routes for admin
         Spark.get(new Route("/tables") {
             @Override

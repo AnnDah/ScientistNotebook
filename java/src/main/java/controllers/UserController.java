@@ -1,5 +1,8 @@
 package controllers;
 import com.datastax.driver.core.schemabuilder.Create;
+import com.datastax.driver.mapping.Mapper;
+import com.datastax.driver.mapping.MappingManager;
+import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,8 +15,14 @@ import org.json.simple.parser.JSONParser;
  * Created by annikamagnusson on 20/04/15.
  */
 public class UserController {
+    //Mapper<userMapping> mapper = new MappingManager(getSession().mapper(userMapping.class));
+
+    public void mappingTest(){
+        //DatabaseConnector db = new DatabaseConnector();
+        //Mapper<userMapping> mapper = new MappingManager(db.getSession().mapper(userMapping.class));
 
 
+    }
 
     public void createUser(String strUser){
         JSONObject jObj = null;

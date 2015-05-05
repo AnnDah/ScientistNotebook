@@ -13,6 +13,7 @@ public class DatabaseConnector {
     private final String dbaddress = "52.17.214.10";
     private final int dbport = 9042;
 
+
     //"CREATE KEYSPACE scinote WITH replication = {'class':'SimpleStrategy','replication_factor':1}";
 
     public void connectDefault(){

@@ -115,6 +115,40 @@ public class Api {
             }
         });
 
+        // Routes for admin
+        Spark.get(new Route("/tables") {
+            @Override
+            public Object handle(Request request, Response response) {
+
+                return null;
+            }
+        });
+
+        Spark.post(new Route("/tables") {
+            @Override
+            public Object handle(Request request, Response response) {
+                new DatabaseController().createTable();
+                return null;
+            }
+        });
+
+        Spark.get(new Route("/keyspace") {
+            @Override
+            public Object handle(Request request, Response response) {
+                new DatabaseController().getKeyspaces();
+                return null;
+            }
+        });
+
+        Spark.post(new Route("/keyspace") {
+            @Override
+            public Object handle(Request request, Response response) {
+                new DatabaseController().createKeyspace();
+                return null;
+            }
+        });
+
+
 
     }
 }

@@ -34,13 +34,12 @@ public class DatabaseController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
-            db.getSession().execute(new SimpleStatement("CREATE TABLE scinote.Users (" +
-                    "block_id uuid, " +
+            db.getSession().execute(new SimpleStatement("CREATE TABLE scinote.user (" +
                     "email text, " +
                     "firstName text, " +
                     "lastName text, " +
                     "password text," +
-                    "PRIMARY KEY (block_id, email));"));
+                    "PRIMARY KEY (email));"));
         } catch (Exception e) {
             System.out.println(e);
         }

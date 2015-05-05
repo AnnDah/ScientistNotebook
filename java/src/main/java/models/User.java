@@ -15,8 +15,6 @@ import java.util.Objects;
 public class User {
     @PartitionKey
     private String email;
-    @Column(name = "addr")
-    @Frozen
     private String firstName;
     private String lastName;
     private String password;
@@ -29,6 +27,14 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+    }
+
+    public String getPassword(){
+        return this.password;
+    }
+
+    public void setPassword(String password){
         this.password = password;
     }
 
@@ -54,14 +60,6 @@ public class User {
 
     public void setLastName(String lastName){
         this.lastName = lastName;
-    }
-
-    public String getPassword(){
-        return this.password;
-    }
-
-    public void setPassword(String password){
-        this.password = password;
     }
 
     @Override

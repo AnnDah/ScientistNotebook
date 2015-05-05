@@ -39,6 +39,7 @@ public class DatabaseController {
                     "email text, " +
                     "firstName text, " +
                     "lastName text, " +
+                    "password text," +
                     "PRIMARY KEY (block_id, email));"));
         } catch (Exception e) {
             System.out.println(e);

@@ -65,7 +65,11 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                return new UserController().getUser("1");
+                JSONObject j = new UserController().getUser(request.queryParams("email"));
+                if(j == null){
+                    response.status(404);
+                }
+                return j;
             }
         });
 

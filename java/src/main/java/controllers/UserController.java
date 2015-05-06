@@ -95,23 +95,41 @@ public class UserController {
         userJson.put("lastName", lastName);
         userJson.put("email", email);
 
-        //Only needs to be implementet when we need to get multiple users
-        //JSONArray ja = new JSONArray();
-        //ja.add(jObj);
-        //JSONObject mainObj = new JSONObject();
-        //mainObj.put("users", ja);
-        //System.out.println(mainObj);
+        /**
+         Only needs to be implemented when we need to get multiple users
+         JSONArray ja = new JSONArray();
+         ja.add(jObj);
+         JSONObject mainObj = new JSONObject();
+         mainObj.put("users", ja);
+         System.out.println(mainObj);
+         */
+
         return userJson;
     }
 
-    public JSONObject getUser(String userId){
-        //Contact DB to get user
+    public JSONObject getUser(String email){
+        if (email == null){
+            System.out.println("No request parameter was provided");
+            return null;
+        }
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+        User whose;
 
-        String firstName = "Annika";
-        String lastName = "Magnusson";
-        String email = "email@email.com";
+        Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
+        whose = mapper.get(email);
+        if (whose == null) {
+            System.out.println("User wasn't found in database");
+            db.close();
+            return null;
+        }
 
-        JSONObject user = createUserJson(firstName, lastName, email);
+
+        String firstName = whose.getFirstName();
+        String lastName = whose.getLastName();
+        String mail = whose.getEmail();
+
+        JSONObject user = createUserJson(firstName, lastName, mail);
         return user;
     }
 }

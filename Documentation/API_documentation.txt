@@ -32,13 +32,14 @@ JSON format in request body:
 {"firstName":"Annika","lastName":"Magnusson","email":"mail@gmail.com","password":"1234"}
 
 GET /users
-Include user id in request
-Response will be a JSON Object
+Include user email in request
+Example http://localhost:9090/users?email=mail@mail.com
+Response will be a JSON Object.
 
 PUT /users
 
 DELETE /users
-Example http://localhost:9090/users?email={email}
+Example http://localhost:9090/users?email=mail@mail.com
 
 // Requests for groups
 POST /groups
@@ -46,6 +47,11 @@ POST /groups
 GET /groups
 
 DELETE /groups
+
+//Requests for admin
+POST /tables
+JSON format in request body: 
+Example: {"keyspace":"scinote","tableName":"test","columns":"namn text, address text","primaryKey":"namn"}
 
 --Examples--
 

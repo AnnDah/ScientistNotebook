@@ -115,15 +115,6 @@ public class Api {
             }
         });
 
-        // Test route for user mapping
-        Spark.get(new Route("/mapping") {
-            @Override
-            public Object handle(Request request, Response response) {
-                new UserController().mappingTest();
-                return "Yippi";
-            }
-        });
-
         // Routes for admin
         Spark.get(new Route("/tables") {
             @Override
@@ -136,8 +127,8 @@ public class Api {
         Spark.post(new Route("/tables") {
             @Override
             public Object handle(Request request, Response response) {
-                new DatabaseController().createTable();
-                return null;
+                new DatabaseController().createTable(request.body());
+                return "Table created";
             }
         });
 

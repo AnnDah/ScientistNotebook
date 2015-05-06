@@ -35,23 +35,34 @@ public class UserController {
     }
 
     public void createUser(String strUser){
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+
         JSONObject jObj = null;
+        String firstName;
+        String lastName;
+        String email;
+        String password;
+
         try{
             jObj = (JSONObject) new JSONParser().parse(strUser);
         } catch (Exception e){
             System.out.println(e);
         }
         try{
-            String firstName = (String) jObj.get("firstName");
-            String lastName = (String) jObj.get("lastName");
-            String email = (String) jObj.get("email");
-            String password = (String) jObj.get("password");
+            firstName = (String) jObj.get("firstName");
+            lastName = (String) jObj.get("lastName");
+            email = (String) jObj.get("email");
+            password = (String) jObj.get("password");
 
+            Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
             User user = new User(firstName, lastName, email, password);
+            mapper.save(user);
             System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
         } catch (Exception e){
             System.out.println(e);
         }
+        db.close();
     }
 
     public JSONObject createUserJson(String firstName, String lastName, String email){

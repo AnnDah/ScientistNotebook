@@ -58,11 +58,35 @@ public class UserController {
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
             User user = new User(firstName, lastName, email, password);
             mapper.save(user);
-            System.out.printf("First Name: %s\nLast Name: %s",user.getFirstName(), user.getLastName());
+            System.out.printf("First Name: %s\nLast Name: %s", user.getFirstName(), user.getLastName());
         } catch (Exception e){
             System.out.println(e);
         }
         db.close();
+    }
+
+    public int deleteUser(String email){
+        if (email == null){
+            System.out.println("No request parameter was provided");
+            return 400;
+        }
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+        try {
+            Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
+            User whose = mapper.get(email);
+            if (whose == null){
+                System.out.println("User wasn't found in database");
+                db.close();
+                return 404;
+            }
+            mapper.delete(whose);
+
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        db.close();
+        return 200;
     }
 
     public JSONObject createUserJson(String firstName, String lastName, String email){

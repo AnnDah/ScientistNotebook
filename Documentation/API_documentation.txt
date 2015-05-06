@@ -38,7 +38,7 @@ Response will be a JSON Object
 PUT /users
 
 DELETE /users
-Include user id in request
+Example http://localhost:9090/users?email={email}
 
 // Requests for groups
 POST /groups

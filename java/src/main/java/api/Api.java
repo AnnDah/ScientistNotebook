@@ -72,7 +72,9 @@ public class Api {
         Spark.delete(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
-                return "Delete user";
+                int status = new UserController().deleteUser(request.queryParams("email"));
+                response.status(status);
+                return response;
             }
         });
 

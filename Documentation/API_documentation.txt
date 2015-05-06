@@ -53,6 +53,10 @@ POST /tables
 JSON format in request body: 
 Example: {"keyspace":"scinote","tableName":"test","columns":"namn text, address text","primaryKey":"namn"}
 
+POST /keyspace
+JSON format in request body: 
+Example: {"keyspace":"scinote"}
+
 --Examples--
 
 --Change log--

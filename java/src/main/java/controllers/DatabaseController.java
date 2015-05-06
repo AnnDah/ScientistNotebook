@@ -7,16 +7,26 @@ import models.DatabaseConnector;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import javax.swing.*;
+
 /**
  * Created by annikamagnusson on 05/05/15.
  */
 public class DatabaseController {
 
-    public void createKeyspace(){
+    public void createKeyspace(String keyspaceInfo){
+        String keyspace = "";
+        try{
+            JSONObject jObj = (JSONObject) new JSONParser().parse(keyspaceInfo);
+            keyspace = (String) jObj.get("keyspace");
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
-            db.getSession().execute(new SimpleStatement("CREATE KEYSPACE scinote WITH replication = {'class':'SimpleStrategy','replication_factor':1};"));
+            db.getSession().execute(new SimpleStatement("CREATE KEYSPACE " + keyspace + " WITH replication = {'class':'SimpleStrategy','replication_factor':1};"));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -27,14 +37,14 @@ public class DatabaseController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
-            db.getSession().execute(new SimpleStatement("SELECT * FROM system.schema_keyspaces;"));
+            ResultSet res = db.getSession().execute(new SimpleStatement("SELECT * FROM system.schema_keyspaces;"));
+            System.out.println(res.all()); //Send this list in JSON to api
         } catch (Exception e) {
             System.out.println(e);
         }
         db.close();
     }
 
-    //CREATE TABLE IF NOT EXISTS scinote.test (namn text, PRIMARY KEY (namn));
     public void createTable(String tableInfo){
         JSONObject jObj = null;
         try{
@@ -61,6 +71,7 @@ public class DatabaseController {
         db.close();
     }
 
+    //No working cql statement
     public void getTables(){
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();

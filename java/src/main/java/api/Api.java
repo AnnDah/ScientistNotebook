@@ -143,7 +143,7 @@ public class Api {
         Spark.post(new Route("/keyspace") {
             @Override
             public Object handle(Request request, Response response) {
-                new DatabaseController().createKeyspace();
+                new DatabaseController().createKeyspace(request.body());
                 return null;
             }
         });

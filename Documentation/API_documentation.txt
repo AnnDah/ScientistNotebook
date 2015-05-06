@@ -23,6 +23,7 @@ Respone will be a JSON Object
 
 DELETE /data
 Include data id in request
+Example http://localhost:9090/data?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
 PUT /data
  

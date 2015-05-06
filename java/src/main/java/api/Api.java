@@ -24,7 +24,11 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                return new DataController().getData(request.queryParams("id"));
+                JSONObject json =  new DataController().getData(request.queryParams("id"));
+                if (json == null) {
+                    response.status(404);
+                }
+                return json;
             }
         });
 
@@ -66,7 +70,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 JSONObject j = new UserController().getUser(request.queryParams("email"));
-                if(j == null){
+                if (j == null) {
                     response.status(404);
                 }
                 return j;

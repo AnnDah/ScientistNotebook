@@ -21,10 +21,10 @@ public class UserController {
         db.connectDefault();
         try {
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User user = new User("Annika", "Magnusson", "annika@mail.com", "password");
+            User user = new User("Annika", "Magnusson", "an@mail.com", "password");
             mapper.save(user);
             User whose = mapper.get("annika@mail.com");
-            System.out.println("User name: " + whose.getFirstName());
+            System.out.println("User name: " + whose.getLastName());
             mapper.delete(user);
         } catch (Exception e){
             System.out.println(e);

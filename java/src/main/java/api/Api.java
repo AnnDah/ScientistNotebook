@@ -1,6 +1,8 @@
 package api;
 import controllers.*;
 import models.DatabaseConnector;
+import models.User;
+import org.json.simple.JSONObject;
 import spark.*;
 
 /**
@@ -12,9 +14,9 @@ public class Api {
         Spark.setPort(9090);
 
         //Start: Database connection test
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        db.close();
+        //DatabaseConnector db = new DatabaseConnector();
+        //db.connectDefault();
+        //db.close();
         //End
 
         // Routes for data
@@ -106,16 +108,16 @@ public class Api {
                 return new LoginController().Login(email, password);
             }
         });
-/**
+
         // Test route for user mapping
-        Spark.post(new Route("/mapping") {
+        Spark.get(new Route("/mapping") {
             @Override
             public Object handle(Request request, Response response) {
                 new UserController().mappingTest();
-                return null;
+                return "Yippi";
             }
         });
-*/
+
         // Routes for admin
         Spark.get(new Route("/tables") {
             @Override
@@ -137,7 +139,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 new DatabaseController().getKeyspaces();
-                return null;
+                return "yey";
             }
         });
 

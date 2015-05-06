@@ -1,7 +1,9 @@
 package controllers;
 
+import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.SimpleStatement;
 import models.DatabaseConnector;
+import org.json.simple.JSONObject;
 
 /**
  * Created by annikamagnusson on 05/05/15.
@@ -23,7 +25,7 @@ public class DatabaseController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
-            db.getSession().execute(new SimpleStatement("SHOW KEYSPACES;"));
+            db.getSession().execute(new SimpleStatement("SELECT * FROM system.schema_keyspaces;"));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -50,7 +52,7 @@ public class DatabaseController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
-            db.getSession().execute(new SimpleStatement("SHOW TABLES;"));
+            db.getSession().execute(new SimpleStatement("DESCRIBE TABLES;"));
         } catch (Exception e) {
             System.out.println(e);
         }

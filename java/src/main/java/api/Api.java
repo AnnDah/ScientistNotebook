@@ -24,7 +24,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                return new DataController().getData("1");
+                return new DataController().getData(request.queryParams("id"));
             }
         });
 

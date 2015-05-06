@@ -23,12 +23,13 @@ public class Data {
 
     }
 
-    public Data(String content, String created, String author, String visibility, List<String> tags){
+    public Data(String content, String created, String author, String visibility, List<String> tags, String id){
         this.content = content;
         this.created = created;
         this.author = author;
         this.visibility = visibility;
         this.tags = tags;
+        this.id = id;
     }
 
     public String getId() { return this.id; }

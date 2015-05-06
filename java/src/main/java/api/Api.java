@@ -43,7 +43,9 @@ public class Api {
         Spark.delete(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
-                return "delete file";
+                int status = new DataController().deleteData(request.queryParams("id"));
+                response.status(status);
+                return response;
             }
         });
 

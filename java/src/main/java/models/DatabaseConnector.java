@@ -9,28 +9,37 @@ import com.datastax.driver.core.policies.DefaultRetryPolicy;
 public class DatabaseConnector {
     private Cluster cluster;
     private Session session;
+    private boolean connected;
 
     private final String dbaddress = "52.28.87.178";
     private final int dbport = 9042;
 
 
-    //"CREATE KEYSPACE scinote WITH replication = {'class':'SimpleStrategy','replication_factor':1}";
+    public DatabaseConnector(){
+        connected = false;
+    }
 
     public void connectDefault(){
         connect(dbaddress, dbport);
     }
 
     public void connect(final String node, final int port){
+        if(!connected){
+            try{
+                cluster = Cluster.builder().addContactPoint(node).withRetryPolicy(DefaultRetryPolicy.INSTANCE).withPort(port).build();
+                final Metadata metadata = cluster.getMetadata();
 
-        cluster = Cluster.builder().addContactPoint(node).withRetryPolicy(DefaultRetryPolicy.INSTANCE).withPort(port).build();
-        final Metadata metadata = cluster.getMetadata();
-
-        System.out.println(String.format("Connected to cluster: %s", metadata.getClusterName()));
-        for (final Host host : metadata.getAllHosts())
-        {
-            System.out.println(String.format("Host: %s", host.getAddress()));
+                System.out.println(String.format("Connected to cluster: %s", metadata.getClusterName()));
+                for (final Host host : metadata.getAllHosts())
+                {
+                    System.out.println(String.format("Host: %s", host.getAddress()));
+                }
+                session = cluster.connect();
+                connected = true;
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
-        session = cluster.connect();
     }
 
     public Session getSession()
@@ -40,16 +49,31 @@ public class DatabaseConnector {
 
     public void close()
     {
-        final Metadata metadata = cluster.getMetadata();
-        System.out.println(String.format("Closing connection: %s", metadata.getClusterName()));
-        cluster.close();
+        if (connected){
+            try{
+                final Metadata metadata = cluster.getMetadata();
+                System.out.println(String.format("Closing connection: %s", metadata.getClusterName()));
+                cluster.close();
+                connected = false;
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
+
     }
 
     public void execute(String query){
-        connectDefault();
-        final Metadata metadata = cluster.getMetadata();
-        session.execute(query);
-        System.out.println(String.format("Executed query: %s\nCluster: %s", query, metadata.getClusterName()));
-        close();
+        try{
+            connectDefault();
+            if (connected){
+                final Metadata metadata = cluster.getMetadata();
+                session.execute(query);
+                System.out.println(String.format("Executed query: %s\nCluster: %s", query, metadata.getClusterName()));
+                close();
+            }
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
     }
 }

@@ -16,24 +16,6 @@ import org.json.simple.parser.JSONParser;
  */
 public class UserController {
 
-    public void mappingTest(){
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        try {
-            Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User user = new User("Annika", "Magnusson", "an@mail.com", "password");
-            mapper.save(user);
-            User whose = mapper.get("annika@mail.com");
-            System.out.println("User name: " + whose.getLastName());
-            mapper.delete(user);
-        } catch (Exception e){
-            System.out.println(e);
-        }
-        db.close();
-
-
-    }
-
     public void createUser(String strUser){
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
@@ -130,6 +112,7 @@ public class UserController {
         String mail = whose.getEmail();
 
         JSONObject user = createUserJson(firstName, lastName, mail);
+        db.close();
         return user;
     }
 }

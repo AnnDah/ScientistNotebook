@@ -7,7 +7,17 @@ import org.json.simple.JSONObject;
  */
 public class ProjectController {
 
-    public JSONObject GetProject(){
-        return null;
+    public void createProject(String projectInfo){
+
+    }
+
+    public JSONObject getProject(String id){
+        JSONObject j = new JSONObject();
+        return j;
+    }
+
+    public int deleteProject(String id){
+        return 200;
+
     }
 }

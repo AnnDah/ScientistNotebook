@@ -14,9 +14,9 @@ public class Api {
         Spark.setPort(9090);
 
         //Start: Database connection test
-        //DatabaseConnector db = new DatabaseConnector();
-        //db.connectDefault();
-        //db.close();
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+        db.close();
         //End
 
         // Routes for data
@@ -24,7 +24,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject json =  new DataController().getData(request.queryParams("id"));
+                JSONObject json = new DataController().getData(request.queryParams("id"));
                 if (json == null) {
                     response.status(404);
                 }
@@ -89,24 +89,33 @@ public class Api {
         });
 
         // Routes for groups
-        Spark.post(new Route("/groups") {
+        Spark.post(new Route("/projects") {
             @Override
             public Object handle(Request request, Response response) {
-                return null;
+                String body = request.body();
+                new ProjectController().createProject(body);
+                return "Project created";
             }
         });
 
-        Spark.get(new Route("/groups") {
+        Spark.get(new Route("/projects") {
             @Override
             public Object handle(Request request, Response response) {
-                return null;
+                response.header("Content-Type", "Application/JSON");
+                JSONObject j = new ProjectController().getProject(request.queryParams("id"));
+                if (j == null) {
+                    response.status(404);
+                }
+                return j;
             }
         });
 
-        Spark.delete(new Route("/groups") {
+        Spark.delete(new Route("/projects") {
             @Override
             public Object handle(Request request, Response response) {
-                return null;
+                int status = new ProjectController().deleteProject(request.queryParams("id"));
+                response.status(status);
+                return response;
             }
         });
 
@@ -121,38 +130,6 @@ public class Api {
             }
         });
 
-        // Routes for admin
-        Spark.get(new Route("/tables") {
-            @Override
-            public Object handle(Request request, Response response) {
-
-                return null;
-            }
-        });
-
-        Spark.post(new Route("/tables") {
-            @Override
-            public Object handle(Request request, Response response) {
-                new DatabaseController().createTable(request.body());
-                return "Table created";
-            }
-        });
-
-        Spark.get(new Route("/keyspace") {
-            @Override
-            public Object handle(Request request, Response response) {
-                new DatabaseController().getKeyspaces();
-                return "yey";
-            }
-        });
-
-        Spark.post(new Route("/keyspace") {
-            @Override
-            public Object handle(Request request, Response response) {
-                new DatabaseController().createKeyspace(request.body());
-                return null;
-            }
-        });
 
 
 

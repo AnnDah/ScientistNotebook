@@ -1,0 +1,12 @@
+<!--top border-->
+<div id="top_border" style="margin-top:5px; margin-left:auto; margin-right:auto; width:30%"
+	<div class="container-fluid">  		
+		<ul class="nav nav-pills">
+			<!--<li class="active"><a href="#">Home</a></li> use active class for indicating current page-->
+			<li><a href="note.html" target="cont_holder">New note</a></li>
+			<li><a href="new_project.html" target="cont_holder">New project</a></li>		
+			<li><a href="search.html" target="cont_holder">Search</a></li>
+		</ul>			
+	</div>	<!--end of container-->	
+</div> 
+

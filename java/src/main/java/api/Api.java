@@ -1,6 +1,5 @@
 package api;
 import controllers.*;
-import models.DatabaseConnector;
 import org.json.simple.JSONObject;
 import spark.*;
 

@@ -2,8 +2,8 @@ package models;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,14 +15,14 @@ public class Project {
     @PartitionKey
     private String id;
     private String field;
-    private List<String> tags;
+    private List<String> tags = new ArrayList<String>();
     private String sharedLevel;
     private String projectAbstract;
-    private List<String> participants;
-    private List<String> projectRoles;
+    private List<String> participants = new ArrayList<String>();
+    private List<String> projectRoles = new ArrayList<String>();
     private String author;
     private String name;
-    private List<String> followers;
+    private List<String> followers = new ArrayList<String>();
     private String status;
 
     public Project(){

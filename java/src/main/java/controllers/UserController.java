@@ -1,17 +1,13 @@
 package controllers;
-import com.datastax.driver.core.schemabuilder.Create;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
-import com.sun.tools.javac.util.Convert;
 import models.DatabaseConnector;
 import models.User;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**

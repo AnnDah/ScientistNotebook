@@ -14,9 +14,9 @@ public class Api {
         Spark.setPort(9090);
 
         //Start: Database connection test
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        db.close();
+        //DatabaseConnector db = new DatabaseConnector();
+        //db.connectDefault();
+        //db.close();
         //End
 
         // Routes for data
@@ -130,7 +130,13 @@ public class Api {
             }
         });
 
-
+        //Json list test
+        Spark.get(new Route("/test") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return new UserController().testJson();
+            }
+        });
 
 
     }

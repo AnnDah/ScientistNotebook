@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class ProjectController {
 
-    public void createProject(String projectInfo) throws Exception{
+    public void createProject(String projectInfo) {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier

@@ -6,7 +6,7 @@ import spark.*;
 
 /**
  * Created by annikamagnusson on 17/04/15.
- * 
+ *
  */
 
 public class Api {

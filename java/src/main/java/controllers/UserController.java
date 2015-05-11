@@ -5,8 +5,13 @@ import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 /**
@@ -20,23 +25,29 @@ public class UserController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
-        JSONObject jObj;
-        String firstName;
-        String lastName;
-        String email;
-        String password;
+
 
         try{
-            jObj = (JSONObject) new JSONParser().parse(strUser);
-            firstName = (String) jObj.get("firstName");
-            lastName = (String) jObj.get("lastName");
-            email = (String) jObj.get("email");
-            password = (String) jObj.get("password");
+            JSONObject jObj = (JSONObject) new JSONParser().parse(strUser);
+            String firstName = (String) jObj.get("firstName");
+            String lastName = (String) jObj.get("lastName");
+            String email = (String) jObj.get("email");
+            String password = (String) jObj.get("password");
+            Long date = new Date().getTime();
+            String organization = (String) jObj.get("organization");
+            String department = (String) jObj.get("department");
+            String role = (String) jObj.get("role");
 
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User user = new User(firstName, lastName, email, password);
+            User user = new User(firstName, lastName, email, password, date, organization, department, role);
             mapper.save(user);
             System.out.printf("First Name: %s\nLast Name: %s", user.getFirstName(), user.getLastName());
+
+            //Set millis to UTC time
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date utcDate= new Date(date);
+            System.out.println(formatter.format(utcDate));
         } catch (Exception e){
             System.out.println(e);
         }
@@ -67,12 +78,23 @@ public class UserController {
         return 200;
     }
 
-    public JSONObject createUserJson(String firstName, String lastName, String email, String password){
+    public JSONObject createUserJson(String firstName, String lastName, String email, String password, Long date,
+                                     String organization, String department, String role){
+        // Parse date to UTC
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date utcDate= new Date(date);
+        System.out.println(formatter.format(utcDate));
+
         JSONObject userJson = new JSONObject();
         userJson.put("firstName", firstName);
         userJson.put("lastName", lastName);
         userJson.put("email", email);
         userJson.put("password", password);
+        userJson.put("date", utcDate);
+        userJson.put("organization", organization);
+        userJson.put("department", department);
+        userJson.put("role", role);
 
         /**
          Only needs to be implemented when we need to get multiple users
@@ -112,8 +134,12 @@ public class UserController {
         String lastName = whose.getLastName();
         String mail = whose.getEmail();
         String password = whose.getPassword();
+        Long date = whose.getDate();
+        String organization = whose.getOrganization();
+        String department = whose.getDepartment();
+        String role = whose.getRole();
 
-        JSONObject user = createUserJson(firstName, lastName, mail, password);
+        JSONObject user = createUserJson(firstName, lastName, mail, password, date, organization, department, role);
         db.close();
         if(!forLogin){
             user.put("password", "OMITTED!");

@@ -14,6 +14,7 @@ import models.Data;
 
 /**
  * Created by annikamagnusson on 20/04/15.
+ *
  */
 public class DataController {
 
@@ -26,13 +27,10 @@ public class DataController {
         String id = uuid.toString();
         System.out.println(id);
 
-        JSONObject jObj = null;
+        JSONObject jObj;
         try{
             jObj = (JSONObject) new JSONParser().parse(strData);
-        } catch (Exception e){
-            System.out.println(e);
-        }
-        try{
+
             String content  = (String) jObj.get("content");
             String created = (String) jObj.get("created");
             String author = (String) jObj.get("author");
@@ -84,12 +82,16 @@ public class DataController {
 
     public JSONObject createDataJson(String content, String created, String author, String visibility, List<String> tags, String id){
         JSONObject dataJson = new JSONObject();
-        dataJson.put("content", content);
-        dataJson.put("created", created);
-        dataJson.put("author", author);
-        dataJson.put("visibility", visibility);
-        dataJson.put("tags", tags);
-        dataJson.put("id", id);
+        try {
+            dataJson.put("content", content);
+            dataJson.put("created", created);
+            dataJson.put("author", author);
+            dataJson.put("visibility", visibility);
+            dataJson.put("tags", tags);
+            dataJson.put("id", id);
+        } catch (Exception e){
+            System.out.println(e);
+        }
         return dataJson;
     }
 

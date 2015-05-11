@@ -151,4 +151,9 @@ public class Project {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, field, sharedLevel, projectAbstract, participants, projectRoles, author, name, followers, status, tags);
+    }
 }

@@ -5,21 +5,22 @@ import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * Created by annikamagnusson on 20/04/15.
+ *
  */
 public class UserController {
 
     public void createUser(String strUser){
+        System.out.println(strUser);
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
-        JSONObject jObj = null;
+        JSONObject jObj;
         String firstName;
         String lastName;
         String email;
@@ -27,10 +28,6 @@ public class UserController {
 
         try{
             jObj = (JSONObject) new JSONParser().parse(strUser);
-        } catch (Exception e){
-            System.out.println(e);
-        }
-        try{
             firstName = (String) jObj.get("firstName");
             lastName = (String) jObj.get("lastName");
             email = (String) jObj.get("email");

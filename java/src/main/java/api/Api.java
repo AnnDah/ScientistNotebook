@@ -2,6 +2,9 @@ package api;
 import controllers.*;
 import org.json.simple.JSONObject;
 import spark.*;
+import models.DatabaseConnector;
+
+import java.text.ParseException;
 
 /**
  * Created by annikamagnusson on 17/04/15.
@@ -13,9 +16,9 @@ public class Api {
         Spark.setPort(9090);
 
         //Start: Database connection test
-        //DatabaseConnector db = new DatabaseConnector();
-        //db.connectDefault();
-        //db.close();
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+        db.close();
         //End
 
         // Routes for data
@@ -61,7 +64,9 @@ public class Api {
             public Object handle(Request request, Response response) {
                 String body = request.body();
                 System.out.println(body);
+
                 new UserController().createUser(body);
+
                 return "User created";
             }
         });

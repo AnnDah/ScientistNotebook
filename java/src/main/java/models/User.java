@@ -21,7 +21,7 @@ public class User {
 
     }
 
-    public User(String FirstName, String lastName, String email, String password){
+    public User(String firstName, String lastName, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -69,5 +69,10 @@ public class User {
                     Objects.equals(this.email, that.email);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, email);
     }
 }

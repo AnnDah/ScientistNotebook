@@ -85,4 +85,9 @@ public class Data {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content, created, author, visibility, tags);
+    }
 }

@@ -10,17 +10,10 @@ import controllers.UserController;
 public class LoginController {
 
     public JSONObject Login(String email, String password){
-        DatabaseConnector db = new DatabaseConnector();
+        UserController uc = new UserController();
 
-        //JSONObject user = db.GetData("");
         JSONObject user = null;
-        if(email.equals("email@mail.com")){
-            user = new JSONObject();
-            user.put("firstName", "Kristoffer");
-            user.put("lastName", "Olsson");
-            user.put("email", "email@mail.com");
-            user.put("password", "test");
-        }
+        user = uc.getUser(email);
 
         if(user != null) {
             if (user.get("password").toString().equals(password)) {

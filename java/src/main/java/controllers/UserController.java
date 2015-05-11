@@ -67,11 +67,12 @@ public class UserController {
         return 200;
     }
 
-    public JSONObject createUserJson(String firstName, String lastName, String email){
+    public JSONObject createUserJson(String firstName, String lastName, String email, String password){
         JSONObject userJson = new JSONObject();
         userJson.put("firstName", firstName);
         userJson.put("lastName", lastName);
         userJson.put("email", email);
+        userJson.put("password", password);
 
         /**
          Only needs to be implemented when we need to get multiple users
@@ -106,8 +107,9 @@ public class UserController {
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
         String mail = whose.getEmail();
+        String password = whose.getPassword();
 
-        JSONObject user = createUserJson(firstName, lastName, mail);
+        JSONObject user = createUserJson(firstName, lastName, mail, password);
         db.close();
         return user;
     }

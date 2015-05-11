@@ -3,8 +3,11 @@ import controllers.*;
 import org.json.simple.JSONObject;
 import spark.*;
 import models.DatabaseConnector;
-
-import java.text.ParseException;
+import java.util.TimeZone;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.DateFormat;
 
 /**
  * Created by annikamagnusson on 17/04/15.
@@ -139,6 +142,20 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 return new UserController().testJson();
+            }
+        });
+
+        Spark.get(new Route("/time") {
+            @Override
+            public Object handle(Request request, Response response) {
+
+                Long d = new Date().getTime();
+                System.out.println(d);
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date date= new Date(d);
+                System.out.println(formatter.format(date));
+                return null;
             }
         });
 

@@ -3,6 +3,7 @@ package models;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -16,6 +17,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
+    private Date date;
 
     public User(){
 
@@ -26,6 +28,7 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+
     }
 
     public String getPassword(){

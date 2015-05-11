@@ -5,6 +5,7 @@ import com.datastax.driver.core.policies.DefaultRetryPolicy;
 
 /**
  * Created by annikamagnusson on 20/04/15.
+ *
  */
 public class DatabaseConnector {
     private Cluster cluster;

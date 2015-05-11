@@ -66,7 +66,8 @@ public class User {
             User that = (User) other;
             return Objects.equals(this.firstName, that.firstName) &&
                     Objects.equals(this.lastName, that.lastName) &&
-                    Objects.equals(this.email, that.email);
+                    Objects.equals(this.email, that.email) &&
+                    Objects.equals(this.password, that.password);
         }
         return false;
     }

@@ -1,0 +1,76 @@
+div {
+	border-radius: 5px;
+}
+
+p{
+	color:blue;
+	
+
+}
+
+#note_preference{
+	
+	float:right;
+	position:fixed;
+	top:100 px;
+	right:10px;	
+	background-color:blue;
+	width:160px;	
+	height:600px;
+
+}
+
+#project_preference{
+	float:left;
+	position:fixed;
+	top:100 px;
+	left:10px;	
+	background-color:blue;
+	width:160px;	
+	height:600px;
+
+}
+
+/* TOP CSS */
+
+#div_new_project{
+	text-decoration:none;
+	display: inline-block;
+	height: 100px;
+	width: 100px;
+	border-radius: 100%;
+	
+	border: 2px solid black;
+	margin-left: 5px;
+	margin-top: 5px;	
+}
+
+#div_new_note{
+	text-decoration:none;
+	display: inline-block;
+	height: 100px;
+	width: 100px;
+	border-radius: 100%;	
+	border: 2px solid black;
+	margin-left: 5px;
+	margin-top: 5px;	
+}
+
+#div_new_project:p{
+	text-decoration:none;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  background-color: #e8e8e8;
+  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #e8e8e8 100%);
+  background-image:      -o-linear-gradient(top, #f5f5f5 0%, #e8e8e8 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#e8e8e8));
+  background-image:         linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0);
+  background-repeat: repeat-x;
+}
+
+
+
+

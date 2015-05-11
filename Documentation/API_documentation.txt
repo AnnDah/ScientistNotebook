@@ -1,31 +1,69 @@
-API
+--API--
 Authentication
 Scientist Notebook API uses OAuth 2.0 protocol for authentication.
 
-Errors
+--Errors--
 Scientist Notebook API make use of the standard HTTP Status Codes.
 
-Endpoints
-All requests are sent to: 
+--Endpoints--
+All requests are sent to: http://localhost:9090
 
-POST username, password (login) --> get token
+//Requests for login
+GET /login?email=email@mail.com&password=test
 
-POST file
-GET file
-DELETE file
-PUT file
+// Requests for data
+POST /data
+JSON format in request body: 
+{"content":"some data","created":"20150209","author":"Annika Magnusson","visibility":"1","tags":[{"tag1":"some tag","tag2":"some tag"}]}
 
-POST user
-GET user
-PUT user
-DELETE user
+GET /data
+Incude data id in request
+Example http://localhost:9090/data?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+Respone will be a JSON Object
 
-POST connection
-GET connection
-DELETE connection
+DELETE /data
+Include data id in request
+Example http://localhost:9090/data?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
-Examples
+PUT /data
+ 
+
+// Requests for users
+POST /users
+JSON format in request body: 
+{"firstName":"Annika","lastName":"Magnusson","email":"mail@gmail.com","password":"1234"}
+
+GET /users
+Include user email in request
+Example http://localhost:9090/users?email=mail@mail.com
+Response will be a JSON Object.
+
+PUT /users
+
+DELETE /users
+Example http://localhost:9090/users?email=mail@mail.com
+
+// Requests for groups
+POST /groups
+
+GET /groups
+
+DELETE /groups
+
+//Requests for admin
+POST /tables
+JSON format in request body: 
+Example: {"keyspace":"scinote","tableName":"test","columns":"namn text, address text","primaryKey":"namn"}
+
+POST /keyspace
+JSON format in request body: 
+Example: {"keyspace":"scinote"}
+
+GET /keyspace
+
+--Examples--
+
+--Change log--
 
 
-Change log
 

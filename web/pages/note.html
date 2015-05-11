@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>Varhelst</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<!-- Latest compiled JavaScript -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		
+	</head>
+	<body>			
+		
+	<div class="container">
+			
+		<h1 style="margin-top:3%; margin-left:50%; margin-right:auto;">Note</h1>
+		
+		<h2>Type of entry</h2>      
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Type
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Text</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Grid</a></li>                
+        </ul>
+      </div>
+	  
+	  
+	  <h2>Select project</h2>      
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Project
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Project 1</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Project 2</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">JavaScript</a></li>          
+        </ul>
+      </div>
+	  
+	  
+	  <h2>Share permissions</h2>      
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Share
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Public</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Friends</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Private</a></li>          
+        </ul>
+      </div>
+	  
+	  
+	  <!--Save button-->
+	  <button type="button" class="btn btn-success" style="margin-top:30px;">Save</button>
+	  
+    </div> <!--end of container-->
+	
+	
+	<div class="container">
+	
+		<form name="noteForm" method="post">
+	
+		<form name="saveNote" method="post" action="submit.php">
+			File Name: <input type="text" name="notetoSave" value=""><br/>
+			<textarea rows="16" cols="100" name="textdata"></textarea><br/>
+			<input type="submit" name="submitToPost" value="Save">
+		</form>
+		          
+	
+	</div>
+			
+			
+				
+		
+		
+			
+		
+		 
+		 
+
+
+	</body>
+</html>

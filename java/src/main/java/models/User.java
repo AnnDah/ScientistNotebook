@@ -10,7 +10,7 @@ import java.util.Objects;
  * Created by annikamagnusson on 20/04/15.
  *
  */
-@Table(keyspace = "scinote", name = "user")
+@Table(keyspace = "scinote", name = "users")
 public class User {
     @PartitionKey
     private String email;

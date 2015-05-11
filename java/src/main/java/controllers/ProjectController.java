@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,33 +23,26 @@ public class ProjectController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
-        UUID uuid = UUID.randomUUID();
-        String id = uuid.toString();
+        UUID id = UUID.randomUUID();
 
         JSONObject jObj = null;
         try{
             jObj = (JSONObject) new JSONParser().parse(projectInfo);
-        } catch (Exception e){
-            System.out.println(e);
-        }
-        try{
+
             String field  = (String) jObj.get("field");
             String sharedLevel = (String) jObj.get("sharedLevel");
             String projectAbstract = (String) jObj.get("projectAbstract");
-            String author = (String) jObj.get("author");
+            String createdBy = (String) jObj.get("createdBy");
             String name = (String) jObj.get("name");
             String status = (String) jObj.get("status");
+            String owner = (String) jObj.get("owner");
+            boolean isPrivate = true;
+            Long created = new Date().getTime();
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
             for(int i=0; i < tagsArray.size(); i++){
                 tags.add(tagsArray.get(i).toString());
-            }
-
-            JSONArray participantsArray = (JSONArray) jObj.get("participants");
-            List<String> participants = new ArrayList<String>();
-            for(int i=0; i < participantsArray.size(); i++){
-                participants.add(participantsArray.get(i).toString());
             }
 
             JSONArray rolesArray = (JSONArray) jObj.get("projectRoles");
@@ -57,14 +51,39 @@ public class ProjectController {
                 projectRoles.add(rolesArray.get(i).toString());
             }
 
-            JSONArray followersArray = (JSONArray) jObj.get("followers");
-            List<String> followers = new ArrayList<String>();
-            for(int i=0; i < followersArray.size(); i++){
-                followers.add(followersArray.get(i).toString());
+            JSONArray fundedArray = (JSONArray) jObj.get("fundedBy");
+            List<String> fundedBy = new ArrayList<String>();
+            for(int i=0; i < fundedArray.size(); i++){
+                fundedBy.add(fundedArray.get(i).toString());
+            }
+
+            JSONArray membersArray = (JSONArray) jObj.get("members");
+            List<String> members = new ArrayList<String>();
+            for(int i=0; i < membersArray.size(); i++){
+                members.add(membersArray.get(i).toString());
+            }
+
+            JSONArray employersArray = (JSONArray) jObj.get("employees");
+            List<String> employers = new ArrayList<String>();
+            for(int i=0; i < employersArray.size(); i++){
+                employers.add(employersArray.get(i).toString());
+            }
+
+            JSONArray fundsArray = (JSONArray) jObj.get("funds");
+            List<String> funds = new ArrayList<String>();
+            for(int i=0; i < fundsArray.size(); i++){
+                funds.add(fundsArray.get(i).toString());
+            }
+
+            JSONArray departmentsArray = (JSONArray) jObj.get("departments");
+            List<String> departments = new ArrayList<String>();
+            for(int i=0; i < departmentsArray.size(); i++){
+                departments.add(departmentsArray.get(i).toString());
             }
 
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-            Project project = new Project(id, field, tags, sharedLevel, projectAbstract, participants,projectRoles, author, name, followers, status);
+            Project project = new Project(id, field, tags, sharedLevel, projectAbstract, projectRoles, createdBy, name,
+                    status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
         } catch (Exception e){
             System.out.println(e);
@@ -89,20 +108,28 @@ public class ProjectController {
             return null;
         }
 
-        String id = project.getId();
+
+        UUID id = project.getId();
         String field = project.getField();
         List<String> tags = project.getTags();
         String sharedLevel = project.getSharedLevel();
         String projectAbstract = project.getProjectAbstract();
-        List<String> participants = project.getParticipants();
         List<String> projectRoles = project.getProjectRoles();
-        String author = project.getAuthor();
+        String createdBy = project.getCreatedBy();
         String name = project.getName();
-        List<String> followers = project.getFollowers();
         String status = project.getStatus();
+        boolean isPrivate = project.getIsPrivate();
+        Long created = project.getCreated();
+        List<String> fundedBy = project.getFundedBy();
+        List<String> members = project.getMembers();
+        List<String> employers = project.getEmployers();
+        List<String> funds = project.getFunds();
+        List<String> departments = project.getDepartments();
+        List<String> followers = project.getFollowers();
+        String owner = project.getOwner();
 
-        JSONObject projectJson = createProjectJson(id, field, tags, sharedLevel, projectAbstract, participants,
-                projectRoles, author, name, followers, status);
+        JSONObject projectJson = createProjectJson(id, field, tags, sharedLevel, projectAbstract, projectRoles, createdBy,
+                name, status, isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
         db.close();
         return projectJson;
     }
@@ -132,20 +159,29 @@ public class ProjectController {
 
     }
 
-    public JSONObject createProjectJson(String id, String field, List<String> tags, String sharedLevel, String projectAbstract,
-                                        List<String> participants, List<String> projectRoles, String author, String name,
-                                        List<String> followers, String status){
+    public JSONObject createProjectJson(UUID id, String field, List<String> tags, String sharedLevel,
+                                        String projectAbstract, List<String> projectRoles, String createdBy, String name,
+                                        String status, boolean isPrivate, Long created, List<String> fundedBy,
+                                        List<String> members, List<String> employers, List<String> funds,
+                                        List<String> departments, String owner, List<String> followers){
         JSONObject projectJson = new JSONObject();
         projectJson.put("id", id);
         projectJson.put("field", field);
         projectJson.put("sharedLevel", sharedLevel);
         projectJson.put("projectAbstract", projectAbstract);
-        projectJson.put("author", author);
+        projectJson.put("createdBy", createdBy);
         projectJson.put("name", name);
         projectJson.put("status", status);
         projectJson.put("tags", tags);
-        projectJson.put("participants", participants);
         projectJson.put("projectRoles", projectRoles);
+        projectJson.put("isPrivate", isPrivate);
+        projectJson.put("created", created);
+        projectJson.put("fundedBy", fundedBy);
+        projectJson.put("members", members);
+        projectJson.put("employers", employers);
+        projectJson.put("funds", funds);
+        projectJson.put("departments", departments);
+        projectJson.put("owner", owner);
         projectJson.put("followers", followers);
 
         return projectJson;

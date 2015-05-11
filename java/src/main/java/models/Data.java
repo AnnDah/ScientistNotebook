@@ -5,6 +5,7 @@ import com.datastax.driver.mapping.annotations.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -12,29 +13,81 @@ import java.util.Objects;
 @Table(keyspace = "scinote", name = "data")
 public class Data {
     @PartitionKey
-    private String id;
+    private UUID id;
     private String content;
     private String created;
     private String author;
-    private String visibility;
+    private String level;
     private List<String> tags = new ArrayList<String>();
+    private String dataType;
+    private List<String> revisionHistory;
+    private String project;
+    private String name;
+    private String description;
+
 
     public Data(){
 
     }
 
-    public Data(String content, String created, String author, String visibility, List<String> tags, String id){
+    public Data(String content, String created, String author, String level, List<String> tags, UUID id, String dataType,
+                List<String> revisionHistory, String project, String name, String description){
         this.content = content;
         this.created = created;
         this.author = author;
-        this.visibility = visibility;
+        this.level = level;
         this.tags = tags;
         this.id = id;
+        this.dataType = dataType;
+        this.revisionHistory = revisionHistory;
+        this.project = project;
+        this.name = name;
+        this.description = description;
     }
 
-    public String getId() { return this.id; }
+    public String getDescription(){
+        return this.description;
+    }
 
-    public void setId(String id){
+    public void setDescription(String description){
+        this.description = description;
+    }
+
+    public  String getName(){
+        return this.name;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getProject(){
+        return this.project;
+    }
+
+    public void setProject(String project){
+        this.project = project;
+    }
+
+    public List<String> getRevisionHistory(){
+        return this.revisionHistory;
+    }
+
+    public void setRevisionHistory(List<String> revisionHistory){
+        this.revisionHistory = revisionHistory;
+    }
+
+    public String getDataType(){
+        return this.dataType;
+    }
+
+    public void setDataType(String dataType){
+        this.dataType = dataType;
+    }
+
+    public UUID getId() { return this.id; }
+
+    public void setId(UUID id){
         this.id = id;
     }
 
@@ -50,10 +103,10 @@ public class Data {
         this.author = author;
     }
 
-    public String getVisibility() { return this.visibility; }
+    public String getLevel() { return this.level; }
 
-    public void setVisibility(String visibility){
-        this.visibility = visibility;
+    public void setLevel(String level){
+        this.level = level;
     }
 
     public String getCreated(){
@@ -81,13 +134,18 @@ public class Data {
                     Objects.equals(this.created, that.created) &&
                     Objects.equals(this.id, that.id) &&
                     Objects.equals(this.tags, that.tags) &&
-                    Objects.equals(this.visibility, that.visibility);
+                    Objects.equals(this.level, that.level) &&
+                    Objects.equals(this.dataType, that.dataType) &&
+                    Objects.equals(this.revisionHistory, that.revisionHistory) &&
+                    Objects.equals(this.project, that.project) &&
+                    Objects.equals(this.name, that.name) &&
+                    Objects.equals(this.description, that.description);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, created, author, visibility, tags);
+        return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name, description);
     }
 }

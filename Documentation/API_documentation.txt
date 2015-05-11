@@ -26,7 +26,7 @@ Include data id in request
 Example http://localhost:9090/data?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
 PUT /data
- 
+Not implemented yet
 
 // Requests for users
 POST /users
@@ -47,7 +47,23 @@ Example http://localhost:9090/users?email=mail@mail.com
 // Requests for projects
 POST /projects
 JSON format in request body: 
-{"content":"some data","created":"20150209","author":"Annika Magnusson","visibility":"1","tags":[{"tag1":"some tag","tag2":"some tag"}]}
+{
+"field":"some field",
+"createdBy":"Annika Magnusson",
+"sharedLevel":"1",
+"name":"project1",
+"status":"ongoing",
+"owner":"kristoffer",
+"isPrivate":"true",
+"projectAbstract":"blablab",
+"tags":[{"tag1":"some tag","tag2":"some tag"}],
+"projectRoles":[{"role1":"some role","role2":"some role"}],
+"fundedBy":[{"funder1":"some funder","funder2":"some funder"}],
+"funds":[{"fund1":"some fund","fund2":"some fund"}],
+"members":[{"member1":"some member","member2":"some member"}],
+"employers":[{"employer1":"some employer","employer2":"some employer"}],
+"departments":[{"department1":"some department","department2":"some department"}]
+}
 
 GET /projects
 Include project id in request
@@ -57,17 +73,6 @@ Response will be a JSON Object.
 DELETE /projects
 Include data id in request
 Example http://localhost:9090/projects?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
-
-//Requests for admin
-POST /tables
-JSON format in request body: 
-Example: {"keyspace":"scinote","tableName":"test","columns":"namn text, address text","primaryKey":"namn"}
-
-POST /keyspace
-JSON format in request body: 
-Example: {"keyspace":"scinote"}
-
-GET /keyspace
 
 --Examples--
 

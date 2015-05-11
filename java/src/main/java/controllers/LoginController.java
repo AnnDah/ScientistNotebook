@@ -13,7 +13,7 @@ public class LoginController {
         UserController uc = new UserController();
 
         JSONObject user = null;
-        user = uc.getUser(email);
+        user = uc.getUser(email, true);
 
         if(user != null) {
             if (user.get("password").toString().equals(password)) {

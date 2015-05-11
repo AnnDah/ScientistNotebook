@@ -87,6 +87,10 @@ public class UserController {
     }
 
     public JSONObject getUser(String email){
+        return getUser(email, false);
+    }
+
+    public JSONObject getUser(String email, boolean forLogin){
         if (email == null){
             System.out.println("No request parameter was provided");
             return null;
@@ -111,6 +115,9 @@ public class UserController {
 
         JSONObject user = createUserJson(firstName, lastName, mail, password);
         db.close();
+        if(!forLogin){
+            user.put("password", "OMITTED!");
+        }
         return user;
     }
 

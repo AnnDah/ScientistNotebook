@@ -168,28 +168,6 @@ public class Api {
             }
         });
 
-        //Json list test
-        Spark.get(new Route("/test") {
-            @Override
-            public Object handle(Request request, Response response) {
-                return new UserController().testJson();
-            }
-        });
-
-        Spark.get(new Route("/time") {
-            @Override
-            public Object handle(Request request, Response response) {
-
-                Long d = new Date().getTime();
-                System.out.println(d);
-                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-                Date date = new Date(d);
-                System.out.println(formatter.format(date));
-                return null;
-            }
-        });
-
 
     }
 }

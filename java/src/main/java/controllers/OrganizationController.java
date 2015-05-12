@@ -7,13 +7,11 @@ import models.Organization;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * Created by niffe on 2015-04-27.
+ *
  */
 public class OrganizationController {
 
@@ -33,8 +31,8 @@ public class OrganizationController {
 
             JSONArray departmentsArray = (JSONArray) jObj.get("departments");
             List<String> departments = new ArrayList<String>();
-            for(int i=0; i < departmentsArray.size(); i++){
-                departments.add(departmentsArray.get(i).toString());
+            for (Object aDepartmentsArray : departmentsArray) {
+                departments.add(aDepartmentsArray.toString());
             }
 
             Mapper<Organization> mapper = new MappingManager(db.getSession()).mapper(Organization.class);

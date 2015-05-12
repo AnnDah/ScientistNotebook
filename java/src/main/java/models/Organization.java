@@ -2,7 +2,6 @@ package models;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-
 import java.util.Objects;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by annikamagnusson on 08/05/15.
+ *
  */
 @Table(keyspace = "scinote", name = "organizations")
 public class Organization {

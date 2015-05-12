@@ -5,7 +5,6 @@ import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -150,31 +149,4 @@ public class UserController {
         return user;
     }
 
-    public JSONObject testJson(){
-        JSONObject userJson = new JSONObject();
-
-        List<String> mylist = new ArrayList<String>();
-
-        for (int i = 0; i < 3; i++){
-            mylist.add("hej");
-        }
-
-        userJson.put("firstName", "Annika");
-        userJson.put("lastName", "Magnusson");
-        userJson.put("email", "annika@mail.com");
-        userJson.put("list", mylist);
-
-        System.out.println(userJson.toString());
-
-        /**
-         Only needs to be implemented when we need to get multiple users
-         JSONArray ja = new JSONArray();
-         ja.add(jObj);
-         JSONObject mainObj = new JSONObject();
-         mainObj.put("users", ja);
-         System.out.println(mainObj);
-         */
-
-        return userJson;
-    }
 }

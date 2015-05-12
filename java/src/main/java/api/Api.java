@@ -24,12 +24,12 @@ public class Api {
         db.close();
         //End
 
-        // Routes for data
-        Spark.get(new Route("/data") {
+        // Routes for da
+        Spark.get(new Route("/data/:id  ") {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject json = new DataController().getData(request.queryParams("id"));
+                JSONObject json = new DataController().getData(request.params(":id"));
                 if (json == null) {
                     response.status(404);
                 }
@@ -45,16 +45,16 @@ public class Api {
             }
         });
 
-        Spark.delete(new Route("/data") {
+        Spark.delete(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new DataController().deleteData(request.queryParams("id"));
+                int status = new DataController().deleteData(request.params(":id"));
                 response.status(status);
                 return response;
             }
         });
 
-        Spark.put(new Route("/data") {
+        Spark.put(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 return "put file";
@@ -74,11 +74,11 @@ public class Api {
             }
         });
 
-        Spark.get(new Route("/users") {
+        Spark.get(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject j = new UserController().getUser(request.queryParams("email"));
+                JSONObject j = new UserController().getUser(request.params(":id"));
                 if (j == null) {
                     response.status(404);
                 }
@@ -86,10 +86,10 @@ public class Api {
             }
         });
 
-        Spark.delete(new Route("/users") {
+        Spark.delete(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new UserController().deleteUser(request.queryParams("email"));
+                int status = new UserController().deleteUser(request.params(":id"));
                 response.status(status);
                 return response;
             }
@@ -100,16 +100,20 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 String body = request.body();
-                new ProjectController().createProject(body);
+                try {
+                    new ProjectController().createProject(body);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 return "Project created";
             }
         });
 
-        Spark.get(new Route("/projects") {
+        Spark.get(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject j = new ProjectController().getProject(request.queryParams("id"));
+                JSONObject j = new ProjectController().getProject(request.params(":id"));
                 if (j == null) {
                     response.status(404);
                 }
@@ -117,10 +121,10 @@ public class Api {
             }
         });
 
-        Spark.delete(new Route("/projects") {
+        Spark.delete(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new ProjectController().deleteProject(request.queryParams("id"));
+                int status = new ProjectController().deleteProject(request.params(":id"));
                 response.status(status);
                 return response;
             }
@@ -153,7 +157,7 @@ public class Api {
                 System.out.println(d);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-                Date date= new Date(d);
+                Date date = new Date(d);
                 System.out.println(formatter.format(date));
                 return null;
             }

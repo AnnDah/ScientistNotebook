@@ -8,10 +8,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 
 /**
@@ -33,37 +30,37 @@ public class UserController {
             String lastName = (String) jObj.get("lastName");
             String email = (String) jObj.get("email");
             String password = (String) jObj.get("password");
-            Long date = new Date().getTime();
+            Long memberSince = new Date().getTime();
             String organization = (String) jObj.get("organization");
             String department = (String) jObj.get("department");
             String role = (String) jObj.get("role");
 
+            UUID id = UUID.randomUUID();
+
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User user = new User(firstName, lastName, email, password, date, organization, department, role);
+            User user = new User(id, firstName, lastName, email, password, memberSince, organization, department, role);
             mapper.save(user);
             System.out.printf("First Name: %s\nLast Name: %s", user.getFirstName(), user.getLastName());
 
-            //Set millis to UTC time
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date utcDate= new Date(date);
-            System.out.println(formatter.format(utcDate));
         } catch (Exception e){
             System.out.println(e);
         }
         db.close();
     }
 
-    public int deleteUser(String email){
-        if (email == null){
+    public int deleteUser(String userId){
+        if (userId == null){
             System.out.println("No request parameter was provided");
             return 400;
         }
+
+        UUID id = UUID.fromString(userId);
+
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User whose = mapper.get(email);
+            User whose = mapper.get(id);
             if (whose == null){
                 System.out.println("User wasn't found in database");
                 db.close();
@@ -78,7 +75,7 @@ public class UserController {
         return 200;
     }
 
-    public JSONObject createUserJson(String firstName, String lastName, String email, String password, Long date,
+    public JSONObject createUserJson(UUID id, String firstName, String lastName, String email, String password, Long date,
                                      String organization, String department, String role){
         // Parse date to UTC
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -87,11 +84,12 @@ public class UserController {
         System.out.println(formatter.format(utcDate));
 
         JSONObject userJson = new JSONObject();
+        userJson.put("id", id);
         userJson.put("firstName", firstName);
         userJson.put("lastName", lastName);
         userJson.put("email", email);
         userJson.put("password", password);
-        userJson.put("date", utcDate);
+        userJson.put("memberSince", utcDate);
         userJson.put("organization", organization);
         userJson.put("department", department);
         userJson.put("role", role);
@@ -108,38 +106,41 @@ public class UserController {
         return userJson;
     }
 
-    public JSONObject getUser(String email){
-        return getUser(email, false);
+    public JSONObject getUser(String id){
+        return getUser(id, false);
     }
 
-    public JSONObject getUser(String email, boolean forLogin){
-        if (email == null){
+    public JSONObject getUser(String userId, boolean forLogin){
+        if (userId == null){
             System.out.println("No request parameter was provided");
             return null;
         }
+
+        UUID userUuid = UUID.fromString(userId);
+
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         User whose;
 
         Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-        whose = mapper.get(email);
+        whose = mapper.get(userUuid);
         if (whose == null) {
             System.out.println("User wasn't found in database");
             db.close();
             return null;
         }
 
-
+        UUID id =whose.getId();
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
         String mail = whose.getEmail();
         String password = whose.getPassword();
-        Long date = whose.getDate();
+        Long memberSince = whose.getMemberSince();
         String organization = whose.getOrganization();
         String department = whose.getDepartment();
         String role = whose.getRole();
 
-        JSONObject user = createUserJson(firstName, lastName, mail, password, date, organization, department, role);
+        JSONObject user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role);
         db.close();
         if(!forLogin){
             user.put("password", "OMITTED!");

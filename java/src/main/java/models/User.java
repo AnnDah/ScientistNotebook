@@ -2,7 +2,7 @@ package models;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-
+import java.util.UUID;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,11 +13,12 @@ import java.util.Objects;
 @Table(keyspace = "scinote", name = "users")
 public class User {
     @PartitionKey
+    private UUID id;
     private String email;
     private String firstName;
     private String lastName;
     private String password;
-    private Long date;
+    private Long memberSince;
     private String organization;
     private String department;
     private String role;
@@ -27,17 +28,26 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String email, String password, Long date, String organization,
+    public User(UUID id, String firstName, String lastName, String email, String password, Long memberSince, String organization,
                 String department, String role){
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.date = date;
+        this.memberSince = memberSince;
         this.organization = organization;
         this.department = department;
         this.role = role;
 
+    }
+
+    public UUID getId(){
+        return this.id;
+    }
+
+    public void setId(UUID id){
+        this.id = id;
     }
 
     public String getPassword(){
@@ -72,12 +82,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Long getDate(){
-        return this.date;
+    public Long getMemberSince(){
+        return this.memberSince;
     }
 
-    public void setDate(Long date){
-        this.date = date;
+    public void setMemberSince(Long memberSince){
+        this.memberSince = memberSince;
     }
 
     public String getOrganization(){
@@ -112,16 +122,17 @@ public class User {
                     Objects.equals(this.lastName, that.lastName) &&
                     Objects.equals(this.email, that.email) &&
                     Objects.equals(this.password, that.password) &&
-                    Objects.equals(this.date, that.date) &&
+                    Objects.equals(this.memberSince, that.memberSince) &&
                     Objects.equals(this.organization, that.organization) &&
                     Objects.equals(this.department, that.department) &&
-                    Objects.equals(this.role, that.role);
+                    Objects.equals(this.role, that.role) &&
+                    Objects.equals(this.id, that.id);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, email, date, organization, department, role);
+        return Objects.hash(firstName, lastName, email, memberSince, organization, department, role, id);
     }
 }

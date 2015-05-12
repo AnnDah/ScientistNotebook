@@ -14,18 +14,18 @@ GET /login?email=email@mail.com&password=test
 // Requests for data
 POST /data
 JSON format in request body: 
-{"content":"some data","created":"20150209","author":"Annika Magnusson","visibility":"1","tags":[{"tag1":"some tag","tag2":"some tag"}]}
+{"content":"some data","created":"20150209","author":"Annika Magnusson","visibility":"1","tags":["tag1","tag2"]}
 
-GET /data
+GET /data/<id>
 Incude data id in request
-Example http://localhost:9090/data?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Respone will be a JSON Object
 
-DELETE /data
+DELETE /data/<id>
 Include data id in request
-Example http://localhost:9090/data?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
-PUT /data
+PUT /data/<id>
 Not implemented yet
 
 // Requests for users
@@ -33,16 +33,16 @@ POST /users
 JSON format in request body: 
 {"firstName":"Annika","lastName":"Magnusson","email":"mail@gmail.com","password":"1234","organization":"MAH","department":"computer","role":"user"}
 
-GET /users
-Include user email in request
-Example http://localhost:9090/users?email=mail@mail.com
+GET /users/<id>
+Include user id in request
+Example http://localhost:9090/users/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Response will be a JSON Object.
 
-PUT /users
+PUT /users/<id>
 Not implemented yet
 
-DELETE /users
-Example http://localhost:9090/users?email=mail@mail.com
+DELETE /users/<id>
+Example http://localhost:9090/users/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
 // Requests for projects
 POST /projects
@@ -56,23 +56,23 @@ JSON format in request body:
 "owner":"kristoffer",
 "isPrivate":"true",
 "projectAbstract":"blablab",
-"tags":[{"tag1":"some tag","tag2":"some tag"}],
-"projectRoles":[{"role1":"some role","role2":"some role"}],
-"fundedBy":[{"funder1":"some funder","funder2":"some funder"}],
-"funds":[{"fund1":"some fund","fund2":"some fund"}],
-"members":[{"member1":"some member","member2":"some member"}],
-"employers":[{"employer1":"some employer","employer2":"some employer"}],
-"departments":[{"department1":"some department","department2":"some department"}]
+"tags":["tag1","tag2"],
+"projectRoles":["role1","role2"],
+"fundedBy":["funder1","funder2"],
+"funds":["fund1","fund2"],
+"members":["member1","member2"],
+"employers":["employer1","employer2"],
+"departments":["department1","department2"]
 }
 
-GET /projects
+GET /projects/<id>
 Include project id in request
-Example http://localhost:9090/projects?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+Example http://localhost:9090/projects/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Response will be a JSON Object.
 
-DELETE /projects
+DELETE /projects/<id>
 Include data id in request
-Example http://localhost:9090/projects?id=1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+Example http://localhost:9090/projects/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
 --Examples--
 

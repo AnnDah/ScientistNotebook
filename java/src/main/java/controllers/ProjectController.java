@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 public class ProjectController {
 
-    public void createProject(String projectInfo) {
+    public void createProject(String projectInfo) throws Exception{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
@@ -63,7 +63,7 @@ public class ProjectController {
                 members.add(membersArray.get(i).toString());
             }
 
-            JSONArray employersArray = (JSONArray) jObj.get("employees");
+            JSONArray employersArray = (JSONArray) jObj.get("employers");
             List<String> employers = new ArrayList<String>();
             for(int i=0; i < employersArray.size(); i++){
                 employers.add(employersArray.get(i).toString());
@@ -86,7 +86,7 @@ public class ProjectController {
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
         } catch (Exception e){
-            System.out.println(e);
+            throw e;
         }
         db.close();
     }
@@ -96,12 +96,13 @@ public class ProjectController {
             System.out.println("No request parameter was provided");
             return null;
         }
+        UUID projectUuid = UUID.fromString(projectId);
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         Project project;
 
         Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-        project = mapper.get(projectId);
+        project = mapper.get(projectUuid);
         if (project == null) {
             System.out.println("Project wasn't found in database");
             db.close();
@@ -139,11 +140,12 @@ public class ProjectController {
             System.out.println("No request parameter was provided");
             return 400;
         }
+        UUID id = UUID.fromString(projectId);
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-            Project toDelete = mapper.get(projectId);
+            Project toDelete = mapper.get(id);
             if (toDelete == null){
                 System.out.println("Project wasn't found in database");
                 db.close();

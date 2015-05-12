@@ -6,6 +6,7 @@ import com.datastax.driver.mapping.annotations.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -13,43 +14,130 @@ import java.util.Objects;
 @Table(keyspace = "scinote", name = "projects")
 public class Project {
     @PartitionKey
-    private String id;
+    private UUID id;
     private String field;
-    private List<String> tags = new ArrayList<String>();
     private String sharedLevel;
     private String projectAbstract;
-    private List<String> participants = new ArrayList<String>();
-    private List<String> projectRoles = new ArrayList<String>();
-    private String author;
+    private String createdBy;
     private String name;
-    private List<String> followers = new ArrayList<String>();
     private String status;
+    private String owner;
+    private List<String> tags = new ArrayList<String>();
+    private List<String> projectRoles = new ArrayList<String>();
+    private List<String> fundedBy = new ArrayList<String>();
+    private List<String> members = new ArrayList<String>();
+    private List<String> employers = new ArrayList<String>();
+    private List<String> funds = new ArrayList<String>();
+    private List<String> departments = new ArrayList<String>();
+    private List<String> followers = new ArrayList<String>();
+    private boolean isPrivate;
+    private Long created;
 
     public Project(){
 
     }
 
-    public Project(String id, String field, List<String> tags, String sharedLevel, String projectAbstract, List<String> participants,
-                   List<String> projectRoles, String author, String name, List<String> followers, String status){
+    public Project(UUID id, String field, List<String> tags, String sharedLevel, String projectAbstract,
+                   List<String> projectRoles, String createdBy, String name, String status, boolean isPrivate,
+                   Long created, List<String> fundedBy, List<String> members, List<String> employers,
+                   List<String> funds, List<String> departments, String owner){
         this.id = id;
         this.field = field;
         this.tags = tags;
         this.sharedLevel = sharedLevel;
         this.projectAbstract = projectAbstract;
-        this.participants = participants;
         this.projectRoles = projectRoles;
-        this.author = author;
+        this.createdBy = createdBy;
         this.name = name;
-        this.followers = followers;
         this.status = status;
+        this.isPrivate = isPrivate;
+        this.created = created;
+        this.fundedBy = fundedBy;
+        this.members = members;
+        this.employers = employers;
+        this.funds = funds;
+        this.departments = departments;
+        this.owner = owner;
 
     }
 
-    public String getId(){
+    public List<String> getFollowers(){
+        return this.followers;
+    }
+
+    public void setFollowers(List<String> followers){
+        this.followers = followers;
+    }
+
+    public String getOwner(){
+        return this.owner;
+    }
+
+    public void setOwner(String owner){
+        this.owner = owner;
+    }
+
+    public List<String> getFunds(){
+        return this.funds;
+    }
+
+    public void setFunds(List<String> funds){
+        this.funds = funds;
+    }
+
+    public List<String> getDepartments(){
+        return this.departments;
+    }
+
+    public void setDepartments(List<String> departments){
+        this.departments = departments;
+    }
+
+    public List<String> getEmployers(){
+        return this.employers;
+    }
+
+    public void setEmployers(List<String> employers){
+        this.employers = employers;
+    }
+
+    public List<String> getMembers(){
+        return this.members;
+    }
+
+    public void setMembers(List<String> members){
+        this.members = members;
+    }
+
+    public List<String> getFundedBy(){
+        return this.fundedBy;
+    }
+
+    public void setFundedBy(List<String> fundedBy){
+        this.fundedBy = fundedBy;
+    }
+
+    public Long getCreated(){
+        return this.created;
+    }
+
+    public void setCreated(Long created){
+        this.created = created;
+    }
+
+    public boolean getIsPrivate(){
+        return  this.isPrivate;
+    }
+
+    public void setIsPrivate(boolean isPrivate){
+        this.isPrivate = isPrivate;
+    }
+
+    public UUID getId(){
         return this.id;
     }
 
-    public void setId(String id){
+    public void setId(UUID id){
         this.id = id;
     }
 
@@ -85,14 +173,6 @@ public class Project {
         this.projectAbstract = projectAbstract;
     }
 
-    public List<String> getParticipants(){
-        return  this.participants;
-    }
-
-    public void setParticipants(List<String> participants){
-        this.participants = participants;
-    }
-
     public List<String> getProjectRoles(){
         return  this.projectRoles;
     }
@@ -101,12 +181,12 @@ public class Project {
         this.projectRoles = projectRoles;
     }
 
-    public String getAuthor(){
-        return this.author;
+    public String getCreatedBy(){
+        return this.createdBy;
     }
 
-    public void setAuthor(String author){
-        this.author = author;
+    public void setCreatedBy(String createdBy){
+        this.createdBy = createdBy;
     }
 
     public String getName(){
@@ -115,14 +195,6 @@ public class Project {
 
     public void setName(String name){
         this.name = name;
-    }
-
-    public List<String> getFollowers(){
-        return this.followers;
-    }
-
-    public void setFollowers(List<String> followers){
-        this.followers = followers;
     }
 
     public String getStatus(){
@@ -141,19 +213,27 @@ public class Project {
                     Objects.equals(this.field, that.field) &&
                     Objects.equals(this.sharedLevel, that.sharedLevel) &&
                     Objects.equals(this.projectAbstract, that.projectAbstract) &&
-                    Objects.equals(this.participants, that.participants) &&
                     Objects.equals(this.projectRoles, that.projectRoles) &&
-                    Objects.equals(this.author, that.author) &&
+                    Objects.equals(this.createdBy, that.createdBy) &&
                     Objects.equals(this.name, that.name) &&
-                    Objects.equals(this.followers, that.followers) &&
                     Objects.equals(this.status, that.status) &&
-                    Objects.equals(this.tags, that.tags);
+                    Objects.equals(this.tags, that.tags) &&
+                    Objects.equals(this.isPrivate, that.isPrivate) &&
+                    Objects.equals(this.created, that.created) &&
+                    Objects.equals(this.fundedBy, that.fundedBy) &&
+                    Objects.equals(this.members, that.members) &&
+                    Objects.equals(this.employers, that.employers) &&
+                    Objects.equals(this.funds, that.funds) &&
+                    Objects.equals(this.departments, that.departments) &&
+                    Objects.equals(this.owner, that.owner) &&
+                    Objects.equals(this.followers, that.followers);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, field, sharedLevel, projectAbstract, participants, projectRoles, author, name, followers, status, tags);
+        return Objects.hash(id, field, sharedLevel, projectAbstract, projectRoles, createdBy, name, status, tags,
+                isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
     }
 }

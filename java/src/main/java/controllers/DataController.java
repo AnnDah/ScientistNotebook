@@ -22,10 +22,7 @@ public class DataController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
-        UUID uuid = UUID.randomUUID();
-        System.out.println(uuid);
-        String id = uuid.toString();
-        System.out.println(id);
+        UUID id = UUID.randomUUID();
 
         JSONObject jObj;
         try{
@@ -34,15 +31,26 @@ public class DataController {
             String content  = (String) jObj.get("content");
             String created = (String) jObj.get("created");
             String author = (String) jObj.get("author");
-            String visibility = (String) jObj.get("visibilty");
-            JSONArray jArray = (JSONArray) jObj.get("tags");
+            String level = (String) jObj.get("visibilty");
+            String dataType = (String) jObj.get("dataType");
+            String project = (String) jObj.get("project");
+            String name = (String) jObj.get("name");
+            String description = (String) jObj.get("description");
+
+            JSONArray revisionArray = (JSONArray) jObj.get("tags");
+            List<String> revisionHistory = new ArrayList<String>();
+            for(int i=0; i < revisionArray.size(); i++){
+                revisionHistory.add(revisionArray.get(i).toString());
+            }
+
+            JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
-            for(int i=0; i < jArray.size(); i++){
-                tags.add(jArray.get(i).toString());
+            for(int i=0; i < tagsArray.size(); i++){
+                tags.add(tagsArray.get(i).toString());
             }
 
             Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
-            Data data = new Data(created, content, author, visibility, tags, id);
+            Data data = new Data(content, created, author, level, tags, id, dataType, revisionHistory, project, name, description);
             mapper.save(data);
         } catch (Exception e){
             System.out.println(e);
@@ -70,17 +78,17 @@ public class DataController {
         String author = data.getAuthor();
         String content = data.getContent();
         String created = data.getCreated();
-        String visibility = data.getVisibility();
-        String id = data.getId();
+        String level = data.getLevel();
+        UUID id = data.getId();
         List<String> tags = data.getTags();
 
-        JSONObject dataJson = createDataJson(content, created, author, visibility, tags, id);
+        JSONObject dataJson = createDataJson(content, created, author, level, tags, id);
         db.close();
         return dataJson;
 
     }
 
-    public JSONObject createDataJson(String content, String created, String author, String visibility, List<String> tags, String id){
+    public JSONObject createDataJson(String content, String created, String author, String visibility, List<String> tags, UUID id){
         JSONObject dataJson = new JSONObject();
         try {
             dataJson.put("content", content);

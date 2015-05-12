@@ -5,8 +5,10 @@ import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -20,39 +22,45 @@ public class UserController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
-        JSONObject jObj;
-        String firstName;
-        String lastName;
-        String email;
-        String password;
+
 
         try{
-            jObj = (JSONObject) new JSONParser().parse(strUser);
-            firstName = (String) jObj.get("firstName");
-            lastName = (String) jObj.get("lastName");
-            email = (String) jObj.get("email");
-            password = (String) jObj.get("password");
+            JSONObject jObj = (JSONObject) new JSONParser().parse(strUser);
+            String firstName = (String) jObj.get("firstName");
+            String lastName = (String) jObj.get("lastName");
+            String email = (String) jObj.get("email");
+            String password = (String) jObj.get("password");
+            Long memberSince = new Date().getTime();
+            String organization = (String) jObj.get("organization");
+            String department = (String) jObj.get("department");
+            String role = (String) jObj.get("role");
+
+            UUID id = UUID.randomUUID();
 
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User user = new User(firstName, lastName, email, password);
+            User user = new User(id, firstName, lastName, email, password, memberSince, organization, department, role);
             mapper.save(user);
             System.out.printf("First Name: %s\nLast Name: %s", user.getFirstName(), user.getLastName());
+
         } catch (Exception e){
             System.out.println(e);
         }
         db.close();
     }
 
-    public int deleteUser(String email){
-        if (email == null){
+    public int deleteUser(String userId){
+        if (userId == null){
             System.out.println("No request parameter was provided");
             return 400;
         }
+
+        UUID id = UUID.fromString(userId);
+
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User whose = mapper.get(email);
+            User whose = mapper.get(id);
             if (whose == null){
                 System.out.println("User wasn't found in database");
                 db.close();
@@ -67,12 +75,24 @@ public class UserController {
         return 200;
     }
 
-    public JSONObject createUserJson(String firstName, String lastName, String email, String password){
+    public JSONObject createUserJson(UUID id, String firstName, String lastName, String email, String password, Long date,
+                                     String organization, String department, String role){
+        // Parse date to UTC
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date utcDate= new Date(date);
+        System.out.println(formatter.format(utcDate));
+
         JSONObject userJson = new JSONObject();
+        userJson.put("id", id);
         userJson.put("firstName", firstName);
         userJson.put("lastName", lastName);
         userJson.put("email", email);
         userJson.put("password", password);
+        userJson.put("memberSince", utcDate);
+        userJson.put("organization", organization);
+        userJson.put("department", department);
+        userJson.put("role", role);
 
         /**
          Only needs to be implemented when we need to get multiple users
@@ -86,31 +106,45 @@ public class UserController {
         return userJson;
     }
 
-    public JSONObject getUser(String email){
-        if (email == null){
+    public JSONObject getUser(String id){
+        return getUser(id, false);
+    }
+
+    public JSONObject getUser(String userId, boolean forLogin){
+        if (userId == null){
             System.out.println("No request parameter was provided");
             return null;
         }
+
+        UUID userUuid = UUID.fromString(userId);
+
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         User whose;
 
         Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-        whose = mapper.get(email);
+        whose = mapper.get(userUuid);
         if (whose == null) {
             System.out.println("User wasn't found in database");
             db.close();
             return null;
         }
 
-
+        UUID id =whose.getId();
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
         String mail = whose.getEmail();
         String password = whose.getPassword();
+        Long memberSince = whose.getMemberSince();
+        String organization = whose.getOrganization();
+        String department = whose.getDepartment();
+        String role = whose.getRole();
 
-        JSONObject user = createUserJson(firstName, lastName, mail, password);
+        JSONObject user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role);
         db.close();
+        if(!forLogin){
+            user.put("password", "OMITTED!");
+        }
         return user;
     }
 

@@ -92,7 +92,7 @@ public class Api {
             }
         });
 
-        // Routes for groups
+        // Routes for projects
         Spark.post(new Route("/projects") {
             @Override
             public Object handle(Request request, Response response) {
@@ -100,7 +100,7 @@ public class Api {
                 UUID id = null;
                 try {
                     id = new ProjectController().createProject(body);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return id;
@@ -123,6 +123,35 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 int status = new ProjectController().deleteProject(request.params(":id"));
+                response.status(status);
+                return response;
+            }
+        });
+
+        // Routes for organizations
+        Spark.post(new Route("/organizations") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return new OrganizationController().createOrganization(request.body());
+            }
+        });
+
+        Spark.get(new Route("/organizations/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                response.header("Content-Type", "Application/JSON");
+                JSONObject j = new OrganizationController().getOrganization(request.params(":id"));
+                if (j == null) {
+                    response.status(404);
+                }
+                return j;
+            }
+        });
+
+        Spark.delete(new Route("/organizations/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                int status = new OrganizationController().deleteOrganization(request.params(":id"));
                 response.status(status);
                 return response;
             }

@@ -24,6 +24,7 @@ JSON format in request body:
 "name":"data name",
 "description":"blablabla",
 "tags":["tag1","tag2"]}
+When a new data is created the data id will be added to response body. This you can use to get and delete the data.
 
 GET /data/<id>
 Incude data id in request
@@ -48,6 +49,7 @@ JSON format in request body:
 "organization":"MAH",
 "department":"computer",
 "role":"user"}
+When a new user is created the user id will be added to response body. This you can use to get and delete the user.
 
 GET /users/<id>
 Include user id in request
@@ -79,6 +81,7 @@ JSON format in request body:
 "employers":["employer1","employer2"],
 "departments":["department1","department2"]
 }
+When a new project is created the project id will be added to response body. This you can use to get and delete the project.
 
 GET /projects/<id>
 Include project id in request
@@ -88,6 +91,27 @@ Response will be a JSON Object.
 DELETE /projects/<id>
 Include data id in request
 Example http://localhost:9090/projects/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+
+// Requests for organizations
+POST /organizations
+JSON format in request body:
+{
+"name":"organization name",
+"description":"blablabla",
+"policy":"some policy",
+"license":"some license",
+"departments":["department1","department2"]}
+When a new organization is created the organization id will be added to response body. This you can use to get and delete the organization.
+
+GET /organizations/<id>
+Include organization id in request
+Example http://localhost:9090/organizations/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+Response will be a JSON Object.
+
+DELETE /organizations/<id>
+Include organization id in request
+Example http://localhost:9090/organizations/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+
 
 --Examples--
 

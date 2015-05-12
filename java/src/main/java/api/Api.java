@@ -1,5 +1,8 @@
 package api;
 import controllers.*;
+import exceptions.DeletionException;
+import exceptions.GetException;
+import exceptions.UserCreationException;
 import org.json.simple.JSONObject;
 import spark.*;
 import models.DatabaseConnector;
@@ -61,9 +64,12 @@ public class Api {
         Spark.post(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
-                String body = request.body();
-
-                return new UserController().createUser(body);
+                try {
+                    return new UserController().createUser(request.body());
+                } catch (UserCreationException e){
+                    response.status(400);
+                }
+                return 0;
             }
         });
 
@@ -71,19 +77,24 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject j = new UserController().getUser(request.params(":id"));
-                if (j == null) {
-                    response.status(404);
+                try {
+                    return new UserController().getUser(request.params(":id"));
+                } catch (GetException e){
+                    response.status(400);
                 }
-                return j;
+
+                return 0;
             }
         });
 
         Spark.delete(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new UserController().deleteUser(request.params(":id"));
-                response.status(status);
+                try {
+                    new UserController().deleteUser(request.params(":id"));
+                } catch (DeletionException e){
+                    response.status(400);
+                }
                 return response;
             }
         });
@@ -160,7 +171,12 @@ public class Api {
 
                 String email = request.queryParams("email");
                 String password = request.queryParams("password");
-                return new LoginController().Login(email, password);
+                try {
+                    return new LoginController().Login(email, password);
+                } catch (GetException e){
+                    response.status(400);
+                }
+                return 0;
             }
         });
 

@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.GetException;
 import org.json.simple.JSONObject;
 
 /**
@@ -9,7 +10,7 @@ import org.json.simple.JSONObject;
 public class LoginController {
 
     @SuppressWarnings("unchecked")
-    public JSONObject Login(String email, String password){
+    public JSONObject Login(String email, String password) throws GetException{
         UserController uc = new UserController();
 
         JSONObject user;

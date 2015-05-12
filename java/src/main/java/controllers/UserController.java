@@ -1,6 +1,9 @@
 package controllers;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import exceptions.DeletionException;
+import exceptions.GetException;
+import exceptions.UserCreationException;
 import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
@@ -16,16 +19,15 @@ import java.util.*;
  */
 public class UserController {
 
-    public UUID createUser(String strUser){
-        System.out.println(strUser);
+    public UUID createUser(String strUser) throws UserCreationException {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
-        UUID id = null;
+        UUID id = UUID.randomUUID();
 
-
-        try{
+        try {
             JSONObject jObj = (JSONObject) new JSONParser().parse(strUser);
+
             String firstName = (String) jObj.get("firstName");
             String lastName = (String) jObj.get("lastName");
             String email = (String) jObj.get("email");
@@ -35,45 +37,35 @@ public class UserController {
             String department = (String) jObj.get("department");
             String role = (String) jObj.get("role");
 
-            id = UUID.randomUUID();
-
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
             User user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
             mapper.save(user);
-            System.out.printf("First Name: %s\nLast Name: %s", user.getFirstName(), user.getLastName());
-
-        } catch (Exception e){
-            System.out.println(e);
+        }  catch (org.json.simple.parser.ParseException e){
+            throw new UserCreationException("Invalid input data");
         }
+
+
         db.close();
         return id;
     }
 
-    public int deleteUser(String userId){
-        if (userId == null){
-            System.out.println("No request parameter was provided");
-            return 400;
-        }
+    public void deleteUser(String userId) throws DeletionException{
 
         UUID id = UUID.fromString(userId);
 
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
-        try {
-            Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User whose = mapper.get(id);
-            if (whose == null){
-                System.out.println("User wasn't found in database");
-                db.close();
-                return 404;
-            }
-            mapper.delete(whose);
 
-        } catch (Exception e){
-            System.out.println(e);
+        Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
+        try {
+            User whose = mapper.get(id);
+
+            mapper.delete(whose);
+        } catch (IllegalArgumentException e){
+            throw new DeletionException("User wasn't found in database");
         }
+
         db.close();
-        return 200;
     }
 
     @SuppressWarnings("unchecked")
@@ -109,29 +101,23 @@ public class UserController {
         return userJson;
     }
 
-    public JSONObject getUser(String id){
+    public JSONObject getUser(String id) throws GetException{
         return getUser(id, false);
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject getUser(String userId, boolean forLogin){
-        if (userId == null){
-            System.out.println("No request parameter was provided");
-            return null;
-        }
-
-        UUID userUuid = UUID.fromString(userId);
+    public JSONObject getUser(String userId, boolean forLogin) throws GetException{
 
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         User whose;
 
         Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-        whose = mapper.get(userUuid);
-        if (whose == null) {
-            System.out.println("User wasn't found in database");
-            db.close();
-            return null;
+        try {
+            UUID userUuid = UUID.fromString(userId);
+            whose = mapper.get(userUuid);
+        } catch (IllegalArgumentException e){
+            throw new GetException("User wasn't found in database");
         }
 
         UUID id =whose.getId();
@@ -146,10 +132,13 @@ public class UserController {
         List<String> follows = whose.getFollows();
 
         JSONObject user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role, follows);
-        db.close();
+
         if(!forLogin){
             user.put("password", "OMITTED!");
         }
+
+        db.close();
+
         return user;
     }
 

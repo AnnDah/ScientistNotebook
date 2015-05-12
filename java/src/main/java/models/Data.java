@@ -10,6 +10,7 @@ import java.util.UUID;
 
 /**
  * Created by annikamagnusson on 20/04/15.
+ *
  */
 @Table(keyspace = "scinote", name = "data")
 public class Data {
@@ -46,16 +47,14 @@ public class Data {
         this.dataType = dataType;
         this.project = project;
         this.name = name;
-        this.description = description;
+        this.setDescription(description);
     }
 
-
-
-    public String getDescription(){
-        return this.description;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescription(String description){
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -145,7 +144,7 @@ public class Data {
                     Objects.equals(this.revisionHistory, that.revisionHistory) &&
                     Objects.equals(this.project, that.project) &&
                     Objects.equals(this.name, that.name) &&
-                    Objects.equals(this.description, that.description);
+                    Objects.equals(this.getDescription(), that.getDescription());
         }
         return false;
     }
@@ -153,6 +152,7 @@ public class Data {
     @Override
     public int hashCode() {
         return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name,
-                description);
+                getDescription());
     }
+
 }

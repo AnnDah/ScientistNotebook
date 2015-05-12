@@ -11,6 +11,7 @@ import java.util.UUID;
 
 /**
  * Created by annikamagnusson on 20/04/15.
+ *
  */
 @Table(keyspace = "scinote", name = "projects")
 public class Project {

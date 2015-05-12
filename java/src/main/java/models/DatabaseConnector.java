@@ -12,15 +12,14 @@ public class DatabaseConnector {
     private Session session;
     private boolean connected;
 
-    private final String dbaddress = "52.28.87.178";
-    private final int dbport = 9042;
-
 
     public DatabaseConnector(){
         connected = false;
     }
 
     public void connectDefault(){
+        String dbaddress = "52.28.87.178";
+        int dbport = 9042;
         connect(dbaddress, dbport);
     }
 

@@ -39,8 +39,8 @@ public class DataController {
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
-            for(int i=0; i < tagsArray.size(); i++){
-                tags.add(tagsArray.get(i).toString());
+            for (Object aTagsArray : tagsArray) {
+                tags.add(aTagsArray.toString());
             }
 
             int level = Integer.parseInt(strLevel);
@@ -97,6 +97,7 @@ public class DataController {
 
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject createDataJson(String content, String created, String author, int level, List<String> tags,
                                      UUID id, String dataType, String project, String name, String description,
                                      List<String> revisionHistory){

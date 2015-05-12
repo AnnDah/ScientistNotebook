@@ -1,18 +1,18 @@
 package controllers;
 
-import models.DatabaseConnector;
 import org.json.simple.JSONObject;
-import controllers.UserController;
 
 /**
  * Created by annikamagnusson on 20/04/15.
+ *
  */
 public class LoginController {
 
+    @SuppressWarnings("unchecked")
     public JSONObject Login(String email, String password){
         UserController uc = new UserController();
 
-        JSONObject user = null;
+        JSONObject user;
         user = uc.getUser(email, true);
 
         if(user != null) {

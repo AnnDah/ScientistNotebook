@@ -22,11 +22,10 @@ public class ProjectController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
-        UUID id = null;
+        UUID id = UUID.randomUUID();
 
-        JSONObject jObj = null;
         try{
-            jObj = (JSONObject) new JSONParser().parse(projectInfo);
+            JSONObject jObj = (JSONObject) new JSONParser().parse(projectInfo);
 
             String field  = (String) jObj.get("field");
             String projectAbstract = (String) jObj.get("projectAbstract");
@@ -40,48 +39,46 @@ public class ProjectController {
 
             Long created = new Date().getTime();
 
-            id = UUID.randomUUID();
-
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
-            for(int i=0; i < tagsArray.size(); i++){
-                tags.add(tagsArray.get(i).toString());
+            for (Object aTagsArray : tagsArray) {
+                tags.add(aTagsArray.toString());
             }
 
             JSONArray rolesArray = (JSONArray) jObj.get("projectRoles");
             List<String> projectRoles = new ArrayList<String>();
-            for(int i=0; i < rolesArray.size(); i++){
-                projectRoles.add(rolesArray.get(i).toString());
+            for (Object aRolesArray : rolesArray) {
+                projectRoles.add(aRolesArray.toString());
             }
 
             JSONArray fundedArray = (JSONArray) jObj.get("fundedBy");
             List<String> fundedBy = new ArrayList<String>();
-            for(int i=0; i < fundedArray.size(); i++){
-                fundedBy.add(fundedArray.get(i).toString());
+            for (Object aFundedArray : fundedArray) {
+                fundedBy.add(aFundedArray.toString());
             }
 
             JSONArray membersArray = (JSONArray) jObj.get("members");
             List<String> members = new ArrayList<String>();
-            for(int i=0; i < membersArray.size(); i++){
-                members.add(membersArray.get(i).toString());
+            for (Object aMembersArray : membersArray) {
+                members.add(aMembersArray.toString());
             }
 
             JSONArray employersArray = (JSONArray) jObj.get("employers");
             List<String> employers = new ArrayList<String>();
-            for(int i=0; i < employersArray.size(); i++){
-                employers.add(employersArray.get(i).toString());
+            for (Object anEmployersArray : employersArray) {
+                employers.add(anEmployersArray.toString());
             }
 
             JSONArray fundsArray = (JSONArray) jObj.get("funds");
             List<String> funds = new ArrayList<String>();
-            for(int i=0; i < fundsArray.size(); i++){
-                funds.add(fundsArray.get(i).toString());
+            for (Object aFundsArray : fundsArray) {
+                funds.add(aFundsArray.toString());
             }
 
             JSONArray departmentsArray = (JSONArray) jObj.get("departments");
             List<String> departments = new ArrayList<String>();
-            for(int i=0; i < departmentsArray.size(); i++){
-                departments.add(departmentsArray.get(i).toString());
+            for (Object aDepartmentsArray : departmentsArray) {
+                departments.add(aDepartmentsArray.toString());
             }
 
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
@@ -165,6 +162,7 @@ public class ProjectController {
 
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject createProjectJson(UUID id, String field, List<String> tags, String projectAbstract,
                                         List<String> projectRoles, String createdBy, String name, String status,
                                         boolean isPrivate, Long created, List<String> fundedBy, List<String> members,

@@ -76,8 +76,9 @@ public class UserController {
         return 200;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject createUserJson(UUID id, String firstName, String lastName, String email, String password, Long date,
-                                     String organization, String department, String role){
+                                     String organization, String department, String role, List<String> follows){
         // Parse date to UTC
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -94,6 +95,7 @@ public class UserController {
         userJson.put("organization", organization);
         userJson.put("department", department);
         userJson.put("role", role);
+        userJson.put("follows", follows);
 
         /**
          Only needs to be implemented when we need to get multiple users
@@ -111,6 +113,7 @@ public class UserController {
         return getUser(id, false);
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject getUser(String userId, boolean forLogin){
         if (userId == null){
             System.out.println("No request parameter was provided");
@@ -140,8 +143,9 @@ public class UserController {
         String organization = whose.getOrganization();
         String department = whose.getDepartment();
         String role = whose.getRole();
+        List<String> follows = whose.getFollows();
 
-        JSONObject user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role);
+        JSONObject user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role, follows);
         db.close();
         if(!forLogin){
             user.put("password", "OMITTED!");

@@ -73,8 +73,10 @@ public class OrganizationController {
         return 200;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject createOrgJson(UUID id, String name, String description, String policy, String license,
                                     List<String> departments){
+
 
         JSONObject orgJson = new JSONObject();
         orgJson.put("id", id);

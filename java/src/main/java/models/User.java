@@ -2,9 +2,9 @@ package models;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import java.util.UUID;
-import java.util.Date;
-import java.util.Objects;
+import com.datastax.driver.mapping.annotations.Column;
+
+import java.util.*;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -15,13 +15,17 @@ public class User {
     @PartitionKey
     private UUID id;
     private String email;
+    @Column(name="first_name")
     private String firstName;
+    @Column(name="last_name")
     private String lastName;
     private String password;
+    @Column(name="member_since")
     private Long memberSince;
     private String organization;
     private String department;
     private String role;
+    private List<String> follows = new ArrayList<String>();
 
 
     public User(){
@@ -40,6 +44,14 @@ public class User {
         this.department = department;
         this.role = role;
 
+    }
+
+    public List<String> getFollows(){
+        return this.follows;
+    }
+
+    public void setFollows(List<String> follows){
+        this.follows = follows;
     }
 
     public UUID getId(){
@@ -126,13 +138,14 @@ public class User {
                     Objects.equals(this.organization, that.organization) &&
                     Objects.equals(this.department, that.department) &&
                     Objects.equals(this.role, that.role) &&
-                    Objects.equals(this.id, that.id);
+                    Objects.equals(this.id, that.id) &&
+                    Objects.equals(this.follows, that.follows);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, email, memberSince, organization, department, role, id);
+        return Objects.hash(firstName, lastName, email, memberSince, organization, department, role, id, follows);
     }
 }

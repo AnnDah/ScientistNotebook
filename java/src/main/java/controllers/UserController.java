@@ -17,11 +17,12 @@ import java.util.*;
  */
 public class UserController {
 
-    public void createUser(String strUser){
+    public UUID createUser(String strUser){
         System.out.println(strUser);
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
+        UUID id = null;
 
 
         try{
@@ -35,10 +36,10 @@ public class UserController {
             String department = (String) jObj.get("department");
             String role = (String) jObj.get("role");
 
-            UUID id = UUID.randomUUID();
+            id = UUID.randomUUID();
 
             Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-            User user = new User(id, firstName, lastName, email, password, memberSince, organization, department, role);
+            User user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
             mapper.save(user);
             System.out.printf("First Name: %s\nLast Name: %s", user.getFirstName(), user.getLastName());
 
@@ -46,6 +47,7 @@ public class UserController {
             System.out.println(e);
         }
         db.close();
+        return id;
     }
 
     public int deleteUser(String userId){

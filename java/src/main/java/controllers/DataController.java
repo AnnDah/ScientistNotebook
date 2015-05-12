@@ -18,11 +18,11 @@ import models.Data;
  */
 public class DataController {
 
-    public void createData(String strData){
+    public UUID createData(String strData){
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
-        UUID id = UUID.randomUUID();
+        UUID id = null;
 
         JSONObject jObj;
         try{
@@ -31,17 +31,11 @@ public class DataController {
             String content  = (String) jObj.get("content");
             String created = (String) jObj.get("created");
             String author = (String) jObj.get("author");
-            String level = (String) jObj.get("visibilty");
+            String strLevel = (String) jObj.get("level");
             String dataType = (String) jObj.get("dataType");
             String project = (String) jObj.get("project");
             String name = (String) jObj.get("name");
             String description = (String) jObj.get("description");
-
-            JSONArray revisionArray = (JSONArray) jObj.get("tags");
-            List<String> revisionHistory = new ArrayList<String>();
-            for(int i=0; i < revisionArray.size(); i++){
-                revisionHistory.add(revisionArray.get(i).toString());
-            }
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
@@ -49,20 +43,28 @@ public class DataController {
                 tags.add(tagsArray.get(i).toString());
             }
 
+            int level = Integer.parseInt(strLevel);
+
+            id  = UUID.randomUUID();
+
             Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
-            Data data = new Data(content, created, author, level, tags, id, dataType, revisionHistory, project, name, description);
+            Data data = new Data(content, created, author, level, tags, id, dataType, project, name, description);
             mapper.save(data);
         } catch (Exception e){
             System.out.println(e);
         }
         db.close();
+
+        return id;
     }
 
-    public JSONObject getData(String dataId){
-        if (dataId == null){
+    public JSONObject getData(String strId){
+        if (strId == null){
             System.out.println("No request parameter was provided");
             return null;
         }
+
+        UUID dataId = UUID.fromString(strId);
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         Data data;
@@ -75,28 +77,42 @@ public class DataController {
             return null;
         }
 
+        //content, created, author, level, tags, id, dataType, project, name, description, revision_history
         String author = data.getAuthor();
         String content = data.getContent();
         String created = data.getCreated();
-        String level = data.getLevel();
+        int level = data.getLevel();
         UUID id = data.getId();
         List<String> tags = data.getTags();
+        String dataType = data.getDataType();
+        String project = data.getProject();
+        String name = data.getName();
+        String description = data.getDescription();
+        List<String> revisionHistory = data.getRevisionHistory();
 
-        JSONObject dataJson = createDataJson(content, created, author, level, tags, id);
+        JSONObject dataJson = createDataJson(content, created, author, level, tags, id, dataType, project, name,
+                description, revisionHistory);
         db.close();
         return dataJson;
 
     }
 
-    public JSONObject createDataJson(String content, String created, String author, String visibility, List<String> tags, UUID id){
+    public JSONObject createDataJson(String content, String created, String author, int level, List<String> tags,
+                                     UUID id, String dataType, String project, String name, String description,
+                                     List<String> revisionHistory){
         JSONObject dataJson = new JSONObject();
         try {
             dataJson.put("content", content);
             dataJson.put("created", created);
             dataJson.put("author", author);
-            dataJson.put("visibility", visibility);
+            dataJson.put("visibility", level);
             dataJson.put("tags", tags);
             dataJson.put("id", id);
+            dataJson.put("dataType", dataType);
+            dataJson.put("project", project);
+            dataJson.put("name", name);
+            dataJson.put("description", description);
+            dataJson.put("revisionHistory", revisionHistory);
         } catch (Exception e){
             System.out.println(e);
         }

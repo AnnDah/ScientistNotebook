@@ -6,8 +6,8 @@ import models.DatabaseConnector;
 import java.util.TimeZone;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Calendar;
 import java.text.DateFormat;
+import java.util.UUID;
 
 /**
  * Created by annikamagnusson on 17/04/15.
@@ -40,8 +40,8 @@ public class Api {
         Spark.post(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
-                new DataController().createData(request.body());
-                return "data posted";
+
+                return new DataController().createData(request.body());
             }
         });
 
@@ -66,11 +66,8 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 String body = request.body();
-                System.out.println(body);
 
-                new UserController().createUser(body);
-
-                return "User created";
+                return new UserController().createUser(body);
             }
         });
 
@@ -100,12 +97,13 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 String body = request.body();
+                UUID id = null;
                 try {
-                    new ProjectController().createProject(body);
+                    id = new ProjectController().createProject(body);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                return "Project created";
+                return id;
             }
         });
 

@@ -19,25 +19,29 @@ import java.util.UUID;
  */
 public class ProjectController {
 
-    public void createProject(String projectInfo) throws Exception{
+    public UUID createProject(String projectInfo) throws Exception{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
-        UUID id = UUID.randomUUID();
+        UUID id = null;
 
         JSONObject jObj = null;
         try{
             jObj = (JSONObject) new JSONParser().parse(projectInfo);
 
             String field  = (String) jObj.get("field");
-            String sharedLevel = (String) jObj.get("sharedLevel");
             String projectAbstract = (String) jObj.get("projectAbstract");
             String createdBy = (String) jObj.get("createdBy");
             String name = (String) jObj.get("name");
             String status = (String) jObj.get("status");
             String owner = (String) jObj.get("owner");
-            boolean isPrivate = true;
+            String strPrivate = (String) jObj.get("isPrivate");
+            boolean isPrivate = false;
+            if("true".equals(strPrivate)) isPrivate = true;
+
             Long created = new Date().getTime();
+
+            id = UUID.randomUUID();
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
@@ -82,13 +86,15 @@ public class ProjectController {
             }
 
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-            Project project = new Project(id, field, tags, sharedLevel, projectAbstract, projectRoles, createdBy, name,
+            Project project = new Project(id, field, tags, projectAbstract, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
         } catch (Exception e){
             throw e;
         }
         db.close();
+
+        return id;
     }
 
     public JSONObject getProject(String projectId){
@@ -113,7 +119,6 @@ public class ProjectController {
         UUID id = project.getId();
         String field = project.getField();
         List<String> tags = project.getTags();
-        String sharedLevel = project.getSharedLevel();
         String projectAbstract = project.getProjectAbstract();
         List<String> projectRoles = project.getProjectRoles();
         String createdBy = project.getCreatedBy();
@@ -129,7 +134,7 @@ public class ProjectController {
         List<String> followers = project.getFollowers();
         String owner = project.getOwner();
 
-        JSONObject projectJson = createProjectJson(id, field, tags, sharedLevel, projectAbstract, projectRoles, createdBy,
+        JSONObject projectJson = createProjectJson(id, field, tags, projectAbstract, projectRoles, createdBy,
                 name, status, isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
         db.close();
         return projectJson;
@@ -161,15 +166,14 @@ public class ProjectController {
 
     }
 
-    public JSONObject createProjectJson(UUID id, String field, List<String> tags, String sharedLevel,
-                                        String projectAbstract, List<String> projectRoles, String createdBy, String name,
-                                        String status, boolean isPrivate, Long created, List<String> fundedBy,
-                                        List<String> members, List<String> employers, List<String> funds,
-                                        List<String> departments, String owner, List<String> followers){
+    public JSONObject createProjectJson(UUID id, String field, List<String> tags, String projectAbstract,
+                                        List<String> projectRoles, String createdBy, String name, String status,
+                                        boolean isPrivate, Long created, List<String> fundedBy, List<String> members,
+                                        List<String> employers, List<String> funds, List<String> departments,
+                                        String owner, List<String> followers){
         JSONObject projectJson = new JSONObject();
         projectJson.put("id", id);
         projectJson.put("field", field);
-        projectJson.put("sharedLevel", sharedLevel);
         projectJson.put("projectAbstract", projectAbstract);
         projectJson.put("createdBy", createdBy);
         projectJson.put("name", name);

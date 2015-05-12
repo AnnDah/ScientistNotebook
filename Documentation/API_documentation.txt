@@ -14,7 +14,16 @@ GET /login?email=email@mail.com&password=test
 // Requests for data
 POST /data
 JSON format in request body: 
-{"content":"some data","created":"20150209","author":"Annika Magnusson","visibility":"1","tags":["tag1","tag2"]}
+{
+"content":"some data",
+"created":"20150209",
+"author":"Annika Magnusson",
+"level":"101",
+"dataType":"doc",
+"project":"some project",
+"name":"data name",
+"description":"blablabla",
+"tags":["tag1","tag2"]}
 
 GET /data/<id>
 Incude data id in request
@@ -31,7 +40,14 @@ Not implemented yet
 // Requests for users
 POST /users
 JSON format in request body: 
-{"firstName":"Annika","lastName":"Magnusson","email":"mail@gmail.com","password":"1234","organization":"MAH","department":"computer","role":"user"}
+{
+"firstName":"Annika",
+"lastName":"Magnusson",
+"email":"mail@gmail.com",
+"password":"1234",
+"organization":"MAH",
+"department":"computer",
+"role":"user"}
 
 GET /users/<id>
 Include user id in request
@@ -50,7 +66,6 @@ JSON format in request body:
 {
 "field":"some field",
 "createdBy":"Annika Magnusson",
-"sharedLevel":"1",
 "name":"project1",
 "status":"ongoing",
 "owner":"kristoffer",

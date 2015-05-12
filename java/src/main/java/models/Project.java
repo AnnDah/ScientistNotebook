@@ -2,6 +2,7 @@ package models;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.Column;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +17,24 @@ public class Project {
     @PartitionKey
     private UUID id;
     private String field;
-    private String sharedLevel;
+    @Column(name="project_abstract")
     private String projectAbstract;
+    @Column(name="created_by")
     private String createdBy;
     private String name;
     private String status;
     private String owner;
     private List<String> tags = new ArrayList<String>();
+    @Column(name="project_roles")
     private List<String> projectRoles = new ArrayList<String>();
+    @Column(name="funded_by")
     private List<String> fundedBy = new ArrayList<String>();
     private List<String> members = new ArrayList<String>();
     private List<String> employers = new ArrayList<String>();
     private List<String> funds = new ArrayList<String>();
     private List<String> departments = new ArrayList<String>();
     private List<String> followers = new ArrayList<String>();
+    @Column(name="is_private")
     private boolean isPrivate;
     private Long created;
 
@@ -37,14 +42,13 @@ public class Project {
 
     }
 
-    public Project(UUID id, String field, List<String> tags, String sharedLevel, String projectAbstract,
-                   List<String> projectRoles, String createdBy, String name, String status, boolean isPrivate,
-                   Long created, List<String> fundedBy, List<String> members, List<String> employers,
-                   List<String> funds, List<String> departments, String owner){
+    public Project(UUID id, String field, List<String> tags, String projectAbstract, List<String> projectRoles,
+                   String createdBy, String name, String status, boolean isPrivate, Long created, List<String> fundedBy,
+                   List<String> members, List<String> employers, List<String> funds, List<String> departments,
+                   String owner){
         this.id = id;
         this.field = field;
         this.tags = tags;
-        this.sharedLevel = sharedLevel;
         this.projectAbstract = projectAbstract;
         this.projectRoles = projectRoles;
         this.createdBy = createdBy;
@@ -157,14 +161,6 @@ public class Project {
         this.tags = tags;
     }
 
-    public String getSharedLevel(){
-        return this.sharedLevel;
-    }
-
-    public void setSharedLevel(String sharedLevel){
-        this.sharedLevel = sharedLevel;
-    }
-
     public String getProjectAbstract(){
         return this.projectAbstract;
     }
@@ -211,7 +207,6 @@ public class Project {
             Project that = (Project) other;
             return Objects.equals(this.id, that.id) &&
                     Objects.equals(this.field, that.field) &&
-                    Objects.equals(this.sharedLevel, that.sharedLevel) &&
                     Objects.equals(this.projectAbstract, that.projectAbstract) &&
                     Objects.equals(this.projectRoles, that.projectRoles) &&
                     Objects.equals(this.createdBy, that.createdBy) &&
@@ -233,7 +228,7 @@ public class Project {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, field, sharedLevel, projectAbstract, projectRoles, createdBy, name, status, tags,
+        return Objects.hash(id, field, projectAbstract, projectRoles, createdBy, name, status, tags,
                 isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
     }
 }

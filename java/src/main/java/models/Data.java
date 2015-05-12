@@ -1,6 +1,7 @@
 package models;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.Column;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +18,25 @@ public class Data {
     private String content;
     private String created;
     private String author;
-    private String level;
-    private List<String> tags = new ArrayList<String>();
-    private String dataType;
-    private List<String> revisionHistory;
     private String project;
     private String name;
     private String description;
+
+    @Column(name="data_type")
+    private String dataType;
+    private int level;
+    private List<String> tags = new ArrayList<String>();
+    @Column(name="revision_history")
+    private List<String> revisionHistory = new ArrayList<String>();
+
 
 
     public Data(){
 
     }
 
-    public Data(String content, String created, String author, String level, List<String> tags, UUID id, String dataType,
-                List<String> revisionHistory, String project, String name, String description){
+    public Data(String content, String created, String author, int level, List<String> tags, UUID id, String dataType,
+                String project, String name, String description){
         this.content = content;
         this.created = created;
         this.author = author;
@@ -39,11 +44,12 @@ public class Data {
         this.tags = tags;
         this.id = id;
         this.dataType = dataType;
-        this.revisionHistory = revisionHistory;
         this.project = project;
         this.name = name;
         this.description = description;
     }
+
+
 
     public String getDescription(){
         return this.description;
@@ -103,9 +109,9 @@ public class Data {
         this.author = author;
     }
 
-    public String getLevel() { return this.level; }
+    public int getLevel() { return this.level; }
 
-    public void setLevel(String level){
+    public void setLevel(int level){
         this.level = level;
     }
 
@@ -146,6 +152,7 @@ public class Data {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name, description);
+        return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name,
+                description);
     }
 }

@@ -48,10 +48,12 @@ public class UserController {
             throw new UserCreationException("Failed to hash password");
         } catch (java.io.IOException e){
             throw new UserCreationException("Failed to hash password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
         }
 
-
-        db.close();
         return id;
     }
 

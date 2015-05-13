@@ -14,7 +14,6 @@ import java.util.*;
 public class User {
     @PartitionKey
     private UUID id;
-    @PartitionKey
     private String email;
     @Column(name="first_name")
     private String firstName;

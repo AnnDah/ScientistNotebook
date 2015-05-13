@@ -180,6 +180,15 @@ public class Api {
             }
         });
 
+        //Route for testing
+        Spark.post(new Route("test") {
+            @Override
+            public Object handle(Request request, Response response) {
+                System.out.println("Json in body: " + request.body());
+                return request.body();
+            }
+        });
+
 
     }
 }

@@ -1,4 +1,6 @@
 package controllers;
+import Utility.PasswordUtility;
+import com.datastax.driver.core.*;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import exceptions.DeletionException;
@@ -31,7 +33,7 @@ public class UserController {
             String firstName = (String) jObj.get("firstName");
             String lastName = (String) jObj.get("lastName");
             String email = (String) jObj.get("email");
-            String password = (String) jObj.get("password");
+            String password = PasswordUtility.generateHash((String) jObj.get("password"));
             Long memberSince = new Date().getTime();
             String organization = (String) jObj.get("organization");
             String department = (String) jObj.get("department");
@@ -42,6 +44,10 @@ public class UserController {
             mapper.save(user);
         }  catch (org.json.simple.parser.ParseException e){
             throw new UserCreationException("Invalid input data");
+        } catch (java.security.NoSuchAlgorithmException e){
+            throw new UserCreationException("Failed to hash password");
+        } catch (java.io.IOException e){
+            throw new UserCreationException("Failed to hash password");
         }
 
 
@@ -101,12 +107,8 @@ public class UserController {
         return userJson;
     }
 
-    public JSONObject getUser(String id) throws GetException{
-        return getUser(id, false);
-    }
-
     @SuppressWarnings("unchecked")
-    public JSONObject getUser(String userId, boolean forLogin) throws GetException{
+    public JSONObject getUser(String userId) throws GetException{
 
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
@@ -120,26 +122,55 @@ public class UserController {
             throw new GetException("User wasn't found in database");
         }
 
-        UUID id =whose.getId();
+        UUID id = whose.getId();
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
         String mail = whose.getEmail();
-        String password = whose.getPassword();
         Long memberSince = whose.getMemberSince();
         String organization = whose.getOrganization();
         String department = whose.getDepartment();
         String role = whose.getRole();
         List<String> follows = whose.getFollows();
 
-        JSONObject user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role, follows);
-
-        if(!forLogin){
-            user.put("password", "OMITTED!");
-        }
+        JSONObject user = createUserJson(id, firstName, lastName, mail, "OMITTED!", memberSince, organization, department, role, follows);
 
         db.close();
 
         return user;
     }
 
+    public JSONObject getUserLogin(String inputEmail) throws GetException {
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+
+        Statement statement = new SimpleStatement(String.format("SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
+
+        JSONObject user = null;
+
+        try{
+            ResultSet results = db.getSession().execute(statement);
+            Row row = results.one();
+            if (row != null){
+                UUID id = row.getUUID("id");
+                String firstName = row.getString("first_name");
+                String lastName = row.getString("last_name");
+                String mail = row.getString("email");
+                String password = row.getString("password");
+                Long memberSince = row.getLong("member_since");
+                String organization = row.getString("organization");
+                String department = row.getString("department");
+                String role = row.getString("role");
+                List<String> follows = row.getList("follows", String.class);
+
+                System.out.println(String.format("User: %s %s is logging in...", firstName, lastName));
+                user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role, follows);
+            }
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+            throw new GetException("User wasn't found in database");
+        }
+
+        db.close();
+
+        return user;
+    }
 }

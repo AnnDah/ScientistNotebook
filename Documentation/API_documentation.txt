@@ -9,7 +9,20 @@ Scientist Notebook API make use of the standard HTTP Status Codes.
 All requests are sent to: http://localhost:9090
 
 //Requests for login
-GET /login?email=email@mail.com&password=test
+POST /login
+JSON format in request body: 
+{
+"email":"mail@gmail.com",
+"password":"1234"}
+JSON format in response: 
+{
+"firstName":"Annika",
+"lastName":"Magnusson",
+"email":"mail@gmail.com",
+"password":"1234",
+"organization":"MAH",
+"department":"computer",
+"role":"user"}
 
 // Requests for data
 POST /data

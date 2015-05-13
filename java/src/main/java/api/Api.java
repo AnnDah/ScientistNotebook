@@ -66,7 +66,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try {
                     return new UserController().createUser(request.body());
-                } catch (UserCreationException e){
+                } catch (UserCreationException e) {
                     response.status(400);
                 }
                 return 0;
@@ -79,7 +79,7 @@ public class Api {
                 response.header("Content-Type", "Application/JSON");
                 try {
                     return new UserController().getUser(request.params(":id"));
-                } catch (GetException e){
+                } catch (GetException e) {
                     response.status(400);
                 }
 
@@ -92,7 +92,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try {
                     new UserController().deleteUser(request.params(":id"));
-                } catch (DeletionException e){
+                } catch (DeletionException e) {
                     response.status(400);
                 }
                 return response;
@@ -165,18 +165,17 @@ public class Api {
         });
 
         // Routes for login
-        Spark.get(new Route("/login") {
+        Spark.post(new Route("/login") {
             @Override
             public Object handle(Request request, Response response) {
-
-                String email = request.queryParams("email");
-                String password = request.queryParams("password");
+                String body = request.body();
+                JSONObject user = null;
                 try {
-                    return new LoginController().Login(email, password);
-                } catch (GetException e){
-                    response.status(400);
+                    user = new LoginController().login(body);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                return 0;
+                return user;
             }
         });
 

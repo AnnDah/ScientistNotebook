@@ -3,8 +3,7 @@ package controllers;
 import Utility.PasswordUtility;
 import exceptions.GetException;
 import org.json.simple.JSONObject;
-
-import java.util.concurrent.ExecutionException;
+import org.json.simple.parser.JSONParser;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -13,13 +12,15 @@ import java.util.concurrent.ExecutionException;
 public class LoginController {
 
     @SuppressWarnings("unchecked")
-    public JSONObject Login(String email, String password) throws GetException{
+    public JSONObject login(String strLogin) throws GetException{
         UserController uc = new UserController();
 
-
-        JSONObject user;
-        user = uc.getUserLogin(email);
         try{
+            JSONObject jObj = (JSONObject) new JSONParser().parse(strLogin);
+            String email = (String) jObj.get("email");
+            String password = (String) jObj.get("password");
+            JSONObject user = uc.getUserLogin(email);
+
             if(user != null) {
                 if (user.get("password").toString().equals(PasswordUtility.generateHash(password))) {
                     user.put("password", "OMITTED!");

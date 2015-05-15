@@ -17,7 +17,7 @@ public class Data {
     @PartitionKey
     private UUID id;
     private String content;
-    private String created;
+    private Long created;
     private String author;
     private String project;
     private String name;
@@ -36,7 +36,7 @@ public class Data {
 
     }
 
-    public Data(String content, String created, String author, int level, List<String> tags, UUID id, String dataType,
+    public Data(String content, Long created, String author, int level, List<String> tags, UUID id, String dataType,
                 String project, String name, String description){
         this.content = content;
         this.created = created;
@@ -114,11 +114,11 @@ public class Data {
         this.level = level;
     }
 
-    public String getCreated(){
+    public Long getCreated(){
         return this.created;
     }
 
-    public void setCreated(String created){
+    public void setCreated(Long created){
         this.created = created;
     }
 

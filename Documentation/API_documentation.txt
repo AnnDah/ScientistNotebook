@@ -29,7 +29,6 @@ POST /data
 JSON format in request body: 
 {
 "content":"some data",
-"created":"20150209",
 "author":"Annika Magnusson",
 "level":"101",
 "dataType":"doc",

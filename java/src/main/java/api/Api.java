@@ -29,7 +29,7 @@ public class Api {
                 response.header("Content-Type", "Application/JSON");
                 try {
                     return new DataController().getData(request.params(":id"));
-                } catch (GetException e){
+                } catch (GetException e) {
                     response.status(404);
                 }
                 return 0;
@@ -39,9 +39,9 @@ public class Api {
         Spark.post(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
-                try{
-                   return new DataController().createData(request.body());
-                } catch (CreationException e){
+                try {
+                    return new DataController().createData(request.body());
+                } catch (CreationException e) {
                     response.status(400);
                 }
 
@@ -205,6 +205,19 @@ public class Api {
             public Object handle(Request request, Response response) {
                 System.out.println("Json in body: " + request.body());
                 return request.body();
+            }
+        });
+
+        Spark.post(new Route("/search") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try {
+                    new DataController().searchDataTags2(request.body());
+                }catch (GetException e){
+                    response.status(400);
+                }
+
+                return 0;
             }
         });
 

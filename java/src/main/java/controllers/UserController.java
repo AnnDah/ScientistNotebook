@@ -150,7 +150,8 @@ public class UserController {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
-        Statement statement = new SimpleStatement(String.format("SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
+        Statement statement = new SimpleStatement(String.format(
+                "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
 
         JSONObject user = null;
 

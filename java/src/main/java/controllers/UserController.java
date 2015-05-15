@@ -59,13 +59,12 @@ public class UserController {
 
     public void deleteUser(String userId) throws DeletionException{
 
-        UUID id = UUID.fromString(userId);
-
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
         Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
         try {
+            UUID id = UUID.fromString(userId);
             User whose = mapper.get(id);
 
             mapper.delete(whose);

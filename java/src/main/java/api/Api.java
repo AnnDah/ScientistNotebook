@@ -28,27 +28,36 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject json = new DataController().getData(request.params(":id"));
-                if (json == null) {
+                try {
+                    return new DataController().getData(request.params(":id"));
+                } catch (GetException e){
                     response.status(404);
                 }
-                return json;
+                return 0;
             }
         });
 
         Spark.post(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
+                try{
+                   return new DataController().createData(request.body());
+                } catch (CreationException e){
+                    response.status(400);
+                }
 
-                return new DataController().createData(request.body());
+                return 0;
             }
         });
 
         Spark.delete(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new DataController().deleteData(request.params(":id"));
-                response.status(status);
+                try {
+                    new DataController().deleteData(request.params(":id"));
+                } catch (DeletionException e) {
+                    response.status(400);
+                }
                 return response;
             }
         });

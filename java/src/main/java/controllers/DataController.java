@@ -2,6 +2,9 @@ package controllers;
 
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import exceptions.CreationException;
+import exceptions.DeletionException;
+import exceptions.GetException;
 import models.DatabaseConnector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,11 +21,11 @@ import models.Data;
  */
 public class DataController {
 
-    public UUID createData(String strData){
+    public UUID createData(String strData) throws CreationException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
-        UUID id = null;
+        UUID id = UUID.randomUUID();
 
         JSONObject jObj;
         try{
@@ -45,36 +48,29 @@ public class DataController {
 
             int level = Integer.parseInt(strLevel);
 
-            id  = UUID.randomUUID();
-
             Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
             Data data = new Data(content, created, author, level, tags, id, dataType, project, name, description);
             mapper.save(data);
-        } catch (Exception e){
-            System.out.println(e);
+        } catch (org.json.simple.parser.ParseException e){
+            throw new CreationException("Invalid input data");
         }
         db.close();
 
         return id;
     }
 
-    public JSONObject getData(String strId){
-        if (strId == null){
-            System.out.println("No request parameter was provided");
-            return null;
-        }
+    public JSONObject getData(String strId) throws GetException{
 
-        UUID dataId = UUID.fromString(strId);
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         Data data;
 
         Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
-        data = mapper.get(dataId);
-        if (data == null) {
-            System.out.println("Data wasn't found in database");
-            db.close();
-            return null;
+        try {
+            UUID dataId = UUID.fromString(strId);
+            data = mapper.get(dataId);
+        } catch (IllegalArgumentException e){
+            throw new GetException("Data wasn't found in database");
         }
 
         //content, created, author, level, tags, id, dataType, project, name, description, revision_history
@@ -92,6 +88,7 @@ public class DataController {
 
         JSONObject dataJson = createDataJson(content, created, author, level, tags, id, dataType, project, name,
                 description, revisionHistory);
+
         db.close();
         return dataJson;
 
@@ -120,27 +117,17 @@ public class DataController {
         return dataJson;
     }
 
-    public int deleteData(String id){
-        if (id == null){
-            System.out.println("No request parameter was provided");
-            return 400;
-        }
+    public void deleteData(String id) throws DeletionException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
             Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
             Data toDelete = mapper.get(id);
-            if (toDelete == null){
-                System.out.println("Data wasn't found in database");
-                db.close();
-                return 404;
-            }
             mapper.delete(toDelete);
 
-        } catch (Exception e){
-            System.out.println(e);
+        } catch (IllegalArgumentException e){
+            throw new DeletionException("Data wasn't found in database");
         }
         db.close();
-        return 200;
     }
 }

@@ -6,7 +6,6 @@ import exceptions.CreationException;
 import org.json.simple.JSONObject;
 import spark.*;
 import models.DatabaseConnector;
-import java.util.UUID;
 
 /**
  * Created by annikamagnusson on 17/04/15.
@@ -113,13 +112,12 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 String body = request.body();
-                UUID id = null;
                 try {
-                    id = new ProjectController().createProject(body);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    return new ProjectController().createProject(body);
+                } catch (CreationException e) {
+                    response.status(400);
                 }
-                return id;
+                return 0;
             }
         });
 
@@ -127,20 +125,24 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject j = new ProjectController().getProject(request.params(":id"));
-                if (j == null) {
-                    response.status(404);
+                try {
+                    return new ProjectController().getProject(request.params(":id"));
+                } catch (GetException e) {
+                    response.status(400);
                 }
-                return j;
+                return 0;
             }
         });
 
         Spark.delete(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new ProjectController().deleteProject(request.params(":id"));
-                response.status(status);
-                return response;
+                try {
+                    new ProjectController().deleteProject(request.params(":id"));
+                } catch (DeletionException e) {
+                    response.status(400);
+                }
+                return 0;
             }
         });
 

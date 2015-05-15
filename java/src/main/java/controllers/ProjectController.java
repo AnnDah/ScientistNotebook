@@ -2,11 +2,16 @@ package controllers;
 
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import exceptions.CreationException;
+import exceptions.DeletionException;
+import exceptions.GetException;
 import models.DatabaseConnector;
 import models.Project;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +23,7 @@ import java.util.UUID;
  */
 public class ProjectController {
 
-    public UUID createProject(String projectInfo) throws Exception{
+    public UUID createProject(String projectInfo) throws CreationException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         //Create an unique identifier
@@ -85,32 +90,27 @@ public class ProjectController {
             Project project = new Project(id, field, tags, projectAbstract, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
-        } catch (Exception e){
-            throw e;
+        } catch (ParseException e){
+            throw new CreationException("Invalid input data");
         }
         db.close();
 
         return id;
     }
 
-    public JSONObject getProject(String projectId){
-        if (projectId == null){
-            System.out.println("No request parameter was provided");
-            return null;
-        }
-        UUID projectUuid = UUID.fromString(projectId);
+    public JSONObject getProject(String projectId) throws GetException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         Project project;
 
         Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-        project = mapper.get(projectUuid);
-        if (project == null) {
-            System.out.println("Project wasn't found in database");
-            db.close();
-            return null;
-        }
 
+        try {
+            UUID projectUuid = UUID.fromString(projectId);
+            project = mapper.get(projectUuid);
+        } catch (IllegalArgumentException e){
+            throw new GetException("Project wasn't found in database");
+        }
 
         UUID id = project.getId();
         String field = project.getField();
@@ -136,29 +136,19 @@ public class ProjectController {
         return projectJson;
     }
 
-    public int deleteProject(String projectId){
-        if (projectId == null){
-            System.out.println("No request parameter was provided");
-            return 400;
-        }
-        UUID id = UUID.fromString(projectId);
+    public void deleteProject(String projectId) throws DeletionException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
+            UUID id = UUID.fromString(projectId);
             Project toDelete = mapper.get(id);
-            if (toDelete == null){
-                System.out.println("Project wasn't found in database");
-                db.close();
-                return 404;
-            }
             mapper.delete(toDelete);
 
-        } catch (Exception e){
-            System.out.println(e);
+        } catch (IllegalArgumentException e){
+            throw new DeletionException("Project wasn't found in database");
         }
         db.close();
-        return 200;
 
     }
 

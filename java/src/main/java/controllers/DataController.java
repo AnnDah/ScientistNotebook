@@ -60,34 +60,42 @@ public class DataController {
         return id;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject getData(String strId) throws GetException{
 
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
-        Data data;
+        Data whose;
 
         Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
         try {
             UUID dataId = UUID.fromString(strId);
-            data = mapper.get(dataId);
+            whose = mapper.get(dataId);
         } catch (IllegalArgumentException e){
             throw new GetException("Data wasn't found in database");
         } finally {
             db.close();
         }
 
-        return createDataJson(
-                data.getContent(),
-                data.getCreated(),
-                data.getAuthor(),
-                data.getLevel(),
-                data.getTags(),
-                data.getId(),
-                data.getDataType(),
-                data.getProject(),
-                data.getName(),
-                data.getDescription(),
-                data.getRevisionHistory());
+        JSONObject data = createDataJson(
+                whose.getContent(),
+                whose.getCreated(),
+                whose.getAuthor(),
+                whose.getLevel(),
+                whose.getTags(),
+                whose.getId(),
+                whose.getDataType(),
+                whose.getProject(),
+                whose.getName(),
+                whose.getDescription(),
+                whose.getRevisionHistory());
+
+        JSONArray ja = new JSONArray();
+        ja.add(data);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("data", ja);
+
+        return mainObj;
 
     }
 

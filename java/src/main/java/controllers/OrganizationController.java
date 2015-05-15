@@ -93,6 +93,7 @@ public class OrganizationController {
         return orgJson;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject getOrganization(String orgId) throws GetException{
 
         DatabaseConnector db = new DatabaseConnector();
@@ -109,12 +110,20 @@ public class OrganizationController {
             db.close();
         }
 
-        return createOrgJson(
+        JSONObject organization = createOrgJson(
                 whose.getId(),
                 whose.getName(),
                 whose.getDescription(),
                 whose.getPolicy(),
                 whose.getLicense(),
                 whose.getDepartments());
+
+
+        JSONArray ja = new JSONArray();
+        ja.add(organization);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("organizations", ja);
+
+        return mainObj;
     }
 }

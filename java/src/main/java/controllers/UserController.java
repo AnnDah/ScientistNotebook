@@ -10,6 +10,7 @@ import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONArray;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -135,9 +136,14 @@ public class UserController {
                 whose.getRole(),
                 whose.getFollows());
 
+        JSONArray ja = new JSONArray();
+        ja.add(user);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("users", ja);
+
         db.close();
 
-        return user;
+        return mainObj;
     }
 
     public JSONObject getUserLogin(String inputEmail) throws GetException {

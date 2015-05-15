@@ -99,40 +99,48 @@ public class ProjectController {
         return id;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject getProject(String projectId) throws GetException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
-        Project project;
+        Project whose;
 
         Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
 
         try {
             UUID projectUuid = UUID.fromString(projectId);
-            project = mapper.get(projectUuid);
+            whose = mapper.get(projectUuid);
         } catch (IllegalArgumentException e){
             throw new GetException("Project wasn't found in database");
         } finally {
             db.close();
         }
 
-        return createProjectJson(
-                project.getId(),
-                project.getField(),
-                project.getTags(),
-                project.getProjectAbstract(),
-                project.getProjectRoles(),
-                project.getCreatedBy(),
-                project.getName(),
-                project.getStatus(),
-                project.getIsPrivate(),
-                project.getCreated(),
-                project.getFundedBy(),
-                project.getMembers(),
-                project.getEmployers(),
-                project.getFunds(),
-                project.getDepartments(),
-                project.getOwner(),
-                project.getFollowers());
+        JSONObject project = createProjectJson(
+                whose.getId(),
+                whose.getField(),
+                whose.getTags(),
+                whose.getProjectAbstract(),
+                whose.getProjectRoles(),
+                whose.getCreatedBy(),
+                whose.getName(),
+                whose.getStatus(),
+                whose.getIsPrivate(),
+                whose.getCreated(),
+                whose.getFundedBy(),
+                whose.getMembers(),
+                whose.getEmployers(),
+                whose.getFunds(),
+                whose.getDepartments(),
+                whose.getOwner(),
+                whose.getFollowers());
+
+        JSONArray ja = new JSONArray();
+        ja.add(project);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("projects", ja);
+
+        return mainObj;
     }
 
     public void deleteProject(String projectId) throws DeletionException{

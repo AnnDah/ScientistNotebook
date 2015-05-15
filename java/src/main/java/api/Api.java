@@ -148,7 +148,12 @@ public class Api {
         Spark.post(new Route("/organizations") {
             @Override
             public Object handle(Request request, Response response) {
-                return new OrganizationController().createOrganization(request.body());
+                try {
+                    return new OrganizationController().createOrganization(request.body());
+                } catch (CreationException e) {
+                    response.status(400);
+                }
+                return 0;
             }
         });
 
@@ -156,20 +161,24 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
-                JSONObject j = new OrganizationController().getOrganization(request.params(":id"));
-                if (j == null) {
+                try {
+                    return new OrganizationController().getOrganization(request.params(":id"));
+                } catch (GetException e) {
                     response.status(404);
                 }
-                return j;
+                return 0;
             }
         });
 
         Spark.delete(new Route("/organizations/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                int status = new OrganizationController().deleteOrganization(request.params(":id"));
-                response.status(status);
-                return response;
+                try {
+                    new OrganizationController().deleteOrganization(request.params(":id"));
+                } catch (DeletionException e) {
+                    response.status(400);
+                }
+                return 0;
             }
         });
 

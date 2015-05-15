@@ -2,11 +2,16 @@ package controllers;
 
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import exceptions.CreationException;
+import exceptions.DeletionException;
+import exceptions.GetException;
 import models.DatabaseConnector;
 import models.Organization;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.util.*;
 
 /**
@@ -15,7 +20,7 @@ import java.util.*;
  */
 public class OrganizationController {
 
-    public UUID createOrganization(String strOrganization){
+    public UUID createOrganization(String strOrganization) throws CreationException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
@@ -39,38 +44,26 @@ public class OrganizationController {
             Organization org = new Organization(id, name, description, policy, license, departments);
             mapper.save(org);
 
-        } catch (Exception e){
-            System.out.println(e);
+        } catch (ParseException e){
+            throw new CreationException("Invalid input data");
         }
         db.close();
         return id;
     }
 
-    public int deleteOrganization(String orgId){
-        if (orgId == null){
-            System.out.println("No request parameter was provided");
-            return 400;
-        }
-
-        UUID id = UUID.fromString(orgId);
-
+    public void deleteOrganization(String orgId) throws DeletionException{
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
         try {
             Mapper<Organization> mapper = new MappingManager(db.getSession()).mapper(Organization.class);
+            UUID id = UUID.fromString(orgId);
             Organization whose = mapper.get(id);
-            if (whose == null){
-                System.out.println("Organization wasn't found in database");
-                db.close();
-                return 404;
-            }
             mapper.delete(whose);
 
-        } catch (Exception e){
-            System.out.println(e);
+        } catch (IllegalArgumentException e){
+            throw new DeletionException("Organization wasn't found in database");
         }
         db.close();
-        return 200;
     }
 
     @SuppressWarnings("unchecked")
@@ -98,25 +91,22 @@ public class OrganizationController {
         return orgJson;
     }
 
-    public JSONObject getOrganization(String orgId){
-        if (orgId == null){
-            System.out.println("No request parameter was provided");
-            return null;
-        }
+    public JSONObject getOrganization(String orgId) throws GetException{
 
-        UUID orgUuid = UUID.fromString(orgId);
+
 
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
-        Organization whose;
 
+        Organization whose;
         Mapper<Organization> mapper = new MappingManager(db.getSession()).mapper(Organization.class);
-        whose = mapper.get(orgUuid);
-        if (whose == null) {
-            System.out.println("Organization wasn't found in database");
-            db.close();
-            return null;
+        try {
+            UUID orgUuid = UUID.fromString(orgId);
+            whose = mapper.get(orgUuid);
+        } catch (IllegalArgumentException e){
+            throw new GetException("Organization wasn't found in database");
         }
+
 
         UUID id =whose.getId();
         String name = whose.getName();

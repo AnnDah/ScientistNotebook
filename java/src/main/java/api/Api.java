@@ -2,7 +2,7 @@ package api;
 import controllers.*;
 import exceptions.DeletionException;
 import exceptions.GetException;
-import exceptions.UserCreationException;
+import exceptions.CreationException;
 import org.json.simple.JSONObject;
 import spark.*;
 import models.DatabaseConnector;
@@ -66,7 +66,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try {
                     return new UserController().createUser(request.body());
-                } catch (UserCreationException e) {
+                } catch (CreationException e) {
                     response.status(400);
                 }
                 return 0;

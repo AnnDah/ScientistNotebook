@@ -5,7 +5,7 @@ import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import exceptions.DeletionException;
 import exceptions.GetException;
-import exceptions.UserCreationException;
+import exceptions.CreationException;
 import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class UserController {
 
-    public UUID createUser(String strUser) throws UserCreationException {
+    public UUID createUser(String strUser) throws CreationException {
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
@@ -43,11 +43,11 @@ public class UserController {
             User user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
             mapper.save(user);
         }  catch (org.json.simple.parser.ParseException e){
-            throw new UserCreationException("Invalid input data");
+            throw new CreationException("Invalid input data");
         } catch (java.security.NoSuchAlgorithmException e){
-            throw new UserCreationException("Failed to hash password");
+            throw new CreationException("Failed to hash password");
         } catch (java.io.IOException e){
-            throw new UserCreationException("Failed to hash password");
+            throw new CreationException("Failed to hash password");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

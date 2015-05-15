@@ -92,8 +92,9 @@ public class ProjectController {
             mapper.save(project);
         } catch (ParseException e){
             throw new CreationException("Invalid input data");
+        } finally {
+            db.close();
         }
-        db.close();
 
         return id;
     }
@@ -110,30 +111,28 @@ public class ProjectController {
             project = mapper.get(projectUuid);
         } catch (IllegalArgumentException e){
             throw new GetException("Project wasn't found in database");
+        } finally {
+            db.close();
         }
 
-        UUID id = project.getId();
-        String field = project.getField();
-        List<String> tags = project.getTags();
-        String projectAbstract = project.getProjectAbstract();
-        List<String> projectRoles = project.getProjectRoles();
-        String createdBy = project.getCreatedBy();
-        String name = project.getName();
-        String status = project.getStatus();
-        boolean isPrivate = project.getIsPrivate();
-        Long created = project.getCreated();
-        List<String> fundedBy = project.getFundedBy();
-        List<String> members = project.getMembers();
-        List<String> employers = project.getEmployers();
-        List<String> funds = project.getFunds();
-        List<String> departments = project.getDepartments();
-        List<String> followers = project.getFollowers();
-        String owner = project.getOwner();
-
-        JSONObject projectJson = createProjectJson(id, field, tags, projectAbstract, projectRoles, createdBy,
-                name, status, isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
-        db.close();
-        return projectJson;
+        return createProjectJson(
+                project.getId(),
+                project.getField(),
+                project.getTags(),
+                project.getProjectAbstract(),
+                project.getProjectRoles(),
+                project.getCreatedBy(),
+                project.getName(),
+                project.getStatus(),
+                project.getIsPrivate(),
+                project.getCreated(),
+                project.getFundedBy(),
+                project.getMembers(),
+                project.getEmployers(),
+                project.getFunds(),
+                project.getDepartments(),
+                project.getOwner(),
+                project.getFollowers());
     }
 
     public void deleteProject(String projectId) throws DeletionException{
@@ -147,9 +146,9 @@ public class ProjectController {
 
         } catch (IllegalArgumentException e){
             throw new DeletionException("Project wasn't found in database");
+        } finally {
+            db.close();
         }
-        db.close();
-
     }
 
     @SuppressWarnings("unchecked")

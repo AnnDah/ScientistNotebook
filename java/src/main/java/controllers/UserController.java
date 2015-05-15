@@ -123,17 +123,17 @@ public class UserController {
             throw new GetException("User wasn't found in database");
         }
 
-        UUID id = whose.getId();
-        String firstName = whose.getFirstName();
-        String lastName = whose.getLastName();
-        String mail = whose.getEmail();
-        Long memberSince = whose.getMemberSince();
-        String organization = whose.getOrganization();
-        String department = whose.getDepartment();
-        String role = whose.getRole();
-        List<String> follows = whose.getFollows();
-
-        JSONObject user = createUserJson(id, firstName, lastName, mail, "OMITTED!", memberSince, organization, department, role, follows);
+        JSONObject user = createUserJson(
+                whose.getId(),
+                whose.getFirstName(),
+                whose.getLastName(),
+                whose.getEmail(),
+                "OMITTED!",
+                whose.getMemberSince(),
+                whose.getOrganization(),
+                whose.getDepartment(),
+                whose.getRole(),
+                whose.getFollows());
 
         db.close();
 
@@ -152,19 +152,17 @@ public class UserController {
             ResultSet results = db.getSession().execute(statement);
             Row row = results.one();
             if (row != null){
-                UUID id = row.getUUID("id");
-                String firstName = row.getString("first_name");
-                String lastName = row.getString("last_name");
-                String mail = row.getString("email");
-                String password = row.getString("password");
-                Long memberSince = row.getLong("member_since");
-                String organization = row.getString("organization");
-                String department = row.getString("department");
-                String role = row.getString("role");
-                List<String> follows = row.getList("follows", String.class);
-
-                System.out.println(String.format("User: %s %s is logging in...", firstName, lastName));
-                user = createUserJson(id, firstName, lastName, mail, password, memberSince, organization, department, role, follows);
+                user = createUserJson(
+                        row.getUUID("id"),
+                        row.getString("first_name"),
+                        row.getString("last_name"),
+                        row.getString("email"),
+                        row.getString("password"),
+                        row.getLong("member_since"),
+                        row.getString("organization"),
+                        row.getString("department"),
+                        row.getString("role"),
+                        row.getList("follows", String.class));
             }
         } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
             throw new GetException("User wasn't found in database");

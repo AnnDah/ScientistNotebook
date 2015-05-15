@@ -53,8 +53,9 @@ public class DataController {
             mapper.save(data);
         } catch (org.json.simple.parser.ParseException e){
             throw new CreationException("Invalid input data");
+        } finally {
+            db.close();
         }
-        db.close();
 
         return id;
     }
@@ -71,26 +72,22 @@ public class DataController {
             data = mapper.get(dataId);
         } catch (IllegalArgumentException e){
             throw new GetException("Data wasn't found in database");
+        } finally {
+            db.close();
         }
 
-        //content, created, author, level, tags, id, dataType, project, name, description, revision_history
-        String author = data.getAuthor();
-        String content = data.getContent();
-        String created = data.getCreated();
-        int level = data.getLevel();
-        UUID id = data.getId();
-        List<String> tags = data.getTags();
-        String dataType = data.getDataType();
-        String project = data.getProject();
-        String name = data.getName();
-        String description = data.getDescription();
-        List<String> revisionHistory = data.getRevisionHistory();
-
-        JSONObject dataJson = createDataJson(content, created, author, level, tags, id, dataType, project, name,
-                description, revisionHistory);
-
-        db.close();
-        return dataJson;
+        return createDataJson(
+                data.getContent(),
+                data.getCreated(),
+                data.getAuthor(),
+                data.getLevel(),
+                data.getTags(),
+                data.getId(),
+                data.getDataType(),
+                data.getProject(),
+                data.getName(),
+                data.getDescription(),
+                data.getRevisionHistory());
 
     }
 
@@ -99,21 +96,18 @@ public class DataController {
                                      UUID id, String dataType, String project, String name, String description,
                                      List<String> revisionHistory){
         JSONObject dataJson = new JSONObject();
-        try {
-            dataJson.put("content", content);
-            dataJson.put("created", created);
-            dataJson.put("author", author);
-            dataJson.put("visibility", level);
-            dataJson.put("tags", tags);
-            dataJson.put("id", id);
-            dataJson.put("dataType", dataType);
-            dataJson.put("project", project);
-            dataJson.put("name", name);
-            dataJson.put("description", description);
-            dataJson.put("revisionHistory", revisionHistory);
-        } catch (Exception e){
-            System.out.println(e);
-        }
+        dataJson.put("content", content);
+        dataJson.put("created", created);
+        dataJson.put("author", author);
+        dataJson.put("visibility", level);
+        dataJson.put("tags", tags);
+        dataJson.put("id", id);
+        dataJson.put("dataType", dataType);
+        dataJson.put("project", project);
+        dataJson.put("name", name);
+        dataJson.put("description", description);
+        dataJson.put("revisionHistory", revisionHistory);
+
         return dataJson;
     }
 
@@ -127,7 +121,8 @@ public class DataController {
 
         } catch (IllegalArgumentException e){
             throw new DeletionException("Data wasn't found in database");
+        } finally {
+            db.close();
         }
-        db.close();
     }
 }

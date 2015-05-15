@@ -46,8 +46,9 @@ public class OrganizationController {
 
         } catch (ParseException e){
             throw new CreationException("Invalid input data");
+        } finally {
+            db.close();
         }
-        db.close();
         return id;
     }
 
@@ -62,8 +63,9 @@ public class OrganizationController {
 
         } catch (IllegalArgumentException e){
             throw new DeletionException("Organization wasn't found in database");
+        } finally {
+            db.close();
         }
-        db.close();
     }
 
     @SuppressWarnings("unchecked")
@@ -93,8 +95,6 @@ public class OrganizationController {
 
     public JSONObject getOrganization(String orgId) throws GetException{
 
-
-
         DatabaseConnector db = new DatabaseConnector();
         db.connectDefault();
 
@@ -105,19 +105,16 @@ public class OrganizationController {
             whose = mapper.get(orgUuid);
         } catch (IllegalArgumentException e){
             throw new GetException("Organization wasn't found in database");
+        } finally {
+            db.close();
         }
 
-
-        UUID id =whose.getId();
-        String name = whose.getName();
-        String description = whose.getDescription();
-        String policy = whose.getPolicy();
-        String license = whose.getLicense();
-        List<String> departments = whose.getDepartments();
-
-        JSONObject user = createOrgJson(id, name, description, policy, license, departments);
-        db.close();
-
-        return user;
+        return createOrgJson(
+                whose.getId(),
+                whose.getName(),
+                whose.getDescription(),
+                whose.getPolicy(),
+                whose.getLicense(),
+                whose.getDepartments());
     }
 }

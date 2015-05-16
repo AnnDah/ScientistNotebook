@@ -212,7 +212,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    new DataController().searchDataTags2(request.body());
+                    return new DataController().searchDataTags2(request.body());
                 }catch (GetException e){
                     response.status(400);
                 }

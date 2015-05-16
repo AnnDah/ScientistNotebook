@@ -183,7 +183,7 @@ public class DataController {
     public JSONObject searchDataTags2(String tags) throws GetException{
         System.out.println(tags);
 
-        String query = "SELECT * FROM data_tags WHERE";
+        String query = "SELECT * FROM scinote.data_tags WHERE";
         int numberOfTags = 1;
 
         try{

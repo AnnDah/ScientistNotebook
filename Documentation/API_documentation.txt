@@ -43,6 +43,10 @@ Incude data id in request
 Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Respone will be a JSON Object
 
+GET /data?tags=<tags>
+Include all tags separated with comma.
+Exampel: http://localhost:9090/data?tags=train,car,cat
+
 DELETE /data/<id>
 Include data id in request
 Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7

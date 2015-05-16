@@ -142,43 +142,6 @@ public class DataController {
 
     }
 
-
-    /**
-    @SuppressWarnings("unchecked")
-    public JSONObject searchDataTags1(String tag) throws GetException{
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-
-        Mapper<DataTags> mapper = new MappingManager(db.getSession()).mapper(DataTags.class);
-        JSONArray ja = new JSONArray();
-        for (String s : tag.split(",")) {
-            DataTags whose;
-            try{
-                whose = mapper.get(s);
-            } catch (IllegalArgumentException e){
-                throw new GetException("No data with those tags where found in database.");
-            } finally {
-                db.close();
-            }
-
-            JSONObject data = createSearchJson(
-                    whose.getTags(),
-                    whose.getId(),
-                    whose.getName(),
-                    whose.getAuthor(),
-                    whose.getDescription(),
-                    whose.getCreated());
-            ja.add(data);
-        }
-
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("data", ja);
-
-        return mainObj;
-
-    }
-     **/
-
     @SuppressWarnings("unchecked")
     public JSONObject searchDataTags2(String tags) throws GetException{
         System.out.println(tags);

@@ -68,6 +68,19 @@ public class Api {
             }
         });
 
+        Spark.get(new Route("/data") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try {
+                    return new DataController().searchDataTags2(request.queryParams("tags"));
+                }catch (GetException e){
+                    response.status(400);
+                }
+
+                return 0;
+            }
+        });
+
         // Routes for users
         Spark.post(new Route("/users") {
             @Override

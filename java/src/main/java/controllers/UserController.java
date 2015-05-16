@@ -77,7 +77,119 @@ public class UserController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createUserJson(UUID id, String firstName, String lastName, String email, String password, Long date,
+    public JSONObject createUserJson(User whose){
+
+
+        UUID id = whose.getId();
+        String firstName = whose.getFirstName();
+        String lastName = whose.getLastName();
+        String email = whose.getEmail();
+        String password = "OMITTED!";
+        Long date = whose.getMemberSince();
+        String organization = whose.getOrganization();
+        String department = whose.getDepartment();
+        String role = whose.getRole();
+        List<String> follows = whose.getFollows();
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date utcDate= new Date(date);
+
+        JSONObject userJson = new JSONObject();
+        userJson.put("id", id);
+        userJson.put("firstName", firstName);
+        userJson.put("lastName", lastName);
+        userJson.put("email", email);
+        userJson.put("password", password);
+        userJson.put("memberSince", utcDate);
+        userJson.put("organization", organization);
+        userJson.put("department", department);
+        userJson.put("role", role);
+        userJson.put("follows", follows);
+
+        JSONArray ja = new JSONArray();
+        ja.add(userJson);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("users", ja);
+
+        return mainObj;
+
+    }
+
+    public JSONObject getUserJson(String id) throws GetException{
+        User user = getUser(id);
+        return createUserJson(user);
+    }
+
+    @SuppressWarnings("unchecked")
+    public User getUser(String userId) throws GetException{
+
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+
+        Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
+        try {
+            UUID userUuid = UUID.fromString(userId);
+            return mapper.get(userUuid);
+        } catch (IllegalArgumentException e){
+            throw new GetException("User wasn't found in database");
+        } finally {
+            db.close();
+        }
+
+    }
+
+    public JSONObject getUserLogin(String inputEmail) throws GetException {
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+
+        Statement statement = new SimpleStatement(String.format(
+                "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
+
+        JSONObject user = null;
+
+        try{
+            ResultSet results = db.getSession().execute(statement);
+            Row row = results.one();
+            if (row != null){
+                user = createUserJsonTemp(
+                        row.getUUID("id"),
+                        row.getString("first_name"),
+                        row.getString("last_name"),
+                        row.getString("email"),
+                        row.getString("password"),
+                        row.getLong("member_since"),
+                        row.getString("organization"),
+                        row.getString("department"),
+                        row.getString("role"),
+                        row.getList("follows", String.class));
+            }
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+            throw new GetException("User wasn't found in database");
+        }
+
+        db.close();
+
+        return user;
+    }
+
+    public void updateUser(String id, String update)throws GetException{
+        User user;
+        try {
+            user = getUser(id);
+        } catch (GetException e){
+            throw e;
+        }
+        user.setFirstName("sebastian");
+
+    }
+
+    public void addFollows(){
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject createUserJsonTemp(UUID id, String firstName, String lastName, String email, String password, Long date,
                                      String organization, String department, String role, List<String> follows){
         // Parse date to UTC
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -107,80 +219,5 @@ public class UserController {
          */
 
         return userJson;
-    }
-
-    @SuppressWarnings("unchecked")
-    public JSONObject getUser(String userId) throws GetException{
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        User whose;
-
-        Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
-        try {
-            UUID userUuid = UUID.fromString(userId);
-            whose = mapper.get(userUuid);
-        } catch (IllegalArgumentException e){
-            throw new GetException("User wasn't found in database");
-        }
-
-        JSONObject user = createUserJson(
-                whose.getId(),
-                whose.getFirstName(),
-                whose.getLastName(),
-                whose.getEmail(),
-                "OMITTED!",
-                whose.getMemberSince(),
-                whose.getOrganization(),
-                whose.getDepartment(),
-                whose.getRole(),
-                whose.getFollows());
-
-        JSONArray ja = new JSONArray();
-        ja.add(user);
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("users", ja);
-
-        db.close();
-
-        return mainObj;
-    }
-
-    public JSONObject getUserLogin(String inputEmail) throws GetException {
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-
-        Statement statement = new SimpleStatement(String.format(
-                "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
-
-        JSONObject user = null;
-
-        try{
-            ResultSet results = db.getSession().execute(statement);
-            Row row = results.one();
-            if (row != null){
-                user = createUserJson(
-                        row.getUUID("id"),
-                        row.getString("first_name"),
-                        row.getString("last_name"),
-                        row.getString("email"),
-                        row.getString("password"),
-                        row.getLong("member_since"),
-                        row.getString("organization"),
-                        row.getString("department"),
-                        row.getString("role"),
-                        row.getList("follows", String.class));
-            }
-        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
-            throw new GetException("User wasn't found in database");
-        }
-
-        db.close();
-
-        return user;
-    }
-
-    public void addFollows(){
-
     }
 }

@@ -99,12 +99,24 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new UserController().getUser(request.params(":id"));
+                    return new UserController().getUserJson(request.params(":id"));
                 } catch (GetException e) {
                     response.status(400);
                 }
 
                 return 0;
+            }
+        });
+
+        Spark.put(new Route("/users/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try{
+                    new UserController().updateUser(request.params(":id"), request.body());
+                }catch (GetException e){
+                    response.status(400);
+                }
+                return null;
             }
         });
 

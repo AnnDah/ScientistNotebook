@@ -179,4 +179,8 @@ public class UserController {
 
         return user;
     }
+
+    public void addFollows(){
+
+    }
 }

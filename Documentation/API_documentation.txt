@@ -46,6 +46,12 @@ Respone will be a JSON Object
 GET /data?tags=<tags>
 Include all tags separated with comma.
 Exampel: http://localhost:9090/data?tags=train,car,cat
+Response will include:
+	id
+	name
+	author
+	created
+	description
 
 DELETE /data/<id>
 Include data id in request
@@ -88,7 +94,7 @@ JSON format in request body:
 "status":"ongoing",
 "owner":"kristoffer",
 "isPrivate":"true",
-"projectAbstract":"blablab",
+"description":"blablab",
 "tags":["tag1","tag2"],
 "projectRoles":["role1","role2"],
 "fundedBy":["funder1","funder2"],
@@ -107,6 +113,13 @@ Response will be a JSON Object.
 GET /projects?tags=<tags>
 Include all tags separated with comma.
 Exampel: http://localhost:9090/projects?tags=train,car,cat
+Response will include:
+	id
+	name
+	status
+	description
+	created
+	isPrivate
 
 DELETE /projects/<id>
 Include data id in request

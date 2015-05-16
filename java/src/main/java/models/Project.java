@@ -18,8 +18,7 @@ public class Project {
     @PartitionKey
     private UUID id;
     private String field;
-    @Column(name="project_abstract")
-    private String projectAbstract;
+    private String description;
     @Column(name="created_by")
     private String createdBy;
     private String name;
@@ -43,14 +42,14 @@ public class Project {
 
     }
 
-    public Project(UUID id, String field, List<String> tags, String projectAbstract, List<String> projectRoles,
+    public Project(UUID id, String field, List<String> tags, String description, List<String> projectRoles,
                    String createdBy, String name, String status, boolean isPrivate, Long created, List<String> fundedBy,
                    List<String> members, List<String> employers, List<String> funds, List<String> departments,
                    String owner){
         this.id = id;
         this.field = field;
         this.tags = tags;
-        this.projectAbstract = projectAbstract;
+        this.description = description;
         this.projectRoles = projectRoles;
         this.createdBy = createdBy;
         this.name = name;
@@ -162,12 +161,12 @@ public class Project {
         this.tags = tags;
     }
 
-    public String getProjectAbstract(){
-        return this.projectAbstract;
+    public String getDescription(){
+        return this.description;
     }
 
-    public void setProjectAbstract(String projectAbstract){
-        this.projectAbstract = projectAbstract;
+    public void setDescription(String description){
+        this.description = description;
     }
 
     public List<String> getProjectRoles(){
@@ -208,7 +207,7 @@ public class Project {
             Project that = (Project) other;
             return Objects.equals(this.id, that.id) &&
                     Objects.equals(this.field, that.field) &&
-                    Objects.equals(this.projectAbstract, that.projectAbstract) &&
+                    Objects.equals(this.description, that.description) &&
                     Objects.equals(this.projectRoles, that.projectRoles) &&
                     Objects.equals(this.createdBy, that.createdBy) &&
                     Objects.equals(this.name, that.name) &&
@@ -229,7 +228,7 @@ public class Project {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, field, projectAbstract, projectRoles, createdBy, name, status, tags,
+        return Objects.hash(id, field, description, projectRoles, createdBy, name, status, tags,
                 isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
     }
 }

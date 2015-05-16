@@ -38,7 +38,7 @@ public class ProjectController {
             JSONObject jObj = (JSONObject) new JSONParser().parse(projectInfo);
 
             String field  = (String) jObj.get("field");
-            String projectAbstract = (String) jObj.get("projectAbstract");
+            String description = (String) jObj.get("description");
             String createdBy = (String) jObj.get("createdBy");
             String name = (String) jObj.get("name");
             String status = (String) jObj.get("status");
@@ -92,12 +92,12 @@ public class ProjectController {
             }
 
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-            Project project = new Project(id, field, tags, projectAbstract, projectRoles, createdBy, name,
+            Project project = new Project(id, field, tags, description, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
 
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
-            ProjectTags tag = new ProjectTags(id, tags, name, status, projectAbstract, isPrivate, created);
+            ProjectTags tag = new ProjectTags(id, tags, name, status, description, isPrivate, created);
             tagMapper.save(tag);
         } catch (ParseException e){
             throw new CreationException("Invalid input data");
@@ -129,7 +129,7 @@ public class ProjectController {
                 whose.getId(),
                 whose.getField(),
                 whose.getTags(),
-                whose.getProjectAbstract(),
+                whose.getDescription(),
                 whose.getProjectRoles(),
                 whose.getCreatedBy(),
                 whose.getName(),
@@ -172,7 +172,7 @@ public class ProjectController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createProjectJson(UUID id, String field, List<String> tags, String projectAbstract,
+    public JSONObject createProjectJson(UUID id, String field, List<String> tags, String description,
                                         List<String> projectRoles, String createdBy, String name, String status,
                                         boolean isPrivate, Long created, List<String> fundedBy, List<String> members,
                                         List<String> employers, List<String> funds, List<String> departments,
@@ -180,7 +180,7 @@ public class ProjectController {
         JSONObject projectJson = new JSONObject();
         projectJson.put("id", id);
         projectJson.put("field", field);
-        projectJson.put("projectAbstract", projectAbstract);
+        projectJson.put("description", description);
         projectJson.put("createdBy", createdBy);
         projectJson.put("name", name);
         projectJson.put("status", status);
@@ -228,7 +228,6 @@ public class ProjectController {
         System.out.println(query);
         Statement statement = new SimpleStatement(query);
 
-        JSONObject project = null;
         JSONArray ja = new JSONArray();
 
         DatabaseConnector db = new DatabaseConnector();
@@ -238,7 +237,7 @@ public class ProjectController {
             ResultSet results = db.getSession().execute(statement);
             for(Row row : results) {
                 if (row != null) {
-                    project = createSearchJson(
+                    JSONObject project = createSearchJson(
                             row.getUUID("id"),
                             row.getString("name"),
                             row.getString("status"),
@@ -271,8 +270,13 @@ public class ProjectController {
         projectJson.put("author", author);
         projectJson.put("description", description);
         projectJson.put("created", created);
+        projectJson.put("isPrivate", isPrivate);
 
         return projectJson;
+
+    }
+
+    public void addFollower(){
 
     }
 }

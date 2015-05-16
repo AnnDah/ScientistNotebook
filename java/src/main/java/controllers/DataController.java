@@ -131,8 +131,12 @@ public class DataController {
         db.connectDefault();
         try {
             Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
+            Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
             Data toDelete = mapper.get(id);
+            DataTags tagDelete = tagMapper.get(id);
             mapper.delete(toDelete);
+            tagMapper.delete(tagDelete);
+
 
         } catch (IllegalArgumentException e){
             throw new DeletionException("Data wasn't found in database");
@@ -171,7 +175,6 @@ public class DataController {
         System.out.println(query);
         Statement statement = new SimpleStatement(query);
 
-        JSONObject data = null;
         JSONArray ja = new JSONArray();
 
         DatabaseConnector db = new DatabaseConnector();
@@ -181,7 +184,7 @@ public class DataController {
             ResultSet results = db.getSession().execute(statement);
             for(Row row : results) {
                 if (row != null) {
-                    data = createSearchJson(
+                    JSONObject data = createSearchJson(
                             row.getUUID("id"),
                             row.getString("name"),
                             row.getString("author"),

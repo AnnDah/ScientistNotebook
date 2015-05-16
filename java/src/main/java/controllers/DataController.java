@@ -143,7 +143,7 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject searchDataTags2(String tags) throws GetException{
+    public JSONObject searchDataTags(String tags) throws GetException{
         System.out.println(tags);
 
         String query = "SELECT * FROM scinote.data_tags WHERE";

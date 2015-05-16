@@ -72,8 +72,8 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new DataController().searchDataTags2(request.queryParams("tags"));
-                }catch (GetException e){
+                    return new DataController().searchDataTags(request.queryParams("tags"));
+                } catch (GetException e) {
                     response.status(400);
                 }
 
@@ -143,6 +143,19 @@ public class Api {
                 } catch (GetException e) {
                     response.status(400);
                 }
+                return 0;
+            }
+        });
+
+        Spark.get(new Route("/projects") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try {
+                    return new ProjectController().searchProjectTags(request.queryParams("tags"));
+                }catch (GetException e){
+                    response.status(400);
+                }
+
                 return 0;
             }
         });
@@ -225,7 +238,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new DataController().searchDataTags2(request.body());
+                    return new DataController().searchDataTags(request.body());
                 }catch (GetException e){
                     response.status(400);
                 }

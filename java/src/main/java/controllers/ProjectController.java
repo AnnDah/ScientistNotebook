@@ -1,5 +1,9 @@
 package controllers;
 
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.SimpleStatement;
+import com.datastax.driver.core.Statement;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import exceptions.CreationException;
@@ -7,6 +11,7 @@ import exceptions.DeletionException;
 import exceptions.GetException;
 import models.DatabaseConnector;
 import models.Project;
+import models.ProjectTags;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -90,6 +95,10 @@ public class ProjectController {
             Project project = new Project(id, field, tags, projectAbstract, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
+
+            Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
+            ProjectTags tag = new ProjectTags(id, tags, name, status, projectAbstract, isPrivate, created);
+            tagMapper.save(tag);
         } catch (ParseException e){
             throw new CreationException("Invalid input data");
         } finally {
@@ -148,9 +157,12 @@ public class ProjectController {
         db.connectDefault();
         try {
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
+            Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
             UUID id = UUID.fromString(projectId);
             Project toDelete = mapper.get(id);
+            ProjectTags tagDelete = tagMapper.get(id);
             mapper.delete(toDelete);
+            tagMapper.delete(tagDelete);
 
         } catch (IllegalArgumentException e){
             throw new DeletionException("Project wasn't found in database");
@@ -185,5 +197,82 @@ public class ProjectController {
         projectJson.put("followers", followers);
 
         return projectJson;
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject searchProjectTags(String tags) throws GetException{
+        System.out.println(tags);
+
+        String query = "SELECT * FROM scinote.project_tags WHERE";
+        int numberOfTags = 1;
+
+        try{
+
+            for (String s : tags.split(",")) {
+                if (numberOfTags == 1) {
+                    query += (" tags CONTAINS '" + s + "'");
+                    numberOfTags++;
+                } else {
+                    query += (" AND tags CONTAINS '" + s + "'");
+                }
+
+                System.out.println(query);
+
+
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        query += " ALLOW FILTERING;";
+        System.out.println(query);
+        Statement statement = new SimpleStatement(query);
+
+        JSONObject project = null;
+        JSONArray ja = new JSONArray();
+
+        DatabaseConnector db = new DatabaseConnector();
+        db.connectDefault();
+
+        try{
+            ResultSet results = db.getSession().execute(statement);
+            for(Row row : results) {
+                if (row != null) {
+                    project = createSearchJson(
+                            row.getUUID("id"),
+                            row.getString("name"),
+                            row.getString("status"),
+                            row.getString("description"),
+                            row.getLong("created"),
+                            row.getBool("is_private"));
+                    ja.add(project);
+                }
+            }
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+            throw new GetException("Invalid input data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("projects", ja);
+
+        return mainObj;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject createSearchJson(UUID id, String name, String author, String description,
+                                       Long created, boolean isPrivate){
+        JSONObject projectJson = new JSONObject();
+        projectJson.put("id", id);
+        projectJson.put("name", name);
+        projectJson.put("author", author);
+        projectJson.put("description", description);
+        projectJson.put("created", created);
+
+        return projectJson;
+
     }
 }

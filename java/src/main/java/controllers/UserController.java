@@ -6,11 +6,15 @@ import com.datastax.driver.mapping.MappingManager;
 import exceptions.DeletionException;
 import exceptions.GetException;
 import exceptions.CreationException;
+import exceptions.UpdateException;
 import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,10 +26,16 @@ import java.util.*;
  */
 public class UserController {
 
-    public UUID createUser(String strUser) throws CreationException {
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
+    private Mapper<User> mapper;
+    DatabaseConnector db;
 
+    public UserController(){
+        db = new DatabaseConnector();
+        db.connectDefault();
+        mapper = new MappingManager(db.getSession()).mapper(User.class);
+    }
+
+    public UUID createUser(String strUser) throws CreationException {
         UUID id = UUID.randomUUID();
 
         try {
@@ -40,7 +50,7 @@ public class UserController {
             String department = (String) jObj.get("department");
             String role = (String) jObj.get("role");
 
-            Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
+
             User user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
             mapper.save(user);
         }  catch (org.json.simple.parser.ParseException e){
@@ -59,11 +69,6 @@ public class UserController {
     }
 
     public void deleteUser(String userId) throws DeletionException{
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-
-        Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
         try {
             UUID id = UUID.fromString(userId);
             User whose = mapper.get(id);
@@ -118,30 +123,22 @@ public class UserController {
 
     public JSONObject getUserJson(String id) throws GetException{
         User user = getUser(id);
+        db.close();
         return createUserJson(user);
     }
 
     @SuppressWarnings("unchecked")
     public User getUser(String userId) throws GetException{
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-
-        Mapper<User> mapper = new MappingManager(db.getSession()).mapper(User.class);
         try {
             UUID userUuid = UUID.fromString(userId);
             return mapper.get(userUuid);
         } catch (IllegalArgumentException e){
             throw new GetException("User wasn't found in database");
-        } finally {
-            db.close();
         }
 
     }
 
     public JSONObject getUserLogin(String inputEmail) throws GetException {
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
 
         Statement statement = new SimpleStatement(String.format(
                 "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
@@ -166,21 +163,46 @@ public class UserController {
             }
         } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
             throw new GetException("User wasn't found in database");
+        } finally {
+            db.close();
         }
-
-        db.close();
 
         return user;
     }
 
-    public void updateUser(String id, String update)throws GetException{
-        User user;
+    public void updateUser(String id, String update)throws UpdateException{
         try {
-            user = getUser(id);
-        } catch (GetException e){
-            throw e;
+            JSONObject jObj = (JSONObject) new JSONParser().parse(update);
+
+            String firstName = (String) jObj.get("firstName");
+            String lastName = (String) jObj.get("lastName");
+            String email = (String) jObj.get("email");
+            String password = PasswordUtility.generateHash((String) jObj.get("password"));
+            String organization = (String) jObj.get("organization");
+            String department = (String) jObj.get("department");
+            String role = (String) jObj.get("role");
+
+        }  catch (org.json.simple.parser.ParseException e){
+            throw new UpdateException("Invalid input data");
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Invalid input data");
+        } catch (NoSuchAlgorithmException e){
+            throw new UpdateException("Unable to hash password");
+        } catch (IOException e){
+            throw new UpdateException("Invalid input data");
         }
-        user.setFirstName("sebastian");
+
+        try {
+            User user = getUser(id);
+            user.setFirstName("margareta");
+            mapper.save(user);
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("User wasn't found in database");
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
 
     }
 
@@ -208,15 +230,6 @@ public class UserController {
         userJson.put("department", department);
         userJson.put("role", role);
         userJson.put("follows", follows);
-
-        /**
-         Only needs to be implemented when we need to get multiple users
-         JSONArray ja = new JSONArray();
-         ja.add(jObj);
-         JSONObject mainObj = new JSONObject();
-         mainObj.put("users", ja);
-         System.out.println(mainObj);
-         */
 
         return userJson;
     }

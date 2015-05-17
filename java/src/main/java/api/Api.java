@@ -3,6 +3,7 @@ import controllers.*;
 import exceptions.DeletionException;
 import exceptions.GetException;
 import exceptions.CreationException;
+import exceptions.UpdateException;
 import org.json.simple.JSONObject;
 import spark.*;
 import models.DatabaseConnector;
@@ -113,10 +114,10 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try{
                     new UserController().updateUser(request.params(":id"), request.body());
-                }catch (GetException e){
+                }catch (UpdateException e){
                     response.status(400);
                 }
-                return null;
+                return 0;
             }
         });
 

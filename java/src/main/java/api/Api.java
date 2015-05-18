@@ -65,9 +65,9 @@ public class Api {
         Spark.put(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                try{
+                try {
                     return new DataController().updateData(request.params(":id"), request.body());
-                } catch (UpdateException e){
+                } catch (UpdateException e) {
                     response.status(400);
                 }
                 return response;
@@ -117,9 +117,9 @@ public class Api {
         Spark.put(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                try{
+                try {
                     return new UserController().updateUser(request.params(":id"), request.body());
-                }catch (UpdateException e){
+                } catch (UpdateException e) {
                     response.status(400);
                 }
                 return response;
@@ -170,7 +170,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try {
                     return new ProjectController().searchProjectTags(request.queryParams("tags"));
-                }catch (GetException e){
+                } catch (GetException e) {
                     response.status(400);
                 }
 
@@ -216,6 +216,18 @@ public class Api {
             }
         });
 
+        Spark.put(new Route("/organizations/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try {
+                    return new OrganizationController().updateOrganization(request.params(":id"), request.body());
+                } catch (UpdateException e){
+                    response.status(400);
+                }
+                return response;
+            }
+        });
+
         Spark.delete(new Route("/organizations/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -257,7 +269,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try {
                     return new DataController().searchDataTags(request.body());
-                }catch (GetException e){
+                } catch (GetException e) {
                     response.status(400);
                 }
 

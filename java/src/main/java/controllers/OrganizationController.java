@@ -5,6 +5,7 @@ import com.datastax.driver.mapping.MappingManager;
 import exceptions.CreationException;
 import exceptions.DeletionException;
 import exceptions.GetException;
+import exceptions.UpdateException;
 import models.DatabaseConnector;
 import models.Organization;
 import org.json.simple.JSONArray;
@@ -107,6 +108,57 @@ public class OrganizationController {
             return mapper.get(orgUuid);
         } catch (IllegalArgumentException e) {
             throw new GetException("Organization wasn't found in database");
+        }
+    }
+
+    public JSONObject updateOrganization(String id, String update) throws UpdateException{
+        String name;
+        String description;
+        String policy;
+        String license;
+        List<String> departments;
+
+        try {
+            JSONObject jObj = (JSONObject) new JSONParser().parse(update);
+
+            name = (String) jObj.get("name");
+            description = (String) jObj.get("description");
+            policy = (String) jObj.get("policy");
+            license = (String) jObj.get("licence");
+
+            JSONArray departmentsArray = (JSONArray) jObj.get("departments");
+            departments = new ArrayList<String>();
+            for (Object department : departmentsArray) {
+                departments.add(department.toString());
+            }
+
+        }  catch (org.json.simple.parser.ParseException e){
+            throw new UpdateException("Invalid input data");
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Invalid input data");
+        }
+
+        try {
+            Organization org = getOrganization(id);
+
+            org.setName(name);
+            org.setDescription(description);
+            org.setDepartments(departments);
+            org.setLicense(license);
+            org.setPolicy(policy);
+
+            mapper.save(org);
+
+
+            return createOrgJson(org);
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("User wasn't found in database");
+        } catch (NullPointerException e){
+            throw new UpdateException("Invalid input data");
+        } catch (GetException e){
+            throw new UpdateException("Invalid input data");
+        }finally {
+            db.close();
         }
     }
 

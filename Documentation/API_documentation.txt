@@ -158,6 +158,12 @@ Response will be the updated user in JSON format.
 
 
 
+// Update user and project to add a user as follower to a project
+PUT
+/users/<userId>/<projectId>
+
+
+
 // Delete a specific user
 DELETE 
 /users/<id>

@@ -126,6 +126,19 @@ public class Api {
             }
         });
 
+        Spark.put(new Route("/users/:userId/:projectId") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try{
+                    new ProjectController().addFollower(request.params(":projectId"), request.params(":userId"));
+                    new UserController().addFollows(request.params(":userId"), request.params(":projectId"));
+                } catch (UpdateException e){
+                    response.status(400);
+                }
+                return response;
+            }
+        });
+
         Spark.delete(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -181,9 +194,9 @@ public class Api {
         Spark.put(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                try{
+                try {
                     return new ProjectController().updateProject(request.params(":id"), request.body());
-                }catch (UpdateException e){
+                } catch (UpdateException e) {
                     response.status(400);
                 }
                 return response;
@@ -288,7 +301,6 @@ public class Api {
                 return 0;
             }
         });
-
 
     }
 }

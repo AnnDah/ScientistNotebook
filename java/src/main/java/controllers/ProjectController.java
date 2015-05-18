@@ -272,8 +272,23 @@ public class ProjectController {
 
     }
 
-    public void addFollower(){
-
+    public void addFollower(String projectId, String userId) throws UpdateException{
+        try {
+            UUID id = stringToUUID(projectId);
+            Project project = mapper.get(id);
+            if(project.getIsPrivate() == true){
+                System.out.println("Project is private and can't be followed");
+                throw new UpdateException("Project can't be followed");
+            }
+            List<String> followers = project.getFollowers();
+            followers.add(userId);
+            project.setFollowers(followers);
+            mapper.save(project);
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Invalid input data");
+        } finally {
+            db.close();
+        }
     }
 
     public JSONObject updateProject(String id, String update) throws UpdateException{
@@ -411,5 +426,9 @@ public class ProjectController {
         }finally {
             db.close();
         }
+    }
+
+    private UUID stringToUUID(String id){
+        return UUID.fromString(id);
     }
 }

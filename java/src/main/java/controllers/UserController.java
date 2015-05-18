@@ -234,7 +234,19 @@ public class UserController {
 
     }
 
-    public void addFollows(){
+    public void addFollows(String userId, String projectId)throws UpdateException{
+        try {
+            UUID id = stringToUUID(userId);
+            User user = mapper.get(id);
+            List<String> follows = user.getFollows();
+            follows.add(projectId);
+            user.setFollows(follows);
+            mapper.save(user);
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Invalid input data");
+        } finally {
+            db.close();
+        }
 
     }
 
@@ -260,5 +272,9 @@ public class UserController {
         userJson.put("follows", follows);
 
         return userJson;
+    }
+
+    private UUID stringToUUID(String id){
+        return UUID.fromString(id);
     }
 }

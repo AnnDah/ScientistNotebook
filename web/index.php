@@ -11,12 +11,13 @@ header("location: pages/profile.php");
 <title>Login Form in PHP with Session</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
 <div id="main">
 <h1>PHP Login Session Example</h1>
 <div id="login">
 <h2>Login Form</h2>
-<form action="" method="post">
+<form enctype="application/json" action="pages/login.php" method="post">
 <label>UserName :</label>
 <input id="name" name="username" placeholder="username" type="text">
 <label>Password :</label>
@@ -27,4 +28,5 @@ header("location: pages/profile.php");
 </div>
 </div>
 </body>
+
 </html>

@@ -216,13 +216,13 @@ public class UserController {
             return createUserJson(user);
         } catch (IllegalArgumentException e){
             throw new UpdateException("User wasn't found in database");
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
+        } catch (NullPointerException e){
+            throw new UpdateException("Invalid input data");
+        } catch (GetException e){
+            throw new UpdateException("Invalid input data");
+        }finally {
             db.close();
         }
-
-        return null;
 
     }
 

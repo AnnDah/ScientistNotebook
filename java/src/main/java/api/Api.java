@@ -117,7 +117,7 @@ public class Api {
                 }catch (UpdateException e){
                     response.status(400);
                 }
-                return 0;
+                return response;
             }
         });
 

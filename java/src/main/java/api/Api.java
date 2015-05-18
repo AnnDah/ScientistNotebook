@@ -113,7 +113,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try{
-                    new UserController().updateUser(request.params(":id"), request.body());
+                    return new UserController().updateUser(request.params(":id"), request.body());
                 }catch (UpdateException e){
                     response.status(400);
                 }

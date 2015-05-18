@@ -8,7 +8,11 @@ Scientist Notebook API make use of the standard HTTP Status Codes.
 --Endpoints--
 All requests are sent to: http://localhost:9090
 
-//Requests for login
+--------------------------------------------------------
+
+--LOGIN--
+
+// Login a user
 POST /login
 JSON format in request body: 
 {
@@ -24,8 +28,15 @@ JSON format in response:
 "department":"computer",
 "role":"user"}
 
-// Requests for data
-POST /data
+--------------------------------------------------------
+--------------------------------------------------------
+
+--DATA--
+
+// Create a new data
+POST 
+/data
+
 JSON format in request body: 
 {
 "content":"some data",
@@ -38,12 +49,22 @@ JSON format in request body:
 "tags":["tag1","tag2"]}
 When a new data is created the data id will be added to response body. This you can use to get and delete the data.
 
-GET /data/<id>
+
+
+// Get a specific data
+GET 
+/data/<id>
+
 Incude data id in request
 Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Respone will be a JSON Object
 
-GET /data?tags=<tags>
+
+
+// Get result of data through search with tags
+GET 
+/data?tags=<tags>
+
 Include all tags separated with comma.
 Exampel: http://localhost:9090/data?tags=train,car,cat
 Response will include:
@@ -53,15 +74,31 @@ Response will include:
 	created
 	description
 
-DELETE /data/<id>
+
+
+// Delete a specific data
+DELETE 
+/data/<id>
+
 Include data id in request
 Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
-PUT /data/<id>
+
+
+// Update a specific data
+PUT 
+/data/<id>
 Not implemented yet
 
-// Requests for users
-POST /users
+--------------------------------------------------------
+--------------------------------------------------------
+
+--USERS--
+
+// Create a new user
+POST
+/users
+
 JSON format in request body: 
 {
 "firstName":"Annika",
@@ -73,19 +110,52 @@ JSON format in request body:
 "role":"user"}
 When a new user is created the user id will be added to response body. This you can use to get and delete the user.
 
-GET /users/<id>
+
+
+// Get a specific user
+GET 
+/users/<id>
+
 Include user id in request
 Example http://localhost:9090/users/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Response will be a JSON Object.
 
-PUT /users/<id>
-Not implemented yet
 
-DELETE /users/<id>
+
+// Update a specific user
+PUT 
+/users/<id>
+
+Include old values per default and replace those values that are to be updated.
+JSON format in request body:
+{
+"firstName":"Annika",
+"lastName":"Magnusson",
+"email":"mail@gmail.com",
+"password":"1234",
+"organization":"MAH",
+"department":"computer",
+"role":"user"}
+
+Response will be the updated user in JSON format.
+
+
+
+// Delete a specific user
+DELETE 
+/users/<id>
+
 Example http://localhost:9090/users/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
-// Requests for projects
-POST /projects
+--------------------------------------------------------
+--------------------------------------------------------
+
+--PROJECTS--
+
+// Create a new project
+POST 
+/projects
+
 JSON format in request body: 
 {
 "field":"some field",
@@ -105,12 +175,22 @@ JSON format in request body:
 }
 When a new project is created the project id will be added to response body. This you can use to get and delete the project.
 
-GET /projects/<id>
+
+
+// Get a specific project
+GET 
+/projects/<id>
+
 Include project id in request
 Example http://localhost:9090/projects/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Response will be a JSON Object.
 
-GET /projects?tags=<tags>
+
+
+// Get result of projects through search with tags
+GET 
+/projects?tags=<tags>
+
 Include all tags separated with comma.
 Exampel: http://localhost:9090/projects?tags=train,car,cat
 Response will include:
@@ -121,12 +201,24 @@ Response will include:
 	created
 	isPrivate
 
-DELETE /projects/<id>
+
+
+// Delete a specific project
+DELETE 
+/projects/<id>
+
 Include data id in request
 Example http://localhost:9090/projects/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 
-// Requests for organizations
-POST /organizations
+--------------------------------------------------------
+--------------------------------------------------------
+
+--ORGANIZATIONS--
+
+// Create a new organization
+POST 
+/organizations
+
 JSON format in request body:
 {
 "name":"organization name",
@@ -136,12 +228,22 @@ JSON format in request body:
 "departments":["department1","department2"]}
 When a new organization is created the organization id will be added to response body. This you can use to get and delete the organization.
 
-GET /organizations/<id>
+
+
+// Get a specific organization
+GET 
+/organizations/<id>
+
 Include organization id in request
 Example http://localhost:9090/organizations/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 Response will be a JSON Object.
 
-DELETE /organizations/<id>
+
+
+// Delete a specific organization
+DELETE 
+/organizations/<id>
+
 Include organization id in request
 Example http://localhost:9090/organizations/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 

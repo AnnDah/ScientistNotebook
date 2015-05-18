@@ -149,7 +149,7 @@ public class UserController {
             ResultSet results = db.getSession().execute(statement);
             Row row = results.one();
             if (row != null){
-                user = createUserJsonTemp(
+                user = createUserJsonLogin(
                         row.getUUID("id"),
                         row.getString("first_name"),
                         row.getString("last_name"),
@@ -170,17 +170,25 @@ public class UserController {
         return user;
     }
 
-    public void updateUser(String id, String update)throws UpdateException{
+    public JSONObject updateUser(String id, String update)throws UpdateException{
+        String firstName;
+        String lastName;
+        String email;
+        String password;
+        String organization;
+        String department;
+        String role;
+
         try {
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
 
-            String firstName = (String) jObj.get("firstName");
-            String lastName = (String) jObj.get("lastName");
-            String email = (String) jObj.get("email");
-            String password = PasswordUtility.generateHash((String) jObj.get("password"));
-            String organization = (String) jObj.get("organization");
-            String department = (String) jObj.get("department");
-            String role = (String) jObj.get("role");
+            firstName = (String) jObj.get("firstName");
+            lastName = (String) jObj.get("lastName");
+            email = (String) jObj.get("email");
+            password = PasswordUtility.generateHash((String) jObj.get("password"));
+            organization = (String) jObj.get("organization");
+            department = (String) jObj.get("department");
+            role = (String) jObj.get("role");
 
         }  catch (org.json.simple.parser.ParseException e){
             throw new UpdateException("Invalid input data");
@@ -194,8 +202,18 @@ public class UserController {
 
         try {
             User user = getUser(id);
-            user.setFirstName("margareta");
+
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setOrganization(organization);
+            user.setDepartment(department);
+            user.setRole(role);
+
             mapper.save(user);
+
+            return createUserJson(user);
         } catch (IllegalArgumentException e){
             throw new UpdateException("User wasn't found in database");
         } catch (Exception e){
@@ -204,6 +222,8 @@ public class UserController {
             db.close();
         }
 
+        return null;
+
     }
 
     public void addFollows(){
@@ -211,7 +231,7 @@ public class UserController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createUserJsonTemp(UUID id, String firstName, String lastName, String email, String password, Long date,
+    public JSONObject createUserJsonLogin(UUID id, String firstName, String lastName, String email, String password, Long date,
                                      String organization, String department, String role, List<String> follows){
         // Parse date to UTC
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -208,7 +208,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new OrganizationController().getOrganization(request.params(":id"));
+                    return new OrganizationController().getOrganizationJson(request.params(":id"));
                 } catch (GetException e) {
                     response.status(404);
                 }

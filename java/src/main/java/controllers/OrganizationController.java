@@ -19,13 +19,18 @@ import java.util.*;
  *
  */
 public class OrganizationController {
+    private DatabaseConnector db;
+    private Mapper<Organization> mapper;
 
-    public UUID createOrganization(String strOrganization) throws CreationException{
-        DatabaseConnector db = new DatabaseConnector();
+    public OrganizationController(){
+        db = new DatabaseConnector();
         db.connectDefault();
 
-        UUID id = UUID.randomUUID();
+        mapper = new MappingManager(db.getSession()).mapper(Organization.class);
+    }
 
+    public UUID createOrganization(String strOrganization) throws CreationException{
+        UUID id = UUID.randomUUID();
 
         try{
             JSONObject jObj = (JSONObject) new JSONParser().parse(strOrganization);
@@ -40,7 +45,6 @@ public class OrganizationController {
                 departments.add(aDepartmentsArray.toString());
             }
 
-            Mapper<Organization> mapper = new MappingManager(db.getSession()).mapper(Organization.class);
             Organization org = new Organization(id, name, description, policy, license, departments);
             mapper.save(org);
 
@@ -53,10 +57,7 @@ public class OrganizationController {
     }
 
     public void deleteOrganization(String orgId) throws DeletionException{
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
         try {
-            Mapper<Organization> mapper = new MappingManager(db.getSession()).mapper(Organization.class);
             UUID id = UUID.fromString(orgId);
             Organization whose = mapper.get(id);
             mapper.delete(whose);
@@ -69,9 +70,13 @@ public class OrganizationController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createOrgJson(UUID id, String name, String description, String policy, String license,
-                                    List<String> departments){
-
+    public JSONObject createOrgJson(Organization whose){
+        UUID id = whose.getId();
+        String name = whose.getName();
+        String description = whose.getDescription();
+        String policy = whose.getPolicy();
+        String license = whose.getLicense();
+        List<String> departments = whose.getDepartments();
 
         JSONObject orgJson = new JSONObject();
         orgJson.put("id", id);
@@ -81,49 +86,28 @@ public class OrganizationController {
         orgJson.put("license", license);
         orgJson.put("departments", departments);
 
-        /**
-         Only needs to be implemented when we need to get multiple users
-         JSONArray ja = new JSONArray();
-         ja.add(jObj);
-         JSONObject mainObj = new JSONObject();
-         mainObj.put("users", ja);
-         System.out.println(mainObj);
-         */
-
-        return orgJson;
-    }
-
-    @SuppressWarnings("unchecked")
-    public JSONObject getOrganization(String orgId) throws GetException{
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-
-        Organization whose;
-        Mapper<Organization> mapper = new MappingManager(db.getSession()).mapper(Organization.class);
-        try {
-            UUID orgUuid = UUID.fromString(orgId);
-            whose = mapper.get(orgUuid);
-        } catch (IllegalArgumentException e){
-            throw new GetException("Organization wasn't found in database");
-        } finally {
-            db.close();
-        }
-
-        JSONObject organization = createOrgJson(
-                whose.getId(),
-                whose.getName(),
-                whose.getDescription(),
-                whose.getPolicy(),
-                whose.getLicense(),
-                whose.getDepartments());
-
-
         JSONArray ja = new JSONArray();
-        ja.add(organization);
+        ja.add(orgJson);
+
         JSONObject mainObj = new JSONObject();
         mainObj.put("organizations", ja);
 
         return mainObj;
     }
+
+    public JSONObject getOrganizationJson(String id)throws GetException{
+        Organization org = getOrganization(id);
+        db.close();
+        return createOrgJson(org);
+    }
+    @SuppressWarnings("unchecked")
+    public Organization getOrganization(String orgId) throws GetException {
+        try {
+            UUID orgUuid = UUID.fromString(orgId);
+            return mapper.get(orgUuid);
+        } catch (IllegalArgumentException e) {
+            throw new GetException("Organization wasn't found in database");
+        }
+    }
+
 }

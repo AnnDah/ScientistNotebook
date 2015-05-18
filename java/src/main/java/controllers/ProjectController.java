@@ -158,9 +158,12 @@ public class ProjectController {
         try {
             Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
+
             UUID id = UUID.fromString(projectId);
+
             Project toDelete = mapper.get(id);
             ProjectTags tagDelete = tagMapper.get(id);
+
             mapper.delete(toDelete);
             tagMapper.delete(tagDelete);
 

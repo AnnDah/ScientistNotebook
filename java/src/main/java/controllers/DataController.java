@@ -24,10 +24,19 @@ import models.Data;
  *
  */
 public class DataController {
+    private DatabaseConnector db;
+    private Mapper<Data> mapper;
 
-    public UUID createData(String strData) throws CreationException{
-        DatabaseConnector db = new DatabaseConnector();
+    public DataController(){
+        db = new DatabaseConnector();
         db.connectDefault();
+
+        mapper = new MappingManager(db.getSession()).mapper(Data.class);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public UUID createData(String strData) throws CreationException{
         //Create an unique identifier
         UUID id = UUID.randomUUID();
 
@@ -52,9 +61,9 @@ public class DataController {
 
             int level = Integer.parseInt(strLevel);
 
-            Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
             Data data = new Data(content, created, author, level, tags, id, dataType, project, name, description);
             mapper.save(data);
+
             Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
             DataTags tag = new DataTags(tags, id, name, author, description, created);
             tagMapper.save(tag);
@@ -67,49 +76,37 @@ public class DataController {
         return id;
     }
 
+    public JSONObject getDataJson(String strID)throws GetException{
+        Data data = getData(strID);
+        db.close();
+        return createDataJson(data);
+    }
+
     @SuppressWarnings("unchecked")
-    public JSONObject getData(String strId) throws GetException{
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        Data whose;
-
-        Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
+    public Data getData(String strId) throws GetException{
         try {
             UUID dataId = UUID.fromString(strId);
-            whose = mapper.get(dataId);
+            return mapper.get(dataId);
         } catch (IllegalArgumentException e){
             throw new GetException("Data wasn't found in database");
-        } finally {
-            db.close();
         }
-
-        JSONObject data = createDataJson(
-                whose.getContent(),
-                whose.getCreated(),
-                whose.getAuthor(),
-                whose.getLevel(),
-                whose.getTags(),
-                whose.getId(),
-                whose.getDataType(),
-                whose.getProject(),
-                whose.getName(),
-                whose.getDescription(),
-                whose.getRevisionHistory());
-
-        JSONArray ja = new JSONArray();
-        ja.add(data);
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("data", ja);
-
-        return mainObj;
 
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createDataJson(String content, Long created, String author, int level, List<String> tags,
-                                     UUID id, String dataType, String project, String name, String description,
-                                     List<String> revisionHistory){
+    public JSONObject createDataJson(Data whose){
+        String content = whose.getContent();
+        Long created =  whose.getCreated();
+        String author = whose.getAuthor();
+        int level = whose.getLevel();
+        List<String> tags = whose.getTags();
+        UUID id = whose.getId();
+        String dataType = whose.getDataType();
+        String project = whose.getProject();
+        String name = whose.getName();
+        String description = whose.getDescription();
+        List<String> revisionHistory = whose.getRevisionHistory();
+
         JSONObject dataJson = new JSONObject();
         dataJson.put("content", content);
         dataJson.put("created", created);
@@ -123,24 +120,31 @@ public class DataController {
         dataJson.put("description", description);
         dataJson.put("revisionHistory", revisionHistory);
 
-        return dataJson;
+        JSONArray ja = new JSONArray();
+        ja.add(dataJson);
+
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("data", ja);
+
+        return mainObj;
     }
 
     public void deleteData(String id) throws DeletionException{
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
+        UUID dataId = UUID.fromString(id);
         try {
-            Mapper<Data> mapper = new MappingManager(db.getSession()).mapper(Data.class);
             Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
-            Data toDelete = mapper.get(id);
-            DataTags tagDelete = tagMapper.get(id);
+            Data toDelete = mapper.get(dataId);
+            DataTags tagDelete = tagMapper.get(dataId);
+
             mapper.delete(toDelete);
             tagMapper.delete(tagDelete);
 
 
         } catch (IllegalArgumentException e){
             throw new DeletionException("Data wasn't found in database");
-        } finally {
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             db.close();
         }
 
@@ -176,9 +180,6 @@ public class DataController {
         Statement statement = new SimpleStatement(query);
 
         JSONArray ja = new JSONArray();
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
 
         try{
             ResultSet results = db.getSession().execute(statement);

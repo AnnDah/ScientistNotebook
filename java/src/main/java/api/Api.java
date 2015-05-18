@@ -29,7 +29,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new DataController().getData(request.params(":id"));
+                    return new DataController().getDataJson(request.params(":id"));
                 } catch (GetException e) {
                     response.status(404);
                 }

@@ -27,7 +27,7 @@ import java.util.*;
 public class UserController {
 
     private Mapper<User> mapper;
-    DatabaseConnector db;
+    private DatabaseConnector db;
 
     public UserController(){
         db = new DatabaseConnector();

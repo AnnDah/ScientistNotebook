@@ -298,6 +298,47 @@ public class DataController {
         }
     }
 
+    public JSONObject getDataUser(String userId) throws GetException {
+        String query = String.format("SELECT * FROM scinote.data WHERE author = '%s' ALLOW FILTERING;", userId);
+
+        System.out.println(query);
+        return getDataFromQuery(query);
+    }
+
+    public JSONObject getDataProject(String projectId) throws GetException {
+        String query = String.format("SELECT * FROM scinote.data WHERE project = '%s' ALLOW FILTERING;", projectId);
+
+        System.out.println(query);
+        return getDataFromQuery(query);
+    }
+
+    private JSONObject getDataFromQuery(String query) throws GetException {
+        Statement statement = new SimpleStatement(query);
+        JSONArray ja = new JSONArray();
+        try{
+            ResultSet results = db.getSession().execute(statement);
+            for(Row row : results) {
+                if (row != null) {
+                    JSONObject data = createSearchJson(
+                            row.getUUID("id"),
+                            row.getString("name"),
+                            row.getString("author"),
+                            row.getString("description"),
+                            row.getLong("created"));
+                    ja.add(data);
+                }
+            }
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+            throw new GetException("Invalid input data");
+        } finally {
+            db.close();
+        }
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("data", ja);
+
+        return mainObj;
+    }
+
     private UUID stringToUUID(String id){
         return UUID.fromString(id);
     }

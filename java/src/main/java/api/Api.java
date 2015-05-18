@@ -87,6 +87,30 @@ public class Api {
             }
         });
 
+        Spark.get(new Route("/data/user/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try {
+                    return new DataController().getDataUser(request.params(":id"));
+                }catch (GetException e) {
+                    response.status(400);
+                }
+                return response;
+            }
+        });
+
+        Spark.get(new Route("/data/project/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try {
+                    return new DataController().getDataProject(request.params(":id"));
+                }catch (GetException e) {
+                    response.status(400);
+                }
+                return response;
+            }
+        });
+
         // Routes for users
         Spark.post(new Route("/users") {
             @Override

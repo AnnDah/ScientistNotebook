@@ -77,6 +77,33 @@ Response will include:
 
 
 
+// Get all data from one user
+GET 
+/data/user/<userid>
+
+Exampel: http://localhost:9090/data/user/99fd549f-518e-468e-8434-cd7b0e4274e3
+Response will include:
+	id
+	name
+	author
+	created
+	description
+
+
+// Get all data from one project
+GET 
+/data/project/<projectid>
+
+Exampel: http://localhost:9090/data/project/21d06407-72bf-4554-8be9-27bbc3d2fcd2
+Response will include:
+	id
+	name
+	author
+	created
+	description
+
+
+
 // Delete a specific data
 DELETE 
 /data/<id>

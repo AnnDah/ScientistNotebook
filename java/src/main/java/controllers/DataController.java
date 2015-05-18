@@ -9,6 +9,7 @@ import com.datastax.driver.mapping.MappingManager;
 import exceptions.CreationException;
 import exceptions.DeletionException;
 import exceptions.GetException;
+import exceptions.UpdateException;
 import models.DataTags;
 import models.DatabaseConnector;
 import org.json.simple.JSONArray;
@@ -218,5 +219,82 @@ public class DataController {
 
         return dataJson;
 
+    }
+
+    public JSONObject updateData(String id, String update)throws UpdateException{
+        String content;
+        String author;
+        String project;
+        String name;
+        String description;
+        String dataType;
+        int level;
+        List<String> tags;
+
+        try {
+            JSONObject jObj = (JSONObject) new JSONParser().parse(update);
+
+            content = (String) jObj.get("content");
+            author = (String) jObj.get("author");
+            project = (String) jObj.get("project");
+            name = (String) jObj.get("name");
+            description = (String) jObj.get("description");
+            dataType = (String) jObj.get("dataType");
+            String strLevel = (String) jObj.get("level");
+            level = Integer.parseInt(strLevel);
+
+            JSONArray tagsArray = (JSONArray) jObj.get("tags");
+            tags = new ArrayList<String>();
+            for (Object aTagsArray : tagsArray) {
+                tags.add(aTagsArray.toString());
+            }
+
+        }  catch (org.json.simple.parser.ParseException e){
+            throw new UpdateException("Invalid input data");
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Invalid input data");
+        }
+
+        try {
+            Data data = getData(id);
+
+            data.setContent(content);
+            data.setAuthor(author);
+            data.setProject(project);
+            data.setName(name);
+            data.setDescription(description);
+            data.setDataType(dataType);
+            data.setLevel(level);
+            data.setTags(tags);
+
+            mapper.save(data);
+
+            try {
+                UUID dataId = UUID.fromString(id);
+
+                Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
+                DataTags dataTags = tagMapper.get(dataId);
+
+                dataTags.setAuthor(author);
+                dataTags.setDescription(description);
+                dataTags.setName(name);
+                dataTags.setTags(tags);
+
+                tagMapper.save(dataTags);
+            } catch (IllegalArgumentException e){
+                throw new GetException("Data wasn't found in database");
+            }
+
+
+            return createDataJson(data);
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("User wasn't found in database");
+        } catch (NullPointerException e){
+            throw new UpdateException("Invalid input data");
+        } catch (GetException e){
+            throw new UpdateException("Invalid input data");
+        }finally {
+            db.close();
+        }
     }
 }

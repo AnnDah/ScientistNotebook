@@ -46,7 +46,8 @@ JSON format in request body:
 "project":"some project",
 "name":"data name",
 "description":"blablabla",
-"tags":["tag1","tag2"]}
+"tags":["tag1","tag2"]
+}
 When a new data is created the data id will be added to response body. This you can use to get and delete the data.
 
 
@@ -88,7 +89,21 @@ Example http://localhost:9090/data/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
 // Update a specific data
 PUT 
 /data/<id>
-Not implemented yet
+
+Include old values per default and replace those values that are to be updated.
+JSON format in request body:
+{
+"content":"some data",
+"author":"Annika Magnusson",
+"level":"101",
+"dataType":"doc",
+"project":"some project",
+"name":"data name",
+"description":"blablabla",
+"tags":["tag1","tag2"]
+}
+
+Response will be the updated data in JSON format.
 
 --------------------------------------------------------
 --------------------------------------------------------

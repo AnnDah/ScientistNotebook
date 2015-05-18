@@ -65,7 +65,12 @@ public class Api {
         Spark.put(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
-                return "put file";
+                try{
+                    return new DataController().updateData(request.params(":id"), request.body());
+                } catch (UpdateException e){
+                    response.status(400);
+                }
+                return response;
             }
         });
 

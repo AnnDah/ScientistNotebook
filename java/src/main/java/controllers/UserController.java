@@ -178,6 +178,7 @@ public class UserController {
         String organization;
         String department;
         String role;
+        List<String> follows;
 
         try {
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
@@ -189,6 +190,12 @@ public class UserController {
             organization = (String) jObj.get("organization");
             department = (String) jObj.get("department");
             role = (String) jObj.get("role");
+
+            JSONArray followArray = (JSONArray) jObj.get("follows");
+            follows = new ArrayList<String>();
+            for (Object aFollowsArray : followArray) {
+                follows.add(aFollowsArray.toString());
+            }
 
         }  catch (org.json.simple.parser.ParseException e){
             throw new UpdateException("Invalid input data");
@@ -210,6 +217,7 @@ public class UserController {
             user.setOrganization(organization);
             user.setDepartment(department);
             user.setRole(role);
+            user.setFollows(follows);
 
             mapper.save(user);
 

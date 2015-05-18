@@ -9,6 +9,7 @@ import com.datastax.driver.mapping.MappingManager;
 import exceptions.CreationException;
 import exceptions.DeletionException;
 import exceptions.GetException;
+import exceptions.UpdateException;
 import models.DatabaseConnector;
 import models.Project;
 import models.ProjectTags;
@@ -27,10 +28,18 @@ import java.util.UUID;
  * Class to handle CRUD operations on projects to database.
  */
 public class ProjectController {
+    private DatabaseConnector db;
+    private Mapper<Project> mapper;
+
+    public ProjectController(){
+        db = new DatabaseConnector();
+        db.connectDefault();
+
+        mapper = new MappingManager(db.getSession()).mapper(Project.class);
+
+    }
 
     public UUID createProject(String projectInfo) throws CreationException{
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
         //Create an unique identifier
         UUID id = UUID.randomUUID();
 
@@ -91,7 +100,6 @@ public class ProjectController {
                 departments.add(aDepartmentsArray.toString());
             }
 
-            Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
             Project project = new Project(id, field, tags, description, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
@@ -108,55 +116,23 @@ public class ProjectController {
         return id;
     }
 
+    public JSONObject getProjectJson(String id)throws GetException{
+        Project project = getProject(id);
+        db.close();
+        return createProjectJson(project);
+    }
     @SuppressWarnings("unchecked")
-    public JSONObject getProject(String projectId) throws GetException{
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        Project whose;
-
-        Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
-
+    public Project getProject(String projectId) throws GetException {
         try {
             UUID projectUuid = UUID.fromString(projectId);
-            whose = mapper.get(projectUuid);
-        } catch (IllegalArgumentException e){
+            return mapper.get(projectUuid);
+        } catch (IllegalArgumentException e) {
             throw new GetException("Project wasn't found in database");
-        } finally {
-            db.close();
         }
-
-        JSONObject project = createProjectJson(
-                whose.getId(),
-                whose.getField(),
-                whose.getTags(),
-                whose.getDescription(),
-                whose.getProjectRoles(),
-                whose.getCreatedBy(),
-                whose.getName(),
-                whose.getStatus(),
-                whose.getIsPrivate(),
-                whose.getCreated(),
-                whose.getFundedBy(),
-                whose.getMembers(),
-                whose.getEmployers(),
-                whose.getFunds(),
-                whose.getDepartments(),
-                whose.getOwner(),
-                whose.getFollowers());
-
-        JSONArray ja = new JSONArray();
-        ja.add(project);
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("projects", ja);
-
-        return mainObj;
     }
 
     public void deleteProject(String projectId) throws DeletionException{
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
         try {
-            Mapper<Project> mapper = new MappingManager(db.getSession()).mapper(Project.class);
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
 
             UUID id = UUID.fromString(projectId);
@@ -175,11 +151,25 @@ public class ProjectController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createProjectJson(UUID id, String field, List<String> tags, String description,
-                                        List<String> projectRoles, String createdBy, String name, String status,
-                                        boolean isPrivate, Long created, List<String> fundedBy, List<String> members,
-                                        List<String> employers, List<String> funds, List<String> departments,
-                                        String owner, List<String> followers){
+    public JSONObject createProjectJson(Project whose){
+        UUID id = whose.getId();
+        String field = whose.getField();
+        List<String> tags = whose.getTags();
+        String description = whose.getDescription();
+        List<String> projectRoles = whose.getProjectRoles();
+        String createdBy = whose.getCreatedBy();
+        String name = whose.getName();
+        String status = whose.getStatus();
+        boolean isPrivate = whose.getIsPrivate();
+        Long created = whose.getCreated();
+        List<String> fundedBy = whose.getFundedBy();
+        List<String> members = whose.getMembers();
+        List<String> employers = whose.getEmployers();
+        List<String> funds = whose.getFunds();
+        List<String> departments = whose.getDepartments();
+        String owner = whose.getOwner();
+        List<String> followers = whose.getFollowers();
+
         JSONObject projectJson = new JSONObject();
         projectJson.put("id", id);
         projectJson.put("field", field);
@@ -199,7 +189,13 @@ public class ProjectController {
         projectJson.put("owner", owner);
         projectJson.put("followers", followers);
 
-        return projectJson;
+        JSONArray ja = new JSONArray();
+        ja.add(projectJson);
+
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("projects", ja);
+
+        return mainObj;
     }
 
     @SuppressWarnings("unchecked")
@@ -232,9 +228,6 @@ public class ProjectController {
         Statement statement = new SimpleStatement(query);
 
         JSONArray ja = new JSONArray();
-
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
 
         try{
             ResultSet results = db.getSession().execute(statement);
@@ -281,5 +274,142 @@ public class ProjectController {
 
     public void addFollower(){
 
+    }
+
+    public JSONObject updateProject(String id, String update) throws UpdateException{
+        String field;
+        String description;
+        String status;
+        String owner;
+        List<String> tags;
+        List<String> projectRoles;
+        List<String> fundedBy;
+        List<String> members;
+        List<String> employers;
+        List<String> funds;
+        List<String> departments;
+        List<String> followers;
+        boolean isPrivate;
+        String createdBy;
+        String name;
+
+        try {
+            JSONObject jObj = (JSONObject) new JSONParser().parse(update);
+
+            field = (String) jObj.get("field");
+            description = (String) jObj.get("description");
+            status = (String) jObj.get("status");
+            owner = (String) jObj.get("owner");
+            createdBy = (String) jObj.get("createdBy");
+            name = (String) jObj.get("name");
+            String strPrivate = (String) jObj.get("isPrivate");
+
+            isPrivate = false;
+            if("true".equals(strPrivate)) isPrivate = true;
+
+
+            JSONArray tagsArray = (JSONArray) jObj.get("tags");
+            tags = new ArrayList<String>();
+            for (Object aTagsArray : tagsArray) {
+                tags.add(aTagsArray.toString());
+            }
+
+            JSONArray rolesArray = (JSONArray) jObj.get("projectRoles");
+            projectRoles = new ArrayList<String>();
+            for (Object aRolesArray : rolesArray) {
+                projectRoles.add(aRolesArray.toString());
+            }
+
+            JSONArray fundedArray = (JSONArray) jObj.get("fundedBy");
+            fundedBy = new ArrayList<String>();
+            for (Object aFundedArray : fundedArray) {
+                fundedBy.add(aFundedArray.toString());
+            }
+
+            JSONArray membersArray = (JSONArray) jObj.get("members");
+            members = new ArrayList<String>();
+            for (Object aMembersArray : membersArray) {
+                members.add(aMembersArray.toString());
+            }
+
+            JSONArray employersArray = (JSONArray) jObj.get("employers");
+            employers = new ArrayList<String>();
+            for (Object anEmployersArray : employersArray) {
+                employers.add(anEmployersArray.toString());
+            }
+
+            JSONArray fundsArray = (JSONArray) jObj.get("funds");
+            funds = new ArrayList<String>();
+            for (Object aFundsArray : fundsArray) {
+                funds.add(aFundsArray.toString());
+            }
+
+            JSONArray departmentsArray = (JSONArray) jObj.get("departments");
+            departments = new ArrayList<String>();
+            for (Object aDepartmentsArray : departmentsArray) {
+                departments.add(aDepartmentsArray.toString());
+            }
+
+            JSONArray followersArray = (JSONArray) jObj.get("followers");
+            followers = new ArrayList<String>();
+            for (Object aFollowersArray : followersArray) {
+                followers.add(aFollowersArray.toString());
+            }
+
+        }  catch (org.json.simple.parser.ParseException e){
+            throw new UpdateException("Invalid input data");
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Invalid input data");
+        }
+
+        try {
+            Project project = getProject(id);
+
+            project.setField(field);
+            project.setDescription(description);
+            project.setStatus(status);
+            project.setOwner(owner);
+            project.setTags(tags);
+            project.setProjectRoles(projectRoles);
+            project.setFundedBy(fundedBy);
+            project.setMembers(members);
+            project.setEmployers(employers);
+            project.setFunds(funds);
+            project.setDepartments(departments);
+            project.setFollowers(followers);
+            project.setIsPrivate(isPrivate);
+            project.setCreatedBy(createdBy);
+            project.setName(name);
+
+            mapper.save(project);
+
+            try {
+                UUID projectId = UUID.fromString(id);
+
+                Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
+                ProjectTags projectTags = tagMapper.get(projectId);
+
+                projectTags.setName(name);
+                projectTags.setTags(tags);
+                projectTags.setStatus(status);
+                projectTags.setDescription(description);
+                projectTags.setIsPrivate(isPrivate);
+
+                tagMapper.save(projectTags);
+            } catch (IllegalArgumentException e){
+                throw new GetException("Project wasn't found in database");
+            }
+
+
+            return createProjectJson(project);
+        } catch (IllegalArgumentException e){
+            throw new UpdateException("Project wasn't found in database");
+        } catch (NullPointerException e){
+            throw new UpdateException("Invalid input data");
+        } catch (GetException e){
+            throw new UpdateException("Invalid input data");
+        }finally {
+            db.close();
+        }
     }
 }

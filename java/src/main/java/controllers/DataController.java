@@ -288,7 +288,7 @@ public class DataController {
 
             return createDataJson(data);
         } catch (IllegalArgumentException e){
-            throw new UpdateException("User wasn't found in database");
+            throw new UpdateException("Data wasn't found in database");
         } catch (NullPointerException e){
             throw new UpdateException("Invalid input data");
         } catch (GetException e){

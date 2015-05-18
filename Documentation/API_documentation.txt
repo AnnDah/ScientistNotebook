@@ -150,7 +150,9 @@ JSON format in request body:
 "password":"1234",
 "organization":"MAH",
 "department":"computer",
-"role":"user"}
+"role":"user",
+"follows":["annika","sebastian"]
+}
 
 Response will be the updated user in JSON format.
 
@@ -224,6 +226,34 @@ DELETE
 
 Include data id in request
 Example http://localhost:9090/projects/1ee9815f-a3c0-4fad-9f5a-4cb466ae74c7
+
+
+
+// Update a specific project
+PUT 
+/projects/<id>
+
+Include old values per default and replace those values that are to be updated.
+JSON format in request body:
+{
+"field":"some field",
+"createdBy":"Annika Magnusson",
+"name":"project1",
+"status":"ongoing",
+"owner":"kristoffer",
+"isPrivate":"true",
+"description":"blablab",
+"tags":["tag1","tag2"],
+"projectRoles":["role1","role2"],
+"fundedBy":["funder1","funder2"],
+"funds":["fund1","fund2"],
+"members":["member1","member2"],
+"employers":["employer1","employer2"],
+"departments":["department1","department2"],
+"followers":["kristoffer","natalia","diana"]
+}
+
+Response will be the updated project in JSON format.
 
 --------------------------------------------------------
 --------------------------------------------------------

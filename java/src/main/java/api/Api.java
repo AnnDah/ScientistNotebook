@@ -157,7 +157,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new ProjectController().getProject(request.params(":id"));
+                    return new ProjectController().getProjectJson(request.params(":id"));
                 } catch (GetException e) {
                     response.status(400);
                 }
@@ -175,6 +175,18 @@ public class Api {
                 }
 
                 return 0;
+            }
+        });
+
+        Spark.put(new Route("/projects/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                try{
+                    return new ProjectController().updateProject(request.params(":id"), request.body());
+                }catch (UpdateException e){
+                    response.status(400);
+                }
+                return response;
             }
         });
 
@@ -221,7 +233,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 try {
                     return new OrganizationController().updateOrganization(request.params(":id"), request.body());
-                } catch (UpdateException e){
+                } catch (UpdateException e) {
                     response.status(400);
                 }
                 return response;

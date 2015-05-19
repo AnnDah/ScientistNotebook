@@ -296,15 +296,11 @@ public class DataController {
 
     public JSONObject getDataUser(String userId) throws GetException {
         String query = String.format("SELECT * FROM scinote.data WHERE author = '%s' ALLOW FILTERING;", userId);
-
-        System.out.println(query);
         return getDataFromQuery(query);
     }
 
     public JSONObject getDataProject(String projectId) throws GetException {
         String query = String.format("SELECT * FROM scinote.data WHERE project = '%s' ALLOW FILTERING;", projectId);
-
-        System.out.println(query);
         return getDataFromQuery(query);
     }
 
@@ -314,6 +310,9 @@ public class DataController {
         JSONArray ja = new JSONArray();
         try{
             ResultSet results = db.getSession().execute(statement);
+            if(results.all().size() == 0){
+                throw new GetException("No data found");
+            }
             for(Row row : results) {
                 if (row != null) {
                     JSONObject data = createSearchJson(

@@ -90,6 +90,7 @@ Response will include:
 	description
 
 
+
 // Get all data from one project
 GET 
 /data/project/<projectid>
@@ -118,6 +119,8 @@ PUT
 /data/<id>
 
 Include old values per default and replace those values that are to be updated.
+The id of the user performing the update needs to be included in the JSON. This the front end application will add.
+An description of the update needs to be included in the JSON. This the user will add.
 JSON format in request body:
 {
 "content":"some data",
@@ -127,7 +130,9 @@ JSON format in request body:
 "project":"some project",
 "name":"data name",
 "description":"blablabla",
-"tags":["tag1","tag2"]
+"tags":["tag1","tag2"],
+"user":"id on the user who makes the request",
+"revisionDescription":"some description of the revision"
 }
 
 Response will be the updated data in JSON format.
@@ -149,7 +154,8 @@ JSON format in request body:
 "password":"1234",
 "organization":"MAH",
 "department":"computer",
-"role":"user"}
+"role":"user"
+}
 When a new user is created the user id will be added to response body. This you can use to get and delete the user.
 
 

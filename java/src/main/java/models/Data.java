@@ -22,7 +22,8 @@ public class Data {
     private String project;
     private String name;
     private String description;
-
+    @Column(name = "last_update")
+    private Long lastUpdate;
     @Column(name="data_type")
     private String dataType;
     private int level;
@@ -37,7 +38,7 @@ public class Data {
     }
 
     public Data(String content, Long created, String author, int level, List<String> tags, UUID id, String dataType,
-                String project, String name, String description){
+                String project, String name, String description, Long lastUpdate){
         this.content = content;
         this.created = created;
         this.author = author;
@@ -47,7 +48,8 @@ public class Data {
         this.dataType = dataType;
         this.project = project;
         this.name = name;
-        this.setDescription(description);
+        this.description = description;
+        this.lastUpdate = lastUpdate;
     }
 
     public String getDescription() {
@@ -130,6 +132,14 @@ public class Data {
         this.tags = tags;
     }
 
+    public Long getLastUpdate(){
+        return this.lastUpdate;
+    }
+
+    public void setLastUpdate(Long lastUpdate){
+        this.lastUpdate = lastUpdate;
+    }
+
     @Override
     public boolean equals(Object other){
         if(other instanceof Data){
@@ -144,7 +154,8 @@ public class Data {
                     Objects.equals(this.revisionHistory, that.revisionHistory) &&
                     Objects.equals(this.project, that.project) &&
                     Objects.equals(this.name, that.name) &&
-                    Objects.equals(this.getDescription(), that.getDescription());
+                    Objects.equals(this.description, that.description) &&
+                    Objects.equals(this.lastUpdate, that.lastUpdate);
         }
         return false;
     }
@@ -152,7 +163,7 @@ public class Data {
     @Override
     public int hashCode() {
         return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name,
-                getDescription());
+                description, lastUpdate);
     }
 
 }

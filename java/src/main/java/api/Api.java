@@ -9,8 +9,10 @@ import spark.*;
 import models.DatabaseConnector;
 
 /**
- * Created by annikamagnusson on 17/04/15.
+ * API for application.
  *
+ * @author Annika Magnusson
+ * @version 1.0, 17/04/15
  */
 
 public class Api {
@@ -23,7 +25,10 @@ public class Api {
         db.close();
         //End
 
-        // Routes for da
+        /**
+         * Get a specific data.
+         * Data id in request params.
+         */
         Spark.get(new Route("/data/:id  ") {
             @Override
             public Object handle(Request request, Response response) {
@@ -37,6 +42,10 @@ public class Api {
             }
         });
 
+        /**
+         * Create a new data.
+         * Data information is sent request body in JSON format.
+         */
         Spark.post(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
@@ -50,6 +59,10 @@ public class Api {
             }
         });
 
+        /**
+         * Delete a specific data.
+         * Data id in request params.
+         */
         Spark.delete(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -62,6 +75,11 @@ public class Api {
             }
         });
 
+        /**
+         * Update a specific data.
+         * Data id in request params.
+         * Updates are sent in request body in JSON format.
+         */
         Spark.put(new Route("/data/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -74,6 +92,10 @@ public class Api {
             }
         });
 
+        /**
+         * Search data using tags.
+         * Tags are sent in request query.
+         */
         Spark.get(new Route("/data") {
             @Override
             public Object handle(Request request, Response response) {
@@ -87,31 +109,42 @@ public class Api {
             }
         });
 
+        /**
+         * Get all data published by a specific user.
+         * User id in request params.
+         */
         Spark.get(new Route("/data/user/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 try {
                     return new DataController().getDataUser(request.params(":id"));
-                }catch (GetException e) {
+                } catch (GetException e) {
                     response.status(400);
                 }
                 return response;
             }
         });
 
+        /**
+         * Get all data that belongs to a specific project.
+         * Project id in request params.
+         */
         Spark.get(new Route("/data/project/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 try {
                     return new DataController().getDataProject(request.params(":id"));
-                }catch (GetException e) {
+                } catch (GetException e) {
                     response.status(400);
                 }
                 return response;
             }
         });
 
-        // Routes for users
+        /**
+         * Create a new user.
+         * User information is sent in request body in JSON format.
+         */
         Spark.post(new Route("/users") {
             @Override
             public Object handle(Request request, Response response) {
@@ -124,6 +157,10 @@ public class Api {
             }
         });
 
+        /**
+         * Get a specific user.
+         * User id in request params.
+         */
         Spark.get(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -138,6 +175,11 @@ public class Api {
             }
         });
 
+        /**
+         * Update a specific user.
+         * User id in request params.
+         * Updates are sent in request body in JSON format.
+         */
         Spark.put(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -150,19 +192,27 @@ public class Api {
             }
         });
 
+        /**
+         * Add a user to data list of followers and a project in users list of follows.
+         * User id and project id is sent in request params.
+         */
         Spark.put(new Route("/users/:userId/:projectId") {
             @Override
             public Object handle(Request request, Response response) {
-                try{
+                try {
                     new ProjectController().addFollower(request.params(":projectId"), request.params(":userId"));
                     new UserController().addFollows(request.params(":userId"), request.params(":projectId"));
-                } catch (UpdateException e){
+                } catch (UpdateException e) {
                     response.status(400);
                 }
                 return response;
             }
         });
 
+        /**
+         * Delete a specific user.
+         * User id in request params.
+         */
         Spark.delete(new Route("/users/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -175,7 +225,10 @@ public class Api {
             }
         });
 
-        // Routes for projects
+        /**
+         * Create a new project.
+         * Project information is sent in request body in JSON format.
+         */
         Spark.post(new Route("/projects") {
             @Override
             public Object handle(Request request, Response response) {
@@ -189,6 +242,10 @@ public class Api {
             }
         });
 
+        /**
+         * Get a specific project.
+         * Project id in request params.
+         */
         Spark.get(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -202,6 +259,10 @@ public class Api {
             }
         });
 
+        /**
+         * Search projects using tags.
+         * Tags in request query.
+         */
         Spark.get(new Route("/projects") {
             @Override
             public Object handle(Request request, Response response) {
@@ -215,6 +276,10 @@ public class Api {
             }
         });
 
+        /**
+         * Update a specific project.
+         * Project id in request params.
+         */
         Spark.put(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -227,6 +292,10 @@ public class Api {
             }
         });
 
+        /**
+         * Delete a specific project.
+         * Project id in requrst params.
+         */
         Spark.delete(new Route("/projects/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -239,7 +308,10 @@ public class Api {
             }
         });
 
-        // Routes for organizations
+        /**
+         * Create a new organization.
+         * Organization information are sent in request body in JSON format.
+         */
         Spark.post(new Route("/organizations") {
             @Override
             public Object handle(Request request, Response response) {
@@ -252,6 +324,10 @@ public class Api {
             }
         });
 
+        /**
+         * Get a specific organization.
+         * Organization id in request params.
+         */
         Spark.get(new Route("/organizations/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -265,6 +341,10 @@ public class Api {
             }
         });
 
+        /**
+         * Update a specific organization.
+         * Organization id in request params.
+         */
         Spark.put(new Route("/organizations/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -277,6 +357,10 @@ public class Api {
             }
         });
 
+        /**
+         * Delete a specific organization.
+         * Organization id in request params.
+         */
         Spark.delete(new Route("/organizations/:id") {
             @Override
             public Object handle(Request request, Response response) {
@@ -289,7 +373,10 @@ public class Api {
             }
         });
 
-        // Routes for login
+        /**
+         * Login for user.
+         * User email and password are sent in request body.
+         */
         Spark.post(new Route("/login") {
             @Override
             public Object handle(Request request, Response response) {
@@ -304,25 +391,15 @@ public class Api {
             }
         });
 
-        //Route for testing
+        /**
+         * Used to test api calls containing JSON in request body.
+         * Should be removed before project delivery.
+         */
         Spark.post(new Route("test") {
             @Override
             public Object handle(Request request, Response response) {
                 System.out.println("Json in body: " + request.body());
                 return request.body();
-            }
-        });
-
-        Spark.post(new Route("/search") {
-            @Override
-            public Object handle(Request request, Response response) {
-                try {
-                    return new DataController().searchDataTags(request.body());
-                } catch (GetException e) {
-                    response.status(400);
-                }
-
-                return 0;
             }
         });
 

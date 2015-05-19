@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.*;
+import java.util.regex.PatternSyntaxException;
 
 import models.Data;
 
@@ -159,7 +160,6 @@ public class DataController {
         int numberOfTags = 1;
 
         try{
-
             for (String s : tags.split(",")) {
                 if (numberOfTags == 1) {
                     query += (" tags CONTAINS '" + s + "'");
@@ -167,13 +167,9 @@ public class DataController {
                 } else {
                     query += (" AND tags CONTAINS '" + s + "'");
                 }
-
-                System.out.println(query);
-
-
             }
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (PatternSyntaxException e){
+            throw new GetException("Invalid input data");
         }
 
         query += " ALLOW FILTERING;";
@@ -312,6 +308,7 @@ public class DataController {
         return getDataFromQuery(query);
     }
 
+    @SuppressWarnings("unchecked")
     private JSONObject getDataFromQuery(String query) throws GetException {
         Statement statement = new SimpleStatement(query);
         JSONArray ja = new JSONArray();
@@ -337,9 +334,5 @@ public class DataController {
         mainObj.put("data", ja);
 
         return mainObj;
-    }
-
-    private UUID stringToUUID(String id){
-        return UUID.fromString(id);
     }
 }

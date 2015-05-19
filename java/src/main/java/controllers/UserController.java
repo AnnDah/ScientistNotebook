@@ -236,7 +236,7 @@ public class UserController {
 
     public void addFollows(String userId, String projectId)throws UpdateException{
         try {
-            UUID id = stringToUUID(userId);
+            UUID id = UUID.fromString(userId);
             User user = mapper.get(id);
             List<String> follows = user.getFollows();
             follows.add(projectId);
@@ -274,7 +274,4 @@ public class UserController {
         return userJson;
     }
 
-    private UUID stringToUUID(String id){
-        return UUID.fromString(id);
-    }
 }

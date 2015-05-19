@@ -274,7 +274,7 @@ public class ProjectController {
 
     public void addFollower(String projectId, String userId) throws UpdateException{
         try {
-            UUID id = stringToUUID(projectId);
+            UUID id = UUID.fromString(projectId);
             Project project = mapper.get(id);
             if(project.getIsPrivate() == true){
                 System.out.println("Project is private and can't be followed");
@@ -426,9 +426,5 @@ public class ProjectController {
         }finally {
             db.close();
         }
-    }
-
-    private UUID stringToUUID(String id){
-        return UUID.fromString(id);
     }
 }

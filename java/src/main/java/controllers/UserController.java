@@ -83,8 +83,6 @@ public class UserController {
 
     @SuppressWarnings("unchecked")
     public JSONObject createUserJson(User whose){
-
-
         UUID id = whose.getId();
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
@@ -96,9 +94,7 @@ public class UserController {
         String role = whose.getRole();
         List<String> follows = whose.getFollows();
 
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date utcDate= new Date(date);
+        Date utcDate= getUtcDate(date);
 
         JSONObject userJson = new JSONObject();
         userJson.put("id", id);
@@ -139,7 +135,6 @@ public class UserController {
     }
 
     public JSONObject getUserLogin(String inputEmail) throws GetException {
-
         Statement statement = new SimpleStatement(String.format(
                 "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
 
@@ -254,10 +249,7 @@ public class UserController {
     public JSONObject createUserJsonLogin(UUID id, String firstName, String lastName, String email, String password, Long date,
                                      String organization, String department, String role, List<String> follows){
         // Parse date to UTC
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date utcDate= new Date(date);
-        System.out.println(formatter.format(utcDate));
+        Date utcDate= getUtcDate(date);
 
         JSONObject userJson = new JSONObject();
         userJson.put("id", id);
@@ -272,6 +264,12 @@ public class UserController {
         userJson.put("follows", follows);
 
         return userJson;
+    }
+
+    private Date getUtcDate(Long date){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 
 }

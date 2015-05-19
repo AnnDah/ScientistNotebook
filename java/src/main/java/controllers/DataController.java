@@ -16,6 +16,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.PatternSyntaxException;
 
@@ -112,10 +114,13 @@ public class DataController {
         String description = whose.getDescription();
         List<String> revisionHistory = whose.getRevisionHistory();
 
+        Date utcCreated = getUtcDate(created);
+        Date utcUpdated = getUtcDate(lastUpdate);
+
         JSONObject dataJson = new JSONObject();
         dataJson.put("content", content);
-        dataJson.put("created", created);
-        dataJson.put("lastUpdate", lastUpdate);
+        dataJson.put("created", utcCreated);
+        dataJson.put("lastUpdate", utcUpdated);
         dataJson.put("author", author);
         dataJson.put("visibility", level);
         dataJson.put("tags", tags);
@@ -210,12 +215,14 @@ public class DataController {
     @SuppressWarnings("unchecked")
     public JSONObject createSearchJson(UUID id, String name, String author, String description,
                                        Long created){
+        Date utcCreated= getUtcDate(created);
+
         JSONObject dataJson = new JSONObject();
         dataJson.put("id", id);
         dataJson.put("name", name);
         dataJson.put("author", author);
         dataJson.put("description", description);
-        dataJson.put("created", created);
+        dataJson.put("created", utcCreated);
 
         return dataJson;
 
@@ -350,5 +357,11 @@ public class DataController {
         mainObj.put("data", ja);
 
         return mainObj;
+    }
+
+    private Date getUtcDate(Long date){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

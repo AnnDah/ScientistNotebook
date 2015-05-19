@@ -18,10 +18,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -170,6 +169,8 @@ public class ProjectController {
         String owner = whose.getOwner();
         List<String> followers = whose.getFollowers();
 
+        Date utcCreated= getUtcDate(created);
+
         JSONObject projectJson = new JSONObject();
         projectJson.put("id", id);
         projectJson.put("field", field);
@@ -180,7 +181,7 @@ public class ProjectController {
         projectJson.put("tags", tags);
         projectJson.put("projectRoles", projectRoles);
         projectJson.put("isPrivate", isPrivate);
-        projectJson.put("created", created);
+        projectJson.put("created", utcCreated);
         projectJson.put("fundedBy", fundedBy);
         projectJson.put("members", members);
         projectJson.put("employers", employers);
@@ -260,12 +261,14 @@ public class ProjectController {
     @SuppressWarnings("unchecked")
     public JSONObject createSearchJson(UUID id, String name, String author, String description,
                                        Long created, boolean isPrivate){
+        Date utcCreated = getUtcDate(created);
+
         JSONObject projectJson = new JSONObject();
         projectJson.put("id", id);
         projectJson.put("name", name);
         projectJson.put("author", author);
         projectJson.put("description", description);
-        projectJson.put("created", created);
+        projectJson.put("created", utcCreated);
         projectJson.put("isPrivate", isPrivate);
 
         return projectJson;
@@ -274,7 +277,7 @@ public class ProjectController {
 
     public void addFollower(String projectId, String userId) throws UpdateException{
         try {
-            UUID id = stringToUUID(projectId);
+            UUID id = UUID.fromString(projectId);
             Project project = mapper.get(id);
             if(project.getIsPrivate() == true){
                 System.out.println("Project is private and can't be followed");
@@ -428,7 +431,9 @@ public class ProjectController {
         }
     }
 
-    private UUID stringToUUID(String id){
-        return UUID.fromString(id);
+    private Date getUtcDate(Long date){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

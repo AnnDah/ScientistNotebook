@@ -162,8 +162,4 @@ public class OrganizationController {
         }
     }
 
-    private UUID stringToUUID(String id){
-        return UUID.fromString(id);
-    }
-
 }

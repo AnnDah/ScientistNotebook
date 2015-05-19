@@ -16,7 +16,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.PatternSyntaxException;
 
 import models.Data;
 
@@ -47,6 +50,7 @@ public class DataController {
 
             String content  = (String) jObj.get("content");
             Long created = new Date().getTime();
+            Long lastUpdate = new Date().getTime();
             String author = (String) jObj.get("author");
             String strLevel = (String) jObj.get("level");
             String dataType = (String) jObj.get("dataType");
@@ -62,7 +66,8 @@ public class DataController {
 
             int level = Integer.parseInt(strLevel);
 
-            Data data = new Data(content, created, author, level, tags, id, dataType, project, name, description);
+            Data data = new Data(
+                    content, created, author, level, tags, id, dataType, project, name, description, lastUpdate);
             mapper.save(data);
 
             Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
@@ -98,6 +103,7 @@ public class DataController {
     public JSONObject createDataJson(Data whose){
         String content = whose.getContent();
         Long created =  whose.getCreated();
+        Long lastUpdate = whose.getLastUpdate();
         String author = whose.getAuthor();
         int level = whose.getLevel();
         List<String> tags = whose.getTags();
@@ -108,9 +114,13 @@ public class DataController {
         String description = whose.getDescription();
         List<String> revisionHistory = whose.getRevisionHistory();
 
+        Date utcCreated = getUtcDate(created);
+        Date utcUpdated = getUtcDate(lastUpdate);
+
         JSONObject dataJson = new JSONObject();
         dataJson.put("content", content);
-        dataJson.put("created", created);
+        dataJson.put("created", utcCreated);
+        dataJson.put("lastUpdate", utcUpdated);
         dataJson.put("author", author);
         dataJson.put("visibility", level);
         dataJson.put("tags", tags);
@@ -159,7 +169,6 @@ public class DataController {
         int numberOfTags = 1;
 
         try{
-
             for (String s : tags.split(",")) {
                 if (numberOfTags == 1) {
                     query += (" tags CONTAINS '" + s + "'");
@@ -167,13 +176,9 @@ public class DataController {
                 } else {
                     query += (" AND tags CONTAINS '" + s + "'");
                 }
-
-                System.out.println(query);
-
-
             }
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (PatternSyntaxException e){
+            throw new GetException("Invalid input data");
         }
 
         query += " ALLOW FILTERING;";
@@ -210,18 +215,20 @@ public class DataController {
     @SuppressWarnings("unchecked")
     public JSONObject createSearchJson(UUID id, String name, String author, String description,
                                        Long created){
+        Date utcCreated= getUtcDate(created);
+
         JSONObject dataJson = new JSONObject();
         dataJson.put("id", id);
         dataJson.put("name", name);
         dataJson.put("author", author);
         dataJson.put("description", description);
-        dataJson.put("created", created);
+        dataJson.put("created", utcCreated);
 
         return dataJson;
 
     }
 
-    public JSONObject updateData(String id, String update)throws UpdateException{
+    public JSONObject updateData(String dataId, String update)throws UpdateException{
         String content;
         String author;
         String project;
@@ -230,6 +237,9 @@ public class DataController {
         String dataType;
         int level;
         List<String> tags;
+        String user;
+        Long lastUpdate = new Date().getTime();
+        String revisionDescription;
 
         try {
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
@@ -242,6 +252,8 @@ public class DataController {
             dataType = (String) jObj.get("dataType");
             String strLevel = (String) jObj.get("level");
             level = Integer.parseInt(strLevel);
+            user = (String) jObj.get("user");
+            revisionDescription = (String) jObj.get("revisionDescription");
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             tags = new ArrayList<String>();
@@ -256,7 +268,7 @@ public class DataController {
         }
 
         try {
-            Data data = getData(id);
+            Data data = getData(dataId);
 
             data.setContent(content);
             data.setAuthor(author);
@@ -266,14 +278,22 @@ public class DataController {
             data.setDataType(dataType);
             data.setLevel(level);
             data.setTags(tags);
+            data.setLastUpdate(lastUpdate);
+
+            List<String> revision = data.getRevisionHistory();
+            String strRevision = String.format(
+                    "{\"lastUpdate\":\"%s\", \"updateMadeBy\":\"%s\", \"revisionDescription\":\"%s\"}",
+                    lastUpdate, user, revisionDescription);
+            revision.add(strRevision);
+            data.setRevisionHistory(revision);
 
             mapper.save(data);
 
             try {
-                UUID dataId = UUID.fromString(id);
+                UUID idForTags = UUID.fromString(dataId);
 
                 Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
-                DataTags dataTags = tagMapper.get(dataId);
+                DataTags dataTags = tagMapper.get(idForTags);
 
                 dataTags.setAuthor(author);
                 dataTags.setDescription(description);
@@ -298,7 +318,50 @@ public class DataController {
         }
     }
 
-    private UUID stringToUUID(String id){
-        return UUID.fromString(id);
+    public JSONObject getDataUser(String userId) throws GetException {
+        String query = String.format("SELECT * FROM scinote.data WHERE author = '%s' ALLOW FILTERING;", userId);
+        return getDataFromQuery(query);
+    }
+
+    public JSONObject getDataProject(String projectId) throws GetException {
+        String query = String.format("SELECT * FROM scinote.data WHERE project = '%s' ALLOW FILTERING;", projectId);
+        return getDataFromQuery(query);
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject getDataFromQuery(String query) throws GetException {
+        Statement statement = new SimpleStatement(query);
+        JSONArray ja = new JSONArray();
+        try{
+            ResultSet results = db.getSession().execute(statement);
+            if(results.all().size() == 0){
+                throw new GetException("No data found");
+            }
+            for(Row row : results) {
+                if (row != null) {
+                    JSONObject data = createSearchJson(
+                            row.getUUID("id"),
+                            row.getString("name"),
+                            row.getString("author"),
+                            row.getString("description"),
+                            row.getLong("created"));
+                    ja.add(data);
+                }
+            }
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+            throw new GetException("Invalid input data");
+        } finally {
+            db.close();
+        }
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("data", ja);
+
+        return mainObj;
+    }
+
+    private Date getUtcDate(Long date){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

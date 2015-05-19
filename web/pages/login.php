@@ -73,7 +73,12 @@ curl_close($ch);
 //this needs to listen to the response from BE
 $returningString = json_decode($result, true);
 
-print $returningString;
+var_dump(json_decode($result, true));
+//var_dump($returningString);
+//echo $returningString->email;
+
+//returningString=>
+//print $returningString;
 
 //echo $checkForUser;
 
@@ -87,6 +92,7 @@ print $returningString;
 }
 
 //http://stackoverflow.com/questions/16700960/how-to-use-curl-to-get-json-data-and-decode-the-data
+
 /*
 //  Initiate curl
 $ch = curl_init();
@@ -102,7 +108,7 @@ $result=curl_exec($ch);
 curl_close($ch);
 
 // Will dump a beauty json :3
-var_dump(json_decode($result, true)); */
+var_dump(json_decode($result, true));
 
-
+*/
 ?>

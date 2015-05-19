@@ -20,20 +20,12 @@ $user->role  = $_POST["user"];
 //API Url
 $url = 'http://localhost:9090/test';
 
-$field = $_POST["search_field"];
-$projStatus = $_POST["search_projStatus"];
-$sortBy = $_POST["search_sortResults"];
-$projectOrNote = $_POST["search_radioSelection"];
-$searchString = $_POST["searchString"];
 
-/*$last_name = $_POST["lastName"];
-$email = $_POST["email"];
-$password = $_POST["password"];
-$organization = $_POST["organization"];
-$department = $_POST["department"];
-$role = $_POST["role"];
-*/
-
+$projSelection = $_POST["projSelection"];
+$noteTitle = $_POST["noteTitle"];
+$noteType = $_POST["newNote_radioOpt"];
+$noteTags = $_POST["noteTags"];
+$noteBody = $_POST["noteBody"];
 
 
 //Initiate cURL.
@@ -44,20 +36,36 @@ $jsonData = array(
    /* 'username' => 'MyUsername',
     'password' => 'MyPassword'*/
 	
-	"field"=>"$field",
-	"projectStatus"=>"$projStatus",
-	"sortBy"=>"$sortBy",
-	"searchSelection"=>"$projectOrNote",
-	"searchString"=>"$searchString"
-	/*"firstname"=>"$first_name",
-	"lastname"=>"$last_name",
-	"email"=>"$email",
-	"password"=>"$password",
-	"organization"=>"$organization",
-	"department"=>"$department",
-	"role"=>"$role"
-	*/
-);
+	"content"=>"$noteBody",
+//	"author"=>"$field",
+//	"level"=>"$field", set on note aswell as project to save time.
+	"dataType"=>"$noteType",
+	"project"=>"$projSelection",
+	"name"=>"$noteTitle",
+//	"description"=>"$field",
+	"tags"=>"$noteTags"
+
+);	
+	/*
+	// Create a new data
+POST 
+/data
+
+JSON format in request body: 
+{
+"content":"some data",
+"author":"Annika Magnusson",
+"level":"101",
+"dataType":"doc",
+"project":"some project",
+"name":"data name",
+"description":"blablabla",
+"tags":["tag1","tag2"]
+
+
+}
+*/
+
 
 //Encode the array into JSON.
 $jsonDataEncoded = json_encode($jsonData);

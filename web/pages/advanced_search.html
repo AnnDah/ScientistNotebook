@@ -67,11 +67,11 @@
                                     <option>Engineering</option>
                                     <option>Other...</option>
                                 </select>								
-								<input type="submit" value="Submit">
+								<!--<input type="submit" value="Submit">-->
                             </div>
                             <div class="form-group">
                                 <label>Project status</label>
-                                <select class="form-control">
+                                <select class="form-control" name="search_projStatus">
                                     <option>All</option>
                                     <option>Active</option>
                                     <option>Paused</option>
@@ -80,7 +80,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Sort results by </label>
-                                <select class="form-control">
+                                <select class="form-control" name="search_sortResults">
                                     <option>Date</option>
                                     <option>Project</option>
                                     <option>Author</option>
@@ -92,15 +92,15 @@
 							<div class="form-group">
 								<p></p>
 								<label>Search in : </label>
-								<label class="radio-inline">
-                                <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>Projects
+								<label class="radio-inline">								
+                                <input type="radio" name="search_radioSelection" id="optionsRadiosInline1" value="projects" checked>Projects
 								</label>
 								<label class="radio-inline">
-                                <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">Notes
-								</label>
+                                <input type="radio" name="search_radioSelection" id="optionsRadiosInline2" value="notes">Notes
+								</label>								
 							</div>
 							
-                        </form> <!--end of form-->
+                        
                     </div>
                     <!-- /.col-lg-6 (nested) -->
 					
@@ -108,17 +108,17 @@
 
                         <p> </p>
 
+<!--add tag-search, see API documentation-->
 
                         <div class="input-group custom-search-form">
 
-                            <input type="text" class="form-control" placeholder="Search word...">
+                            <input type="text" name="searchString" class="form-control" placeholder="Search word...">
 
                                 <span class="input-group-btn">
 	
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-								<input type="submit"> 
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fa fa-search"></i>									
+                                </button>								
 
                                 </span>
 
@@ -127,12 +127,15 @@
 
                         
 
-
-
+					
+					
                     </div>
                     <!-- /.col-lg-6 (nested) -->
                 </div>
                 <!-- /.row (nested) -->
+				
+				</form> <!--end of form-->
+				
             </div>
             <!-- /.panel-body -->
         </div>

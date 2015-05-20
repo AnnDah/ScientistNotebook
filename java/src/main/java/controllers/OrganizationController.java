@@ -72,7 +72,7 @@ public class OrganizationController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createOrgJson(Organization whose){
+    private JSONObject createOrgJson(Organization whose){
         UUID id = whose.getId();
         String name = whose.getName();
         String description = whose.getDescription();
@@ -103,7 +103,7 @@ public class OrganizationController {
         return createOrgJson(org);
     }
     @SuppressWarnings("unchecked")
-    public Organization getOrganization(String orgId) throws GetException {
+    private Organization getOrganization(String orgId) throws GetException {
         try {
             UUID orgUuid = UUID.fromString(orgId);
             return mapper.get(orgUuid);

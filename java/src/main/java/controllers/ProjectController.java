@@ -122,7 +122,7 @@ public class ProjectController {
         return createProjectJson(project);
     }
     @SuppressWarnings("unchecked")
-    public Project getProject(String projectId) throws GetException {
+    private Project getProject(String projectId) throws GetException {
         try {
             UUID projectUuid = UUID.fromString(projectId);
             return mapper.get(projectUuid);
@@ -151,7 +151,7 @@ public class ProjectController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createProjectJson(Project whose){
+    private JSONObject createProjectJson(Project whose){
         UUID id = whose.getId();
         String field = whose.getField();
         List<String> tags = whose.getTags();
@@ -260,7 +260,7 @@ public class ProjectController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createSearchJson(UUID id, String name, String author, String description,
+    private JSONObject createSearchJson(UUID id, String name, String author, String description,
                                        Long created, boolean isPrivate){
         Date utcCreated = getUtcDate(created);
 

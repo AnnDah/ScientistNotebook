@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createUserJson(User whose){
+    private JSONObject createUserJson(User whose){
         UUID id = whose.getId();
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
@@ -127,7 +127,7 @@ public class UserController {
     }
 
     @SuppressWarnings("unchecked")
-    public User getUser(String userId) throws GetException{
+    private User getUser(String userId) throws GetException{
         try {
             UUID userUuid = UUID.fromString(userId);
             return mapper.get(userUuid);
@@ -249,7 +249,7 @@ public class UserController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createUserJsonLogin(UUID id, String firstName, String lastName, String email, String password, Long date,
+    private JSONObject createUserJsonLogin(UUID id, String firstName, String lastName, String email, String password, Long date,
                                      String organization, String department, String role, List<String> follows){
         // Parse date to UTC
         Date utcDate= getUtcDate(date);

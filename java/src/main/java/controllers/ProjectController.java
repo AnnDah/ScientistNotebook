@@ -38,9 +38,10 @@ public class ProjectController {
 
     }
 
-    public UUID createProject(String projectInfo) throws CreationException{
+    public JSONObject createProject(String projectInfo) throws CreationException{
         //Create an unique identifier
         UUID id = UUID.randomUUID();
+        Project project = null;
 
         try{
             JSONObject jObj = (JSONObject) new JSONParser().parse(projectInfo);
@@ -99,7 +100,7 @@ public class ProjectController {
                 departments.add(aDepartmentsArray.toString());
             }
 
-            Project project = new Project(id, field, tags, description, projectRoles, createdBy, name,
+            project = new Project(id, field, tags, description, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
             mapper.save(project);
 
@@ -112,7 +113,7 @@ public class ProjectController {
             db.close();
         }
 
-        return id;
+        return createProjectJson(project);
     }
 
     public JSONObject getProjectJson(String id)throws GetException{

@@ -40,9 +40,10 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    public UUID createData(String strData) throws CreationException{
+    public JSONObject createData(String strData) throws CreationException{
         //Create an unique identifier
         UUID id = UUID.randomUUID();
+        Data data = null;
 
         JSONObject jObj;
         try{
@@ -66,7 +67,7 @@ public class DataController {
 
             int level = Integer.parseInt(strLevel);
 
-            Data data = new Data(
+            data = new Data(
                     content, created, author, level, tags, id, dataType, project, name, description, lastUpdate);
             mapper.save(data);
 
@@ -79,7 +80,7 @@ public class DataController {
             db.close();
         }
 
-        return id;
+        return createDataJson(data);
     }
 
     public JSONObject getDataJson(String strID)throws GetException{
@@ -89,7 +90,7 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    public Data getData(String strId) throws GetException{
+    private Data getData(String strId) throws GetException{
         try {
             UUID dataId = UUID.fromString(strId);
             return mapper.get(dataId);
@@ -100,7 +101,7 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createDataJson(Data whose){
+    private JSONObject createDataJson(Data whose){
         String content = whose.getContent();
         Long created =  whose.getCreated();
         Long lastUpdate = whose.getLastUpdate();
@@ -213,7 +214,7 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    public JSONObject createSearchJson(UUID id, String name, String author, String description,
+    private JSONObject createSearchJson(UUID id, String name, String author, String description,
                                        Long created){
         Date utcCreated= getUtcDate(created);
 

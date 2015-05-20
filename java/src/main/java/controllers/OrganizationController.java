@@ -30,8 +30,9 @@ public class OrganizationController {
         mapper = new MappingManager(db.getSession()).mapper(Organization.class);
     }
 
-    public UUID createOrganization(String strOrganization) throws CreationException{
+    public JSONObject createOrganization(String strOrganization) throws CreationException{
         UUID id = UUID.randomUUID();
+        Organization org = null;
 
         try{
             JSONObject jObj = (JSONObject) new JSONParser().parse(strOrganization);
@@ -46,7 +47,7 @@ public class OrganizationController {
                 departments.add(aDepartmentsArray.toString());
             }
 
-            Organization org = new Organization(id, name, description, policy, license, departments);
+            org = new Organization(id, name, description, policy, license, departments);
             mapper.save(org);
 
         } catch (ParseException e){
@@ -54,7 +55,7 @@ public class OrganizationController {
         } finally {
             db.close();
         }
-        return id;
+        return createOrgJson(org);
     }
 
     public void deleteOrganization(String orgId) throws DeletionException{

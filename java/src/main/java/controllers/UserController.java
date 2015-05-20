@@ -35,8 +35,9 @@ public class UserController {
         mapper = new MappingManager(db.getSession()).mapper(User.class);
     }
 
-    public UUID createUser(String strUser) throws CreationException {
+    public JSONObject createUser(String strUser) throws CreationException {
         UUID id = UUID.randomUUID();
+        User user = null;
 
         try {
             JSONObject jObj = (JSONObject) new JSONParser().parse(strUser);
@@ -51,8 +52,10 @@ public class UserController {
             String role = (String) jObj.get("role");
 
 
-            User user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
+            user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
             mapper.save(user);
+
+
         }  catch (org.json.simple.parser.ParseException e){
             throw new CreationException("Invalid input data");
         } catch (java.security.NoSuchAlgorithmException e){
@@ -65,7 +68,7 @@ public class UserController {
             db.close();
         }
 
-        return id;
+        return createUserJson(user);
     }
 
     public void deleteUser(String userId) throws DeletionException{

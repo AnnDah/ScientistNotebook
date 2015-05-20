@@ -8,17 +8,17 @@ header("location: pages/profile.php");
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login Form in PHP with Session</title>
+<title>SciNote</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 <div id="main">
-<h1>PHP Login Session Example</h1>
+<h1>Welcome to SciNote</h1>
 <div id="login">
 <h2>Login Form</h2>
 <form enctype="application/json" action="pages/login.php" method="post">
-<label>UserName :</label>
+<label>Email :</label>
 <input id="name" name="username" placeholder="username" type="text">
 <label>Password :</label>
 <input id="password" name="password" placeholder="**********" type="password">

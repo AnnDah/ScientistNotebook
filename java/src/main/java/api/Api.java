@@ -6,7 +6,6 @@ import exceptions.CreationException;
 import exceptions.UpdateException;
 import org.json.simple.JSONObject;
 import spark.*;
-import models.DatabaseConnector;
 
 /**
  * API for application.
@@ -18,12 +17,6 @@ import models.DatabaseConnector;
 public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
-
-        //Start: Database connection test
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        db.close();
-        //End
 
         /**
          * Get a specific data.
@@ -255,7 +248,7 @@ public class Api {
                 } catch (GetException e) {
                     response.status(400);
                 }
-                return 0;
+                return response;
             }
         });
 
@@ -272,7 +265,7 @@ public class Api {
                     response.status(400);
                 }
 
-                return 0;
+                return response;
             }
         });
 
@@ -320,7 +313,7 @@ public class Api {
                 } catch (CreationException e) {
                     response.status(400);
                 }
-                return 0;
+                return response;
             }
         });
 

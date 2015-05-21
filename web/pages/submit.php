@@ -18,7 +18,7 @@ $user->role  = $_POST["user"];
 */
 
 //API Url
-$url = 'http://localhost:9090/test';
+$url = 'http://localhost:9090/users';
 
 $first_name = $_POST["firstName"];
 $last_name = $_POST["lastName"];

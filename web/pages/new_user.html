@@ -4,12 +4,33 @@
 
 
 <form action="submit.php" method="POST">
-User name:<br>
-<input type="text" name="userid">
+First name:<br><input type="text" name="firstName">
 <br>
-User password:<br>
-<input type="password" name="psw">
-<br><br>
+Last name:<br><input type="text" name="lastName">
+<br>
+Email (you will use this to log in)<br><input type="text" name="email">
+<br>
+Your password:<br><input type="password" name="password">
+<br>
+Organization:<br>
+<select name="organization">
+    <option>None</option>
+	<option>Org1</option>
+</select>			
+<br>
+Department:<br>
+<select name="department">    
+    <option>MAH</option>
+    <option>Other</option>
+</select>			
+<br>
+Role:<br>
+<select name="role">    
+    <option>User</option>
+    <option>Admin</option>
+</select>		
+<br>
+<br>
 <input type="submit" value="Submit">
 </form>
 

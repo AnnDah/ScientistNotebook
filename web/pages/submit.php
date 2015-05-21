@@ -39,8 +39,8 @@ $jsonData = array(
    /* 'username' => 'MyUsername',
     'password' => 'MyPassword'*/
 	
-	"firstname"=>"$first_name",
-	"lastname"=>"$last_name",
+	"firstName"=>"$first_name",
+	"lastName"=>"$last_name",
 	"email"=>"$email",
 	"password"=>"$password",
 	"organization"=>"$organization",

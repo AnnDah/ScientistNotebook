@@ -1,97 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
 
-  <title>Varhelst</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-		 <!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-		<!-- jQuery library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<!-- Latest compiled JavaScript -->
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		
-	</head>
-	<body>			
-	
-<div class="container" style="display:block;">
-	<div class="form-group">
-		<label for="usr">Project name:</label> <!--"for usr" maybe not so optimal-->
-		<input type="text" class="form-control" id="usr">		
-	</div>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<div style="margin-left:25%;">
+	<h2>Projects in this organization</h2>	
 </div>
-		
-	<div class="container">				
-		
-		<h2>Field..</h2>      
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Type
-			<span class="caret"></span></button>
-			<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Computer Science</a></li> <!--set href to alter page title-->
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Chemistry</a></li>                
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Math</a></li>                
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Physicis</a></li>                
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Social sciences</a></li>                
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">and so on</a></li>                
-        </ul>
-      </div>
-	  
-	  
-	  <h2>Status..</h2>      
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Project
-        <span class="caret"></span></button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Unfished</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Finished</a></li>          
-        </ul>
-      </div>
-	  
-	  
-	  <h2>Share permissions</h2>      
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Share
-        <span class="caret"></span></button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Public</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Friends</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Private</a></li>          
-        </ul>
-      </div>
-	  
-	<div class="container">
-		<table class="table table-bordered">
-			<thead>				
-			</thead>
-			
-			<tbody>
-				<tr>
-					<td>File 1</td>
-					<td>File 2</td>
-					<td>File 3</td>
-				</tr>
-      
-			</tbody>
-		</table>
-	</div>
-	  
-	  
-	  <!--Save button-->
-	  <button type="button" class="btn btn-success" style="margin-top:30px;">Save</button>
-	  
-    </div> <!--end of container-->
-			
-			
+<br>
+
+<div class="row">
+	<div style="width:75%; margin-left:10%">
+                								
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">                                
+                                <div class="col-xs-8 text-right">
+                                    <div class="huge">Project A</div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">	<!--insert link to page here-->
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
 				
-		
-		
-			
-		
-		 
-		 
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">                                
+                                <div class="col-xs-8 text-right">
+                                    <div class="huge">Project B</div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">	<!--insert link to page here-->
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+				
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">                                
+                                <div class="col-xs-8 text-right">
+                                    <div class="huge">Project C</div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">	<!--insert link to page here-->
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+	</div>
+            <!-- /.row -->
 
 
-	</body>
+</body>
 </html>

@@ -1,84 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Varhelst</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <!--- <link rel="stylesheet" type="text/css" href="profile.css" /> --->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
 
-<body>	
+<body>
 
-<section id="userpic"><!--- section user pic and info--->
-					<a href="#"><img src="http://www.picturesnew.com/media/images/picture-hd.jpg" width="150" height="150" /></a>
-				
-				<div id="info">
-					<h1 style= "font-size: 20">John Doe</h1>
-					<h4>Sweden</h4>
-					<h4>Organization</h4>
-					<h4>johndoe@gmail.com</h4>
-				</div>
-			</div>
+<div style="display:inline-block; width:50%">
+	
+	<img src="http://www.picturesnew.com/media/images/picture-hd.jpg" width="150" height="150" />
+</div>
+<div style="display:inline-block; margin-left:20%;">
+	<h1 style= "font-size: 20">John Doe</h1>					
+	<h4>johndoe@gmail.com</h4>
+</div>
+
 			
-			<div>
-				<h1>About Me</h1>
-				<p>BLAH BLAH BLAH BLAH BLAH</p>
-			</div>
-		</section><!--- end of section user pic and info--->
+<div style="display:block; height:300px;">
+	<h1>About Me</h1><br>
+	<p>BLAH BLAH BLAH BLAH BLAH</p>
+</div>
+
+
+<div style="display:inline-block; width:50%">
+<h4>Is involved in these projects</h4>
+<ul>
+	<li><a href="#">Project A</a></li>
+	<li><a href="#">Project B</a></li>
+	<li><a href="#">Project C</a></li>
+</ul>
+</div>
+
+<div style="display:inline-block; width:50%; float:right;">
+<h4>Is involved in these organizations</h4>
+<ul>
+	<li><a href="#">Organization A</a></li>
+	<li><a href="#">Organization B</a></li>
+	<li><a href="#">Organization C</a></li>
+</ul>
+</div>
 		
-		<section id="friend"><!--- section friends--->
-				<div class="friendlist"><h1>Friend List</h1></div>
-					<p>Total friends 100</p>
-					
-					<!------ Instead of the # can put a link to this friend--->
-					<div id="right">
-						<div class="friend">
-							<a href="#"><img src="http://gaia.ub.edu/wp-content/uploads/2013/10/default-user-avatar.jpg" width="30" height="30" alt="Elmo" /></a><span class="friendly"><a href="#">Elmo</a></span>
-						</div>
-						
-						
-						<div class="friend">
-							<a href="#"><img src="http://gaia.ub.edu/wp-content/uploads/2013/10/default-user-avatar.jpg" width="30" height="30" alt="Barney" /></a><span class="friendly"><a href="#">Barney</a></span>
-						</div>
-						
-						<div class="friend">
-							<a href="#"><img src="http://gaia.ub.edu/wp-content/uploads/2013/10/default-user-avatar.jpg" width="30" height="30" alt="Teletubbies" /></a><span class="friendly"><a href="#">Teletubbies</a></span>
-						</div>
-						
-						<div class="friend">
-							<a href="#"><img src="http://gaia.ub.edu/wp-content/uploads/2013/10/default-user-avatar.jpg" width="30" height="30" alt="Sponge Bob" /></a><span class="friendly"><a href="#">Sponge Bob</a></span>
-						</div>
-						
-						<div class="friend">
-							<a href="#"><img src="http://gaia.ub.edu/wp-content/uploads/2013/10/default-user-avatar.jpg" width="30" height="30" alt="Cookie Monster" /></a><span class="friendly"><a href="#">Cookie Monster</a></span>
-						</div>
-						
-						<div class="friend">
-							<a href="#"><img src="http://gaia.ub.edu/wp-content/uploads/2013/10/default-user-avatar.jpg" width="30" height="30" alt="Big Bird" /></a><span class="friendly"><a href="#">Big Bird</a></span>
-						</div>
-					</div>
-					
-					<span><a href="#">See all…</a></span>
-				</div>
-				
-			</div>
-			
-		</section><!--- end of section friends--->
 		
-		<section id="projects"><!--- section user projects--->
-				<div class="userprojects"><h1>Projects</h1></div>
-					<p>Total Projects 20</p>
-		
-						<li><a href="#">Project A</a></li>
-						<li><a href="#">Project B</a></li>
-						<li><a href="#">Project C</a></li>
-				
-						<span><a href="#">See all…</a></span>
-			
-		</section><!---End of section user projects---->
-	</div>
+
+
+<!-- jQuery -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/dist/js/sb-admin-2.js"></script>
+	
 		
 </body>
 </html>

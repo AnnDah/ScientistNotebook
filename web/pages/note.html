@@ -1,87 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-  <title>Varhelst</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-		 <!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-		<!-- jQuery library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<!-- Latest compiled JavaScript -->
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		
-	</head>
-	<body>			
-		
-	<div class="container">
-			
-		<h1 style="margin-top:3%; margin-left:50%; margin-right:auto;">Note</h1>
-		
-		<h2>Type of entry</h2>      
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Type
-			<span class="caret"></span></button>
-			<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Text</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Grid</a></li>                
-        </ul>
-      </div>
-	  
-	  
-	  <h2>Select project</h2>      
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Project
-        <span class="caret"></span></button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Project 1</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Project 2</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">JavaScript</a></li>          
-        </ul>
-      </div>
-	  
-	  
-	  <h2>Share permissions</h2>      
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Share
-        <span class="caret"></span></button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Public</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Friends</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Private</a></li>          
-        </ul>
-      </div>
-	  
-	  
-	  <!--Save button-->
-	  <button type="button" class="btn btn-success" style="margin-top:30px;">Save</button>
-	  
-    </div> <!--end of container-->
-	
-	
-	<div class="container">
-	
-		<form name="noteForm" method="post">
-	
-		<form name="saveNote" method="post" action="submit.php">
-			File Name: <input type="text" name="notetoSave" value=""><br/>
-			<textarea rows="16" cols="100" name="textdata"></textarea><br/>
-			<input type="submit" name="submitToPost" value="Save">
-		</form>
-		          
-	
-	</div>
-			
-			
-				
-		
-		
-			
-		
-		 
-		 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>	
 
 
-	</body>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">            
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form role="form" action="submit.php" method="post">  							
+						
+                            <div class="form-group">
+                                <label>Edit privacy level</label>
+                                <select class="form-control">                                    									
+									<option>Public</option>
+                                    <option>Only members</option>
+                                    <option>Private</option>                                   
+                                </select>
+                            </div>
+                            
+							<div class="form-group">										
+								<textarea rows="16" cols="100" name="textdata"></textarea><br/>
+								<button type="submit" class="btn btn-default">Save Note</button>						
+							</div>
+							
+						</form>	
+                                   
+                    </div>
+                    <!-- /.col-lg-6 (nested) -->
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
+
+	
+	
+	
+	
+		
+<!-- jQuery -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../UI/startbootstrap-sb-admin-2-1.0.7/dist/js/sb-admin-2.js"></script>
+
+
+
+</body>
 </html>

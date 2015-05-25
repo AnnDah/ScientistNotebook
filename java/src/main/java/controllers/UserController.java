@@ -86,12 +86,12 @@ public class UserController {
 
     @SuppressWarnings("unchecked")
     private JSONObject createUserJson(User whose){
-        UUID id = whose.getId();
+        String id = whose.getId().toString();
         String firstName = whose.getFirstName();
         String lastName = whose.getLastName();
         String email = whose.getEmail();
         String password = "OMITTED!";
-        Long date = whose.getMemberSince();
+        long date = whose.getMemberSince();
         String organization = whose.getOrganization();
         String department = whose.getDepartment();
         String role = whose.getRole();
@@ -105,7 +105,7 @@ public class UserController {
         userJson.put("lastName", lastName);
         userJson.put("email", email);
         userJson.put("password", password);
-        userJson.put("memberSince", utcDate);
+        userJson.put("memberSince", utcDate.toString());
         userJson.put("organization", organization);
         userJson.put("department", department);
         userJson.put("role", role);
@@ -255,12 +255,12 @@ public class UserController {
         Date utcDate= getUtcDate(date);
 
         JSONObject userJson = new JSONObject();
-        userJson.put("id", id);
+        userJson.put("id", id.toString());
         userJson.put("firstName", firstName);
         userJson.put("lastName", lastName);
         userJson.put("email", email);
         userJson.put("password", password);
-        userJson.put("memberSince", utcDate);
+        userJson.put("memberSince", utcDate.toString());
         userJson.put("organization", organization);
         userJson.put("department", department);
         userJson.put("role", role);

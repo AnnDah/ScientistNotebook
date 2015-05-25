@@ -11,7 +11,7 @@ import exceptions.DeletionException;
 import exceptions.GetException;
 import exceptions.UpdateException;
 import models.DataTags;
-import connectors.DatabaseConnector;
+import models.DatabaseConnector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

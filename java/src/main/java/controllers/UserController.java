@@ -1,5 +1,5 @@
 package controllers;
-import utility.PasswordUtility;
+import Utility.PasswordUtility;
 import com.datastax.driver.core.*;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
@@ -7,7 +7,7 @@ import exceptions.DeletionException;
 import exceptions.GetException;
 import exceptions.CreationException;
 import exceptions.UpdateException;
-import connectors.DatabaseConnector;
+import models.DatabaseConnector;
 import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

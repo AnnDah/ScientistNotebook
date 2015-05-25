@@ -1,6 +1,6 @@
 package controllers;
 
-import utility.PasswordUtility;
+import Utility.PasswordUtility;
 import exceptions.GetException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

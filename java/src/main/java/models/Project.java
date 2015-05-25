@@ -38,6 +38,10 @@ public class Project {
     private boolean isPrivate;
     private Long created;
 
+    public Project(){
+
+    }
+
     public Project(UUID id, String field, List<String> tags, String description, List<String> projectRoles,
                    String createdBy, String name, String status, boolean isPrivate, Long created, List<String> fundedBy,
                    List<String> members, List<String> employers, List<String> funds, List<String> departments,

@@ -6,7 +6,7 @@ import exceptions.CreationException;
 import exceptions.DeletionException;
 import exceptions.GetException;
 import exceptions.UpdateException;
-import connectors.DatabaseConnector;
+import models.DatabaseConnector;
 import models.Organization;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

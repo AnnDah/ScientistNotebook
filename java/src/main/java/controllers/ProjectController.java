@@ -10,7 +10,7 @@ import exceptions.CreationException;
 import exceptions.DeletionException;
 import exceptions.GetException;
 import exceptions.UpdateException;
-import connectors.DatabaseConnector;
+import models.DatabaseConnector;
 import models.Project;
 import models.ProjectTags;
 import org.json.simple.JSONArray;

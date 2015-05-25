@@ -27,6 +27,11 @@ public class User {
     private String role;
     private List<String> follows = new ArrayList<String>();
 
+
+    public User(){
+
+    }
+
     public User(UUID id, String firstName, String lastName, String email, String password, Long memberSince, String organization,
                 String department, String role){
         this.id = id;

@@ -120,12 +120,12 @@ public class DataController {
 
         JSONObject dataJson = new JSONObject();
         dataJson.put("content", content);
-        dataJson.put("created", utcCreated);
-        dataJson.put("lastUpdate", utcUpdated);
+        dataJson.put("created", utcCreated.toString());
+        dataJson.put("lastUpdate", utcUpdated.toString());
         dataJson.put("author", author);
-        dataJson.put("visibility", level);
+        dataJson.put("visibility", Integer.toString(level));
         dataJson.put("tags", tags);
-        dataJson.put("id", id);
+        dataJson.put("id", id.toString());
         dataJson.put("dataType", dataType);
         dataJson.put("project", project);
         dataJson.put("name", name);
@@ -219,11 +219,11 @@ public class DataController {
         Date utcCreated= getUtcDate(created);
 
         JSONObject dataJson = new JSONObject();
-        dataJson.put("id", id);
+        dataJson.put("id", id.toString());
         dataJson.put("name", name);
         dataJson.put("author", author);
         dataJson.put("description", description);
-        dataJson.put("created", utcCreated);
+        dataJson.put("created", utcCreated.toString());
 
         return dataJson;
 

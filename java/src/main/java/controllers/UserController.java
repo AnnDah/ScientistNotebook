@@ -1,5 +1,5 @@
 package controllers;
-import Utility.PasswordUtility;
+import utility.PasswordUtility;
 import com.datastax.driver.core.*;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;

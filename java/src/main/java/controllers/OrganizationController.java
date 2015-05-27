@@ -81,7 +81,7 @@ public class OrganizationController {
         List<String> departments = whose.getDepartments();
 
         JSONObject orgJson = new JSONObject();
-        orgJson.put("id", id);
+        orgJson.put("id", id.toString());
         orgJson.put("name", name);
         orgJson.put("description", description);
         orgJson.put("policy", policy);

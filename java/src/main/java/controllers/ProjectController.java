@@ -173,7 +173,7 @@ public class ProjectController {
         Date utcCreated= getUtcDate(created);
 
         JSONObject projectJson = new JSONObject();
-        projectJson.put("id", id);
+        projectJson.put("id", id.toString());
         projectJson.put("field", field);
         projectJson.put("description", description);
         projectJson.put("createdBy", createdBy);
@@ -181,8 +181,8 @@ public class ProjectController {
         projectJson.put("status", status);
         projectJson.put("tags", tags);
         projectJson.put("projectRoles", projectRoles);
-        projectJson.put("isPrivate", isPrivate);
-        projectJson.put("created", utcCreated);
+        projectJson.put("isPrivate", Boolean.toString(isPrivate));
+        projectJson.put("created", utcCreated.toString());
         projectJson.put("fundedBy", fundedBy);
         projectJson.put("members", members);
         projectJson.put("employers", employers);
@@ -265,12 +265,12 @@ public class ProjectController {
         Date utcCreated = getUtcDate(created);
 
         JSONObject projectJson = new JSONObject();
-        projectJson.put("id", id);
+        projectJson.put("id", id.toString());
         projectJson.put("name", name);
         projectJson.put("author", author);
         projectJson.put("description", description);
-        projectJson.put("created", utcCreated);
-        projectJson.put("isPrivate", isPrivate);
+        projectJson.put("created", utcCreated.toString());
+        projectJson.put("isPrivate", Boolean.toString(isPrivate));
 
         return projectJson;
 

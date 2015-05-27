@@ -19,12 +19,6 @@ public class Api {
     public static void main(String[] args){
         Spark.setPort(9090);
 
-        //Start: Database connection test
-        DatabaseConnector db = new DatabaseConnector();
-        db.connectDefault();
-        db.close();
-        //End
-
         /**
          * Get a specific data.
          * Data id in request params.

@@ -111,9 +111,23 @@ curl_close($ch);
 //echo $result;
 
 //this needs to listen to the response from BE
-$returningString = json_decode($result, true);
+//$returningString = json_decode($result, true);
 
-var_dump(json_decode($result, true));
+/*$data = json_decode(file_get_contents('php://input'), true);
+print_r($data);
+*/
+/*
+$json = file_get_contents('php://input'); 
+$obj = json_decode($json);
+
+echo $obj->["email"];
+*/
+//$jsonValue = JSONParser.parseStrict(incomingJsonRespone);
+
+//print $returningString->email;
+//var_dump(json_decode($result, true));
+
+
 //var_dump($returningString);
 //echo $returningString->email;
 

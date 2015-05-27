@@ -17,16 +17,36 @@ $user->role  = $_POST["user"];
 
 */
 
+
 //API Url
 $url = 'http://localhost:9090/test';
 
-
+$author = "mail@gmail.com";
 $projSelection = $_POST["projSelection"];
 $noteTitle = $_POST["noteTitle"];
 $noteType = $_POST["newNote_radioOpt"];
-$noteTags = $_POST["noteTags"];
-$noteBody = $_POST["noteBody"];
+$noteTags = $_POST["noteTags"]; //this should be array.
 
+
+
+$tagArray = array($noteTags);
+foreach ("," as $noteTags) {
+    $tagString + $noteTags;
+}
+// $arr is now array(2, 4, 6, 8)
+unset($tagString); // break the reference with the last element
+echo $tagString;
+
+
+
+
+$noteBody = $_POST["noteBody"];
+//$shareSetting = $_POST["privacy"];
+$shareSetting = 101;
+$noteDescription = $_POST["description"];
+
+//trim whitespace for tags
+trim($noteTitle, " ");
 
 //Initiate cURL.
 $ch = curl_init($url);
@@ -37,12 +57,12 @@ $jsonData = array(
     'password' => 'MyPassword'*/
 	
 	"content"=>"$noteBody",
-//	"author"=>"$field",
-//	"level"=>"$field", set on note aswell as project to save time.
+	"author"=>"$author",
+	"level"=>"$shareSetting",
 	"dataType"=>"$noteType",
 	"project"=>"$projSelection",
 	"name"=>"$noteTitle",
-//	"description"=>"$field",
+	"description"=>"$noteDescription",
 	"tags"=>"$noteTags"
 
 );	

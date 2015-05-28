@@ -24,7 +24,7 @@ public class DataTags {
     private Long created;
 
     // Constructor to create an object of DataTags
-    public DataTags(List<String> tags, UUID id, String name, String author, String description, Long created){
+    public DataTags(List<String> tags, UUID id, String name, String author, String description, Long created) {
         this.setTags(tags);
         this.setId(id);
         this.setName(name);
@@ -88,8 +88,8 @@ public class DataTags {
      * @return true if they are equal, else false
      */
     @Override
-    public boolean equals(Object other){
-        if(other instanceof DataTags){
+    public boolean equals(Object other) {
+        if(other instanceof DataTags) {
             DataTags that = (DataTags) other;
             return Objects.equals(this.tags, that.tags) &&
                     Objects.equals(this.id, that.id) &&
@@ -134,7 +134,7 @@ public class DataTags {
      * @param date a Long of a Unix Timestamp
      * @return the converted Date
      */
-    private Date getUtcDate(Long date){
+    private Date getUtcDate(Long date) {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return new Date(date);

@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * Model of User
- * 
+ *
  * @author Annika Magnusson
  * @version 1.0, 20/04/15
  */
@@ -36,7 +36,7 @@ public class Data {
 
     // Constructor to create an object of Data
     public Data(String content, Long created, String author, int level, List<String> tags, UUID id, String dataType,
-                String project, String name, String description, Long lastUpdate){
+                String project, String name, String description, Long lastUpdate) {
         this.content = content;
         this.created = created;
         this.author = author;
@@ -82,17 +82,17 @@ public class Data {
         this.revisionHistory = revisionHistory;
     }
 
-    public String getDataType(){
+    public String getDataType() {
         return this.dataType;
     }
 
-    public void setDataType(String dataType){
+    public void setDataType(String dataType) {
         this.dataType = dataType;
     }
 
     public UUID getId() { return this.id; }
 
-    public void setId(UUID id){
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -104,7 +104,7 @@ public class Data {
 
     public String getAuthor() { return this.author; }
 
-    public void setAuthor(String author){
+    public void setAuthor(String author) {
         this.author = author;
     }
 
@@ -130,11 +130,11 @@ public class Data {
         this.tags = tags;
     }
 
-    public Long getLastUpdate(){
+    public Long getLastUpdate() {
         return this.lastUpdate;
     }
 
-    public void setLastUpdate(Long lastUpdate){
+    public void setLastUpdate(Long lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -144,8 +144,8 @@ public class Data {
      * @return true if they are equal, else false
      */
     @Override
-    public boolean equals(Object other){
-        if(other instanceof Data){
+    public boolean equals(Object other) {
+        if(other instanceof Data) {
             Data that = (Data) other;
             return Objects.equals(this.author, that.author) &&
                     Objects.equals(this.content, that.content) &&

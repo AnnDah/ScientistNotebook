@@ -10,8 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by annikamagnusson on 20/04/15.
- *
+ * Model of User
+ * 
+ * @author Annika Magnusson
+ * @version 1.0, 20/04/15
  */
 @Table(keyspace = "scinote", name = "data")
 public class Data {
@@ -32,12 +34,7 @@ public class Data {
     @Column(name="revision_history")
     private List<String> revisionHistory = new ArrayList<String>();
 
-
-
-    public Data(){
-
-    }
-
+    // Constructor to create an object of Data
     public Data(String content, Long created, String author, int level, List<String> tags, UUID id, String dataType,
                 String project, String name, String description, Long lastUpdate){
         this.content = content;
@@ -141,6 +138,11 @@ public class Data {
         this.lastUpdate = lastUpdate;
     }
 
+    /**
+     * Determines whether two objects are equal
+     * @param other the object to compare with
+     * @return true if they are equal, else false
+     */
     @Override
     public boolean equals(Object other){
         if(other instanceof Data){
@@ -161,12 +163,20 @@ public class Data {
         return false;
     }
 
+    /**
+     * Generates a hash value that can be used to uniquely identify a particular Object.
+     * @return a hash value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name,
                 description, lastUpdate);
     }
 
+    /**
+     * Creates a JSONObject of the Data object
+     * @return a JSONObject of the Data object
+     */
     @SuppressWarnings("unchecked")
     public JSONObject toJson() {
         JSONObject dataJson = new JSONObject();
@@ -192,6 +202,11 @@ public class Data {
         return mainObj;
     }
 
+    /**
+     * Converts a Unix Timestamp to a Date in UTC
+     * @param date a Long of a Unix Timestamp
+     * @return the converted Date
+     */
     private Date getUtcDate(Long date) {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));

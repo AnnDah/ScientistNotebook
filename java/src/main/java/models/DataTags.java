@@ -8,8 +8,10 @@ import com.datastax.driver.mapping.annotations.Table;
 import org.json.simple.JSONObject;
 
 /**
- * Created by annikamagnusson on 15/05/15.
+ * Model for DataTags
  *
+ * @author Annika Magnusson
+ * @version 1.0, 15/05/15
  */
 @Table(keyspace = "scinote", name = "data_tags")
 public class DataTags {
@@ -21,11 +23,7 @@ public class DataTags {
     private String description;
     private Long created;
 
-
-    public DataTags(){
-
-    }
-
+    // Constructor to create an object of DataTags
     public DataTags(List<String> tags, UUID id, String name, String author, String description, Long created){
         this.setTags(tags);
         this.setId(id);
@@ -83,6 +81,12 @@ public class DataTags {
         this.created = created;
     }
 
+
+    /**
+     * Determines whether two objects are equal
+     * @param other the object to compare with
+     * @return true if they are equal, else false
+     */
     @Override
     public boolean equals(Object other){
         if(other instanceof DataTags){
@@ -97,11 +101,19 @@ public class DataTags {
         return false;
     }
 
+    /**
+     * Generates a hash value that can be used to uniquely identify a particular Object.
+     * @return a hash value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(tags, id, name, author, description, created);
     }
 
+    /**
+     * Creates a JSONObject of the DataTags object
+     * @return a JSONObject of the DataTags object
+     */
     @SuppressWarnings("unchecked")
     public JSONObject toJson() {
 
@@ -117,6 +129,11 @@ public class DataTags {
 
     }
 
+    /**
+     * Converts a Unix Timestamp to a Date in UTC
+     * @param date a Long of a Unix Timestamp
+     * @return the converted Date
+     */
     private Date getUtcDate(Long date){
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));

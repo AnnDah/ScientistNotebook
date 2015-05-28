@@ -2,11 +2,12 @@ package models;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Column;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -164,6 +165,37 @@ public class Data {
     public int hashCode() {
         return Objects.hash(id, content, created, author, level, tags, dataType, revisionHistory, project, name,
                 description, lastUpdate);
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJson() {
+        JSONObject dataJson = new JSONObject();
+        dataJson.put("content", this.getContent());
+        dataJson.put("created", getUtcDate(this.getCreated()).toString());
+        dataJson.put("lastUpdate", getUtcDate(this.getLastUpdate()).toString());
+        dataJson.put("author", this.getAuthor());
+        dataJson.put("visibility", Integer.toString(this.getLevel()));
+        dataJson.put("tags", this.getTags());
+        dataJson.put("id", this.getId().toString());
+        dataJson.put("dataType", this.getDataType());
+        dataJson.put("project", this.getProject());
+        dataJson.put("name", this.getName());
+        dataJson.put("description", this.getDescription());
+        dataJson.put("revisionHistory", this.getRevisionHistory());
+
+        JSONArray ja = new JSONArray();
+        ja.add(dataJson);
+
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("data", ja);
+
+        return mainObj;
+    }
+
+    private Date getUtcDate(Long date) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 
 }

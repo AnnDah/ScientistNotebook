@@ -1,11 +1,11 @@
 package models;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import org.json.simple.JSONObject;
 
 /**
  * Created by annikamagnusson on 15/05/15.
@@ -100,5 +100,26 @@ public class DataTags {
     @Override
     public int hashCode() {
         return Objects.hash(tags, id, name, author, description, created);
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJson() {
+
+        JSONObject dataJson = new JSONObject();
+        dataJson.put("id", this.getId().toString());
+        dataJson.put("name", this.getName());
+        dataJson.put("author", this.getAuthor());
+        dataJson.put("description", this.getDescription());
+        dataJson.put("created", getUtcDate(this.getCreated()).toString());
+        dataJson.put("tags", this.getTags());
+
+        return dataJson;
+
+    }
+
+    private Date getUtcDate(Long date){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

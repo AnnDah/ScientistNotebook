@@ -15,17 +15,16 @@ import models.DatabaseConnector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.PatternSyntaxException;
 
 import models.Data;
 
 /**
- * Created by annikamagnusson on 20/04/15.
+ * Controller for Data and DataTags model
  *
+ * @author Annika Magnusson
+ * @version 1.0, 20/04/15
  */
 public class DataController {
     private DatabaseConnector db;
@@ -39,16 +38,26 @@ public class DataController {
 
     }
 
+    /**
+     * Creates a new object of Data and saves it in the database
+     * @param strData   String of data information in json format to be saved
+     * @return a JSONObject of the saved Data
+     * @throws CreationException
+     */
     @SuppressWarnings("unchecked")
-    public JSONObject createData(String strData) throws CreationException{
+    public JSONObject create(String strData) throws CreationException {
         //Create an unique identifier
         UUID id = UUID.randomUUID();
+
         Data data = null;
 
         JSONObject jObj;
+
         try{
+            // Parse the parameter string
             jObj = (JSONObject) new JSONParser().parse(strData);
 
+            // Fill the variables
             String content  = (String) jObj.get("content");
             Long created = new Date().getTime();
             Long lastUpdate = new Date().getTime();
@@ -67,10 +76,13 @@ public class DataController {
 
             int level = Integer.parseInt(strLevel);
 
+            // Creates a new object of Data
             data = new Data(
                     content, created, author, level, tags, id, dataType, project, name, description, lastUpdate);
+            // Save the Data object in the database
             mapper.save(data);
 
+            // Creates a mapper for DataTags and saves a Data object in data_tags table
             Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
             DataTags tag = new DataTags(tags, id, name, author, description, created);
             tagMapper.save(tag);
@@ -80,19 +92,31 @@ public class DataController {
             db.close();
         }
 
-        return createDataJson(data);
+        return data.toJson();
     }
 
-    public JSONObject getDataJson(String strID)throws GetException{
-        Data data = getData(strID);
+    /**
+     * Get a specific data object
+     * @param id    id of the data to get
+     * @return a JSONObject of the data
+     * @throws GetException
+     */
+    public JSONObject get(String id)throws GetException {
+        Data data = getData(id);
         db.close();
-        return createDataJson(data);
+        return data.toJson();
     }
 
+    /**
+     * Get a specific data object from the database
+     * @param id    id of the data to get
+     * @return  a Data object
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
-    private Data getData(String strId) throws GetException{
+    private Data getData(String id) throws GetException {
         try {
-            UUID dataId = UUID.fromString(strId);
+            UUID dataId = UUID.fromString(id);
             return mapper.get(dataId);
         } catch (IllegalArgumentException e){
             throw new GetException("Data wasn't found in database");
@@ -100,77 +124,47 @@ public class DataController {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private JSONObject createDataJson(Data whose){
-        String content = whose.getContent();
-        Long created =  whose.getCreated();
-        Long lastUpdate = whose.getLastUpdate();
-        String author = whose.getAuthor();
-        int level = whose.getLevel();
-        List<String> tags = whose.getTags();
-        UUID id = whose.getId();
-        String dataType = whose.getDataType();
-        String project = whose.getProject();
-        String name = whose.getName();
-        String description = whose.getDescription();
-        List<String> revisionHistory = whose.getRevisionHistory();
-
-        Date utcCreated = getUtcDate(created);
-        Date utcUpdated = getUtcDate(lastUpdate);
-
-        JSONObject dataJson = new JSONObject();
-        dataJson.put("content", content);
-        dataJson.put("created", utcCreated.toString());
-        dataJson.put("lastUpdate", utcUpdated.toString());
-        dataJson.put("author", author);
-        dataJson.put("visibility", Integer.toString(level));
-        dataJson.put("tags", tags);
-        dataJson.put("id", id.toString());
-        dataJson.put("dataType", dataType);
-        dataJson.put("project", project);
-        dataJson.put("name", name);
-        dataJson.put("description", description);
-        dataJson.put("revisionHistory", revisionHistory);
-
-        JSONArray ja = new JSONArray();
-        ja.add(dataJson);
-
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("data", ja);
-
-        return mainObj;
-    }
-
-    public void deleteData(String id) throws DeletionException{
+    /**
+     * Deletes a data object from the database.
+     * @param id    id of the data to be deleted.
+     * @throws DeletionException
+     */
+    public void delete(String id) throws DeletionException {
         UUID dataId = UUID.fromString(id);
+
+        // Create a mapper for DataTags and deletes the data from data_tags and data table
         try {
             Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
             Data toDelete = mapper.get(dataId);
             DataTags tagDelete = tagMapper.get(dataId);
-
             mapper.delete(toDelete);
             tagMapper.delete(tagDelete);
-
-
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new DeletionException("Data wasn't found in database");
         } catch (Exception e){
             e.printStackTrace();
         }finally {
             db.close();
         }
-
     }
 
+    /**
+     * Search data_tags table for data that matches the tags.
+     * @param tags  tags to be included in the search
+     * @return a JSONObject of the data found
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
-    public JSONObject searchDataTags(String tags) throws GetException{
-        System.out.println(tags);
-
+    public JSONObject searchDataTags(String tags) throws GetException {
+        // The beginning of the query
         String query = "SELECT * FROM scinote.data_tags WHERE";
+        // Set variable to see number of tags in the search
         int numberOfTags = 1;
 
-        try{
+        try {
+            // Splits the string of tags and goes through each tag and fills the query
             for (String s : tags.split(",")) {
+                // If there are only one tag
                 if (numberOfTags == 1) {
                     query += (" tags CONTAINS '" + s + "'");
                     numberOfTags++;
@@ -178,34 +172,41 @@ public class DataController {
                     query += (" AND tags CONTAINS '" + s + "'");
                 }
             }
-        } catch (PatternSyntaxException e){
+        } catch (PatternSyntaxException e) {
             throw new GetException("Invalid input data");
         }
 
+        // Adds the end of the query
         query += " ALLOW FILTERING;";
-        System.out.println(query);
+        // Creates the statement to be sent
         Statement statement = new SimpleStatement(query);
 
+        // Creates a json array
         JSONArray ja = new JSONArray();
 
         try{
             ResultSet results = db.getSession().execute(statement);
+
+            // Check if there were a result
+            if(results.all().size() == 0){
+                throw new GetException("No data found");
+            }
+
+            // Fills the json array
             for(Row row : results) {
                 if (row != null) {
-                    JSONObject data = createSearchJson(
-                            row.getUUID("id"),
-                            row.getString("name"),
-                            row.getString("author"),
-                            row.getString("description"),
+                    DataTags dataTags = new DataTags(row.getList("tags", String.class), row.getUUID("id"),
+                            row.getString("name"), row.getString("author"), row.getString("description"),
                             row.getLong("created"));
-                    ja.add(data);
+                    ja.add(dataTags.toJson());
                 }
             }
-        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e) {
             throw new GetException("Invalid input data");
         } finally {
             db.close();
         }
+        // Adds the json array to a json object
         JSONObject mainObj = new JSONObject();
         mainObj.put("data", ja);
 
@@ -213,23 +214,14 @@ public class DataController {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private JSONObject createSearchJson(UUID id, String name, String author, String description,
-                                       Long created){
-        Date utcCreated= getUtcDate(created);
-
-        JSONObject dataJson = new JSONObject();
-        dataJson.put("id", id.toString());
-        dataJson.put("name", name);
-        dataJson.put("author", author);
-        dataJson.put("description", description);
-        dataJson.put("created", utcCreated.toString());
-
-        return dataJson;
-
-    }
-
-    public JSONObject updateData(String dataId, String update)throws UpdateException{
+    /**
+     * Update a specific data object. Will update both data and data_tags tables.
+     * @param dataId    id of the data to be updated.
+     * @param update    string in json format of the update.
+     * @return a JSONObject of the data that was updated.
+     * @throws UpdateException
+     */
+    public JSONObject update(String dataId, String update)throws UpdateException {
         String content;
         String author;
         String project;
@@ -243,8 +235,10 @@ public class DataController {
         String revisionDescription;
 
         try {
+            // Parse the json string into a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
 
+            // Get the values from the JSONObject
             content = (String) jObj.get("content");
             author = (String) jObj.get("author");
             project = (String) jObj.get("project");
@@ -269,8 +263,10 @@ public class DataController {
         }
 
         try {
+            // Get the data object to be updated
             Data data = getData(dataId);
 
+            // Set the new values to the data object
             data.setContent(content);
             data.setAuthor(author);
             data.setProject(project);
@@ -281,88 +277,117 @@ public class DataController {
             data.setTags(tags);
             data.setLastUpdate(lastUpdate);
 
+            // Get the revision history of the data
             List<String> revision = data.getRevisionHistory();
+            // Create a new revision
             String strRevision = String.format(
                     "{\"lastUpdate\":\"%s\", \"updateMadeBy\":\"%s\", \"revisionDescription\":\"%s\"}",
                     lastUpdate, user, revisionDescription);
+            // Add the revision to the revision history
             revision.add(strRevision);
+            // Save the updated revision history in the data object
             data.setRevisionHistory(revision);
 
+            // Save the data object in the database
             mapper.save(data);
 
             try {
                 UUID idForTags = UUID.fromString(dataId);
 
+                // Create a mapper for DataTags
                 Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
+                // Get the DataTags object from database
                 DataTags dataTags = tagMapper.get(idForTags);
 
+                // Update the DataTags object
                 dataTags.setAuthor(author);
                 dataTags.setDescription(description);
                 dataTags.setName(name);
                 dataTags.setTags(tags);
 
+                // Save the DataTags object in the database
                 tagMapper.save(dataTags);
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new GetException("Data wasn't found in database");
             }
 
-
-            return createDataJson(data);
-        } catch (IllegalArgumentException e){
+            return data.toJson();
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Data wasn't found in database");
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new UpdateException("Invalid input data");
-        } catch (GetException e){
+        } catch (GetException e) {
             throw new UpdateException("Invalid input data");
         }finally {
             db.close();
         }
     }
 
+    /**
+     * Get all data from a specific user.
+     * The function creates a statement and sends it to getDataFromQuery to receive the data.
+     * @param userId    the users id
+     * @return A JSONObject of all data authored by the user.
+     * @throws GetException
+     */
     public JSONObject getDataUser(String userId) throws GetException {
         String query = String.format("SELECT * FROM scinote.data WHERE author = '%s' ALLOW FILTERING;", userId);
         return getDataFromQuery(query);
     }
 
+    /**
+     * Get all data from a specific project.
+     * The function creates a statement and sends it to getDataFromQuery to receive the data.
+     * @param projectId the projects id
+     * @return aJSONObject of all data associated with the project.
+     * @throws GetException
+     */
     public JSONObject getDataProject(String projectId) throws GetException {
         String query = String.format("SELECT * FROM scinote.data WHERE project = '%s' ALLOW FILTERING;", projectId);
         return getDataFromQuery(query);
     }
 
+    /**
+     * Sends an query to the database and receives the response.
+     * @param query     the query to be sent.
+     * @return a JSONObject of the data.
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
     private JSONObject getDataFromQuery(String query) throws GetException {
+        // Create the statement
         Statement statement = new SimpleStatement(query);
+        // Create a json array
         JSONArray ja = new JSONArray();
+
         try{
             ResultSet results = db.getSession().execute(statement);
+
+            // Check if there were a result
             if(results.all().size() == 0){
                 throw new GetException("No data found");
             }
+
+            // Fill the array with the result
             for(Row row : results) {
                 if (row != null) {
-                    JSONObject data = createSearchJson(
-                            row.getUUID("id"),
-                            row.getString("name"),
-                            row.getString("author"),
-                            row.getString("description"),
-                            row.getLong("created"));
-                    ja.add(data);
+                    DataTags dataTags = new DataTags
+                            (row.getList("tags", String.class), row.getUUID("id"), row.getString("name"),
+                                    row.getString("author"), row.getString("description"), row.getLong("created"));
+                    ja.add(dataTags.toJson());
                 }
             }
-        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e) {
             throw new GetException("Invalid input data");
         } finally {
             db.close();
         }
+
+        // Create a json object of the json array
         JSONObject mainObj = new JSONObject();
         mainObj.put("data", ja);
 
         return mainObj;
-    }
 
-    private Date getUtcDate(Long date){
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return new Date(date);
     }
 }

@@ -6,7 +6,6 @@ import exceptions.CreationException;
 import exceptions.UpdateException;
 import org.json.simple.JSONObject;
 import spark.*;
-import models.DatabaseConnector;
 
 /**
  * API for application.
@@ -28,7 +27,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new DataController().getDataJson(request.params(":id"));
+                    return new DataController().get(request.params(":id"));
                 } catch (GetException e) {
                     response.status(404);
                 }
@@ -44,7 +43,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new DataController().createData(request.body());
+                    return new DataController().create(request.body());
                 } catch (CreationException e) {
                     response.status(400);
                 }
@@ -61,7 +60,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    new DataController().deleteData(request.params(":id"));
+                    new DataController().delete(request.params(":id"));
                 } catch (DeletionException e) {
                     response.status(400);
                 }
@@ -78,7 +77,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new DataController().updateData(request.params(":id"), request.body());
+                    return new DataController().update(request.params(":id"), request.body());
                 } catch (UpdateException e) {
                     response.status(400);
                 }

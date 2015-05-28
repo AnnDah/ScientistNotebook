@@ -4,7 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by niffe on 2015-05-11.
+ * Utility to hash a password
+ *
+ * @author niffe
+ * @version 1.0, 11/05/15
  */
 public final class PasswordUtility {
     /**
@@ -15,8 +18,7 @@ public final class PasswordUtility {
      * @throws IOException if the data can't be converted to a string
      */
     public static String generateHash(String password) throws NoSuchAlgorithmException, IOException {
-        MessageDigest mdSha1 = null;
-        mdSha1 = MessageDigest.getInstance("SHA-1");
+        MessageDigest mdSha1 =  MessageDigest.getInstance("SHA-1");
         mdSha1.update(password.getBytes("ASCII"));
         byte[] data = mdSha1.digest();
         return convertToHex(data);

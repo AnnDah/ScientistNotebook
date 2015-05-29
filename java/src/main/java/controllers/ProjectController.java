@@ -252,7 +252,7 @@ public class ProjectController {
 
             // Check if the project is private, if so no followers are allowed
             if(project.getIsPrivate()) {
-                throw new UpdateException("Project can't be followed");
+                throw new UpdateException("Project is private and can't be followed");
             }
             // Get list of followers from project
             List<String> followers = project.getFollowers();

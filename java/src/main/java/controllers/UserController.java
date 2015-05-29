@@ -125,6 +125,7 @@ public class UserController {
     @SuppressWarnings("unchecked")
     private User getUser(String userId) throws GetException {
         try {
+            System.out.println("hej ");
             return mapper.get(UUID.fromString(userId));
         } catch (IllegalArgumentException e) {
             throw new GetException("User wasn't found in database");
@@ -170,7 +171,7 @@ public class UserController {
      * @return  a JSONObject of the updated user
      * @throws UpdateException
      */
-    public JSONObject update(String id, String update)throws UpdateException {
+    public JSONObject update(String id, String update) throws UpdateException {
         String firstName;
         String lastName;
         String email;
@@ -212,6 +213,7 @@ public class UserController {
         try {
             // Get the user from database
             User user = getUser(id);
+            System.out.println("User name: " + user.getFirstName());
 
             // Set new values to user fields
             user.setFirstName(firstName);

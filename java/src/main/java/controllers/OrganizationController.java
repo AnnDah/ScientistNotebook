@@ -23,14 +23,14 @@ public class OrganizationController {
     private DatabaseConnector db;
     private Mapper<Organization> mapper;
 
-    public OrganizationController(){
+    public OrganizationController() {
         db = new DatabaseConnector();
         db.connectDefault();
 
         mapper = new MappingManager(db.getSession()).mapper(Organization.class);
     }
 
-    public JSONObject createOrganization(String strOrganization) throws CreationException{
+    public JSONObject create(String strOrganization) throws CreationException {
         UUID id = UUID.randomUUID();
         Organization org = null;
 
@@ -50,57 +50,31 @@ public class OrganizationController {
             org = new Organization(id, name, description, policy, license, departments);
             mapper.save(org);
 
-        } catch (ParseException e){
+        } catch (ParseException e) {
             throw new CreationException("Invalid input data");
         } finally {
             db.close();
         }
-        return createOrgJson(org);
+        return org.toJson();
     }
 
-    public void deleteOrganization(String orgId) throws DeletionException{
+    public void delete(String orgId) throws DeletionException {
         try {
             UUID id = UUID.fromString(orgId);
             Organization whose = mapper.get(id);
             mapper.delete(whose);
 
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new DeletionException("Organization wasn't found in database");
         } finally {
             db.close();
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private JSONObject createOrgJson(Organization whose){
-        UUID id = whose.getId();
-        String name = whose.getName();
-        String description = whose.getDescription();
-        String policy = whose.getPolicy();
-        String license = whose.getLicense();
-        List<String> departments = whose.getDepartments();
-
-        JSONObject orgJson = new JSONObject();
-        orgJson.put("id", id.toString());
-        orgJson.put("name", name);
-        orgJson.put("description", description);
-        orgJson.put("policy", policy);
-        orgJson.put("license", license);
-        orgJson.put("departments", departments);
-
-        JSONArray ja = new JSONArray();
-        ja.add(orgJson);
-
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("organizations", ja);
-
-        return mainObj;
-    }
-
-    public JSONObject getOrganizationJson(String id)throws GetException{
+    public JSONObject get(String id)throws GetException {
         Organization org = getOrganization(id);
         db.close();
-        return createOrgJson(org);
+        return org.toJson();
     }
     @SuppressWarnings("unchecked")
     private Organization getOrganization(String orgId) throws GetException {
@@ -112,7 +86,7 @@ public class OrganizationController {
         }
     }
 
-    public JSONObject updateOrganization(String id, String update) throws UpdateException{
+    public JSONObject update(String id, String update) throws UpdateException {
         String name;
         String description;
         String policy;
@@ -133,9 +107,9 @@ public class OrganizationController {
                 departments.add(department.toString());
             }
 
-        }  catch (org.json.simple.parser.ParseException e){
+        }  catch (org.json.simple.parser.ParseException e) {
             throw new UpdateException("Invalid input data");
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");
         }
 
@@ -151,12 +125,12 @@ public class OrganizationController {
             mapper.save(org);
 
 
-            return createOrgJson(org);
-        } catch (IllegalArgumentException e){
+            return org.toJson();
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("User wasn't found in database");
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new UpdateException("Invalid input data");
-        } catch (GetException e){
+        } catch (GetException e) {
             throw new UpdateException("Invalid input data");
         }finally {
             db.close();

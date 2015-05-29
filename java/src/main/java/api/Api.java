@@ -309,7 +309,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new OrganizationController().createOrganization(request.body());
+                    return new OrganizationController().create(request.body());
                 } catch (CreationException e) {
                     response.status(400);
                 }
@@ -326,7 +326,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new OrganizationController().getOrganizationJson(request.params(":id"));
+                    return new OrganizationController().get(request.params(":id"));
                 } catch (GetException e) {
                     response.status(404);
                 }
@@ -342,7 +342,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new OrganizationController().updateOrganization(request.params(":id"), request.body());
+                    return new OrganizationController().update(request.params(":id"), request.body());
                 } catch (UpdateException e) {
                     response.status(400);
                 }
@@ -358,7 +358,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    new OrganizationController().deleteOrganization(request.params(":id"));
+                    new OrganizationController().delete(request.params(":id"));
                 } catch (DeletionException e) {
                     response.status(400);
                 }

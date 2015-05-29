@@ -2,6 +2,9 @@ package models;
 
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.Objects;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -21,11 +24,7 @@ public class Organization {
     private String license;
     private List<String> departments = new ArrayList<String>();
 
-    public Organization(){
-
-    }
-
-    public Organization(UUID id, String name, String description, String policy, String license, List<String> departments){
+    public Organization(UUID id, String name, String description, String policy, String license, List<String> departments) {
         this.setId(id);
         this.setName(name);
         this.setDescription(description);
@@ -83,8 +82,8 @@ public class Organization {
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof Organization){
+    public boolean equals(Object other) {
+        if(other instanceof Organization) {
             Organization that = (Organization) other;
             return Objects.equals(this.id, that.id) &&
                     Objects.equals(this.name, that.name) &&
@@ -99,5 +98,24 @@ public class Organization {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, policy, license, departments);
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJson() {
+        JSONObject orgJson = new JSONObject();
+        orgJson.put("id", this.getId().toString());
+        orgJson.put("name", this.getName());
+        orgJson.put("description", this.getDescription());
+        orgJson.put("policy", this.getPolicy());
+        orgJson.put("license", this.getLicense());
+        orgJson.put("departments", this.getDepartments());
+
+        JSONArray ja = new JSONArray();
+        ja.add(orgJson);
+
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("organizations", ja);
+
+        return mainObj;
     }
 }

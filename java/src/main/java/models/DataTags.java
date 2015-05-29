@@ -23,7 +23,10 @@ public class DataTags {
     private String description;
     private Long created;
 
-    // Constructor to create an object of DataTags
+    public DataTags() {
+
+    }
+
     public DataTags(List<String> tags, UUID id, String name, String author, String description, Long created) {
         this.setTags(tags);
         this.setId(id);

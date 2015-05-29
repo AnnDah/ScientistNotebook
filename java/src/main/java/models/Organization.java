@@ -24,6 +24,10 @@ public class Organization {
     private String license;
     private List<String> departments = new ArrayList<String>();
 
+    public Organization() {
+
+    }
+
     public Organization(UUID id, String name, String description, String policy, String license, List<String> departments) {
         this.setId(id);
         this.setName(name);

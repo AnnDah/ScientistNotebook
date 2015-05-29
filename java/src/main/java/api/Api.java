@@ -227,7 +227,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 String body = request.body();
                 try {
-                    return new ProjectController().createProject(body);
+                    return new ProjectController().create(body);
                 } catch (CreationException e) {
                     response.status(400);
                 }
@@ -244,7 +244,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new ProjectController().getProjectJson(request.params(":id"));
+                    return new ProjectController().get(request.params(":id"));
                 } catch (GetException e) {
                     response.status(400);
                 }
@@ -277,7 +277,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new ProjectController().updateProject(request.params(":id"), request.body());
+                    return new ProjectController().update(request.params(":id"), request.body());
                 } catch (UpdateException e) {
                     response.status(400);
                 }
@@ -293,7 +293,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    new ProjectController().deleteProject(request.params(":id"));
+                    new ProjectController().delete(request.params(":id"));
                 } catch (DeletionException e) {
                     response.status(400);
                 }

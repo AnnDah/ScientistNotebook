@@ -3,11 +3,11 @@ package models;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import org.json.simple.JSONObject;
 
-import java.util.Objects;
-import java.util.UUID;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by annikamagnusson on 16/05/15.
@@ -25,12 +25,12 @@ public class ProjectTags {
     private boolean isPrivate;
     private Long created;
 
-    public ProjectTags(){
+    public ProjectTags() {
 
     }
 
     public ProjectTags(UUID id, List<String> tags, String name, String status, String description, boolean isPrivate,
-                       Long created){
+                       Long created) {
         this.setId(id);
         this.setTags(tags);
         this.setName(name);
@@ -58,7 +58,7 @@ public class ProjectTags {
         this.tags = tags;
     }
 
-    public String getName() {
+    public String getName()  {
         return name;
     }
 
@@ -99,8 +99,8 @@ public class ProjectTags {
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof ProjectTags){
+    public boolean equals(Object other) {
+        if(other instanceof ProjectTags) {
             ProjectTags that = (ProjectTags) other;
             return Objects.equals(this.id, that.id) &&
                     Objects.equals(this.tags, that.tags) &&
@@ -117,5 +117,26 @@ public class ProjectTags {
     @Override
     public int hashCode() {
         return Objects.hash(id, tags, name, status, description, isPrivate, created);
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJson() {
+        JSONObject projectJson = new JSONObject();
+        projectJson.put("id", this.getId().toString());
+        projectJson.put("name", this.getName());
+        projectJson.put("description", this.getDescription());
+        projectJson.put("created", getUtcDate(this.getCreated()).toString());
+        projectJson.put("isPrivate", Boolean.toString(this.getIsPrivate()));
+        projectJson.put("tags", this.getTags());
+        projectJson.put("status", this.getStatus());
+
+        return projectJson;
+
+    }
+
+    private Date getUtcDate(Long date) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

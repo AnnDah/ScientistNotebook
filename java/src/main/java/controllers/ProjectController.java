@@ -17,9 +17,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -30,7 +27,7 @@ public class ProjectController {
     private DatabaseConnector db;
     private Mapper<Project> mapper;
 
-    public ProjectController(){
+    public ProjectController() {
         db = new DatabaseConnector();
         db.connectDefault();
 
@@ -38,7 +35,7 @@ public class ProjectController {
 
     }
 
-    public JSONObject createProject(String projectInfo) throws CreationException{
+    public JSONObject create(String projectInfo) throws CreationException {
         //Create an unique identifier
         UUID id = UUID.randomUUID();
         Project project = null;
@@ -54,7 +51,9 @@ public class ProjectController {
             String owner = (String) jObj.get("owner");
             String strPrivate = (String) jObj.get("isPrivate");
             boolean isPrivate = false;
-            if("true".equals(strPrivate)) isPrivate = true;
+            if(strPrivate.equals("true")) {
+                isPrivate = true;
+            }
 
             Long created = new Date().getTime();
 
@@ -107,31 +106,30 @@ public class ProjectController {
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
             ProjectTags tag = new ProjectTags(id, tags, name, status, description, isPrivate, created);
             tagMapper.save(tag);
-        } catch (ParseException e){
+        } catch (ParseException e) {
             throw new CreationException("Invalid input data");
         } finally {
             db.close();
         }
 
-        return createProjectJson(project);
+        return project.toJson();
     }
 
-    public JSONObject getProjectJson(String id)throws GetException{
+    public JSONObject get(String id)throws GetException {
         Project project = getProject(id);
         db.close();
-        return createProjectJson(project);
+        return project.toJson();
     }
     @SuppressWarnings("unchecked")
     private Project getProject(String projectId) throws GetException {
         try {
-            UUID projectUuid = UUID.fromString(projectId);
-            return mapper.get(projectUuid);
+            return mapper.get(UUID.fromString(projectId));
         } catch (IllegalArgumentException e) {
             throw new GetException("Project wasn't found in database");
         }
     }
 
-    public void deleteProject(String projectId) throws DeletionException{
+    public void delete(String projectId) throws DeletionException {
         try {
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
 
@@ -143,72 +141,22 @@ public class ProjectController {
             mapper.delete(toDelete);
             tagMapper.delete(tagDelete);
 
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new DeletionException("Project wasn't found in database");
         } finally {
             db.close();
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private JSONObject createProjectJson(Project whose){
-        UUID id = whose.getId();
-        String field = whose.getField();
-        List<String> tags = whose.getTags();
-        String description = whose.getDescription();
-        List<String> projectRoles = whose.getProjectRoles();
-        String createdBy = whose.getCreatedBy();
-        String name = whose.getName();
-        String status = whose.getStatus();
-        boolean isPrivate = whose.getIsPrivate();
-        Long created = whose.getCreated();
-        List<String> fundedBy = whose.getFundedBy();
-        List<String> members = whose.getMembers();
-        List<String> employers = whose.getEmployers();
-        List<String> funds = whose.getFunds();
-        List<String> departments = whose.getDepartments();
-        String owner = whose.getOwner();
-        List<String> followers = whose.getFollowers();
-
-        Date utcCreated= getUtcDate(created);
-
-        JSONObject projectJson = new JSONObject();
-        projectJson.put("id", id.toString());
-        projectJson.put("field", field);
-        projectJson.put("description", description);
-        projectJson.put("createdBy", createdBy);
-        projectJson.put("name", name);
-        projectJson.put("status", status);
-        projectJson.put("tags", tags);
-        projectJson.put("projectRoles", projectRoles);
-        projectJson.put("isPrivate", Boolean.toString(isPrivate));
-        projectJson.put("created", utcCreated.toString());
-        projectJson.put("fundedBy", fundedBy);
-        projectJson.put("members", members);
-        projectJson.put("employers", employers);
-        projectJson.put("funds", funds);
-        projectJson.put("departments", departments);
-        projectJson.put("owner", owner);
-        projectJson.put("followers", followers);
-
-        JSONArray ja = new JSONArray();
-        ja.add(projectJson);
-
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("projects", ja);
-
-        return mainObj;
-    }
 
     @SuppressWarnings("unchecked")
-    public JSONObject searchProjectTags(String tags) throws GetException{
+    public JSONObject searchProjectTags(String tags) throws GetException {
         System.out.println(tags);
 
         String query = "SELECT * FROM scinote.project_tags WHERE";
         int numberOfTags = 1;
 
         try{
-
             for (String s : tags.split(",")) {
                 if (numberOfTags == 1) {
                     query += (" tags CONTAINS '" + s + "'");
@@ -218,10 +166,8 @@ public class ProjectController {
                 }
 
                 System.out.println(query);
-
-
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -235,17 +181,13 @@ public class ProjectController {
             ResultSet results = db.getSession().execute(statement);
             for(Row row : results) {
                 if (row != null) {
-                    JSONObject project = createSearchJson(
-                            row.getUUID("id"),
-                            row.getString("name"),
-                            row.getString("status"),
-                            row.getString("description"),
-                            row.getLong("created"),
-                            row.getBool("is_private"));
-                    ja.add(project);
+                    Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
+                    ProjectTags projectTags = tagMapper.get(row.getUUID("id"));
+
+                    ja.add(projectTags.toJson());
                 }
             }
-        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e) {
             throw new GetException("Invalid input data");
         } catch (Exception e) {
             e.printStackTrace();
@@ -259,28 +201,11 @@ public class ProjectController {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private JSONObject createSearchJson(UUID id, String name, String author, String description,
-                                       Long created, boolean isPrivate){
-        Date utcCreated = getUtcDate(created);
-
-        JSONObject projectJson = new JSONObject();
-        projectJson.put("id", id.toString());
-        projectJson.put("name", name);
-        projectJson.put("author", author);
-        projectJson.put("description", description);
-        projectJson.put("created", utcCreated.toString());
-        projectJson.put("isPrivate", Boolean.toString(isPrivate));
-
-        return projectJson;
-
-    }
-
-    public void addFollower(String projectId, String userId) throws UpdateException{
+    public void addFollower(String projectId, String userId) throws UpdateException {
         try {
             UUID id = UUID.fromString(projectId);
             Project project = mapper.get(id);
-            if(project.getIsPrivate() == true){
+            if(project.getIsPrivate()) {
                 System.out.println("Project is private and can't be followed");
                 throw new UpdateException("Project can't be followed");
             }
@@ -288,14 +213,14 @@ public class ProjectController {
             followers.add(userId);
             project.setFollowers(followers);
             mapper.save(project);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");
         } finally {
             db.close();
         }
     }
 
-    public JSONObject updateProject(String id, String update) throws UpdateException{
+    public JSONObject update(String id, String update) throws UpdateException {
         String field;
         String description;
         String status;
@@ -323,8 +248,7 @@ public class ProjectController {
             name = (String) jObj.get("name");
             String strPrivate = (String) jObj.get("isPrivate");
 
-            isPrivate = false;
-            if("true".equals(strPrivate)) isPrivate = true;
+            isPrivate = "true".equals(strPrivate);
 
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
@@ -375,9 +299,9 @@ public class ProjectController {
                 followers.add(aFollowersArray.toString());
             }
 
-        }  catch (org.json.simple.parser.ParseException e){
+        }  catch (org.json.simple.parser.ParseException e) {
             throw new UpdateException("Invalid input data");
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");
         }
 
@@ -415,26 +339,21 @@ public class ProjectController {
                 projectTags.setIsPrivate(isPrivate);
 
                 tagMapper.save(projectTags);
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new GetException("Project wasn't found in database");
             }
 
 
-            return createProjectJson(project);
-        } catch (IllegalArgumentException e){
+            return project.toJson();
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Project wasn't found in database");
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new UpdateException("Invalid input data");
-        } catch (GetException e){
+        } catch (GetException e) {
             throw new UpdateException("Invalid input data");
         }finally {
             db.close();
         }
     }
 
-    private Date getUtcDate(Long date){
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return new Date(date);
-    }
 }

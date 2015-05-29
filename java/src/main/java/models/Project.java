@@ -3,11 +3,12 @@ package models;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Column;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by annikamagnusson on 20/04/15.
@@ -38,14 +39,14 @@ public class Project {
     private boolean isPrivate;
     private Long created;
 
-    public Project(){
+    public Project() {
 
     }
 
     public Project(UUID id, String field, List<String> tags, String description, List<String> projectRoles,
                    String createdBy, String name, String status, boolean isPrivate, Long created, List<String> fundedBy,
                    List<String> members, List<String> employers, List<String> funds, List<String> departments,
-                   String owner){
+                   String owner) {
         this.id = id;
         this.field = field;
         this.tags = tags;
@@ -65,145 +66,145 @@ public class Project {
 
     }
 
-    public List<String> getFollowers(){
+    public List<String> getFollowers() {
         return this.followers;
     }
 
-    public void setFollowers(List<String> followers){
+    public void setFollowers(List<String> followers) {
         this.followers = followers;
     }
 
-    public String getOwner(){
+    public String getOwner() {
         return this.owner;
     }
 
-    public void setOwner(String owner){
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
-    public List<String> getFunds(){
+    public List<String> getFunds() {
         return this.funds;
     }
 
-    public void setFunds(List<String> funds){
+    public void setFunds(List<String> funds) {
         this.funds = funds;
     }
 
-    public List<String> getDepartments(){
+    public List<String> getDepartments() {
         return this.departments;
     }
 
-    public void setDepartments(List<String> departments){
+    public void setDepartments(List<String> departments) {
         this.departments = departments;
     }
 
-    public List<String> getEmployers(){
+    public List<String> getEmployers() {
         return this.employers;
     }
 
-    public void setEmployers(List<String> employers){
+    public void setEmployers(List<String> employers) {
         this.employers = employers;
     }
 
-    public List<String> getMembers(){
+    public List<String> getMembers() {
         return this.members;
     }
 
-    public void setMembers(List<String> members){
+    public void setMembers(List<String> members) {
         this.members = members;
     }
 
-    public List<String> getFundedBy(){
+    public List<String> getFundedBy() {
         return this.fundedBy;
     }
 
-    public void setFundedBy(List<String> fundedBy){
+    public void setFundedBy(List<String> fundedBy) {
         this.fundedBy = fundedBy;
     }
 
-    public Long getCreated(){
+    public Long getCreated() {
         return this.created;
     }
 
-    public void setCreated(Long created){
+    public void setCreated(Long created) {
         this.created = created;
     }
 
-    public boolean getIsPrivate(){
+    public boolean getIsPrivate() {
         return  this.isPrivate;
     }
 
-    public void setIsPrivate(boolean isPrivate){
+    public void setIsPrivate(boolean isPrivate) {
         this.isPrivate = isPrivate;
     }
 
-    public UUID getId(){
+    public UUID getId() {
         return this.id;
     }
 
-    public void setId(UUID id){
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getField(){
+    public String getField() {
         return this.field;
     }
 
-    public void setField(String field){
+    public void setField(String field) {
         this.field = field;
     }
 
-    public List<String> getTags(){
+    public List<String> getTags() {
         return this.tags;
     }
 
-    public void setTags(List<String> tags){
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return this.description;
     }
 
-    public void setDescription(String description){
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public List<String> getProjectRoles(){
+    public List<String> getProjectRoles() {
         return  this.projectRoles;
     }
 
-    public void setProjectRoles(List<String> projectRoles){
+    public void setProjectRoles(List<String> projectRoles) {
         this.projectRoles = projectRoles;
     }
 
-    public String getCreatedBy(){
+    public String getCreatedBy() {
         return this.createdBy;
     }
 
-    public void setCreatedBy(String createdBy){
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(String status){
+    public void setStatus(String status) {
         this.status = status;
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof Project){
+    public boolean equals(Object other) {
+        if(other instanceof Project) {
             Project that = (Project) other;
             return Objects.equals(this.id, that.id) &&
                     Objects.equals(this.field, that.field) &&
@@ -230,5 +231,41 @@ public class Project {
     public int hashCode() {
         return Objects.hash(id, field, description, projectRoles, createdBy, name, status, tags,
                 isPrivate, created, fundedBy, members, employers, funds, departments, owner, followers);
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJson() {
+        JSONObject projectJson = new JSONObject();
+        projectJson.put("id", this.getId().toString());
+        projectJson.put("field", this.getField());
+        projectJson.put("description", this.getDescription());
+        projectJson.put("createdBy", this.getCreatedBy());
+        projectJson.put("name", this.getName());
+        projectJson.put("status", this.getStatus());
+        projectJson.put("tags", this.getTags());
+        projectJson.put("projectRoles", this.getProjectRoles());
+        projectJson.put("isPrivate", Boolean.toString(this.getIsPrivate()));
+        projectJson.put("created", getUtcDate(this.getCreated()).toString());
+        projectJson.put("fundedBy", this.getFundedBy());
+        projectJson.put("members", this.getMembers());
+        projectJson.put("employers", this.getEmployers());
+        projectJson.put("funds", this.getFunds());
+        projectJson.put("departments", this.getDepartments());
+        projectJson.put("owner", this.getOwner());
+        projectJson.put("followers", this.getFollowers());
+
+        JSONArray ja = new JSONArray();
+        ja.add(projectJson);
+
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("projects", ja);
+
+        return mainObj;
+    }
+
+    private Date getUtcDate(Long date) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

@@ -1,4 +1,7 @@
 <?php
+//Created by Kristoffer Olsson
+//Edited by Kristoffer Olsson
+
 include('pages/login.php'); // Includes Login Script
 
 if(isset($_SESSION['login_user'])){

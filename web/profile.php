@@ -1,4 +1,7 @@
 <?php
+//This class is keept as refrence and is not part of
+//final product
+
 require_once('connection.php');
 $id=$_SESSION['SESS_MEMBER_ID'];
 $result3 = mysql_query("SELECT * FROM member where mem_id='$id'");

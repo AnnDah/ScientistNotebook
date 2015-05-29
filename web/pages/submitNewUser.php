@@ -1,21 +1,6 @@
-
 <?php 
-/*
-class User {
-    public $firstname = "";
-    public $email  = "";    
-}
- 
-$user = new User();
-$user->firstname = $_POST["firstName"];
-$user->lastname  = $_POST["lastName"];
-$user->email  = $_POST["mail@gmail.com"];
-$user->password  = $_POST["1234"];
-$user->organization  = $_POST["MAH"];
-$user->department  = $_POST["computer"];
-$user->role  = $_POST["user"];
-
-*/
+//Created by Kristoffer Olsson
+//Edited by Kristoffer Olsson
 
 //API Url
 $url = 'http://localhost:9090/users';
@@ -35,18 +20,14 @@ $role = $_POST["role"];
 $ch = curl_init($url);
 
 //The JSON data.
-$jsonData = array(	
-   /* 'username' => 'MyUsername',
-    'password' => 'MyPassword'*/
-	
+$jsonData = array(	   
 	"firstName"=>"$first_name",
 	"lastName"=>"$last_name",
 	"email"=>"$email",
 	"password"=>"$password",
 	"organization"=>"$organization",
 	"department"=>"$department",
-	"role"=>"$role"
-	
+	"role"=>"$role"	
 );
 
 //Encode the array into JSON.

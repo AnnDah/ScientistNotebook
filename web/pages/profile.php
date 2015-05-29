@@ -1,4 +1,6 @@
 <?php
+//This class is keept as refrence and is not part of
+//final product
 include('session.php');
 ?>
 <!DOCTYPE html>

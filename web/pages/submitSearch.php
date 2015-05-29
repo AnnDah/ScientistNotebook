@@ -1,20 +1,10 @@
 
 <?php 
-/*
-class User {
-    public $firstname = "";
-    public $email  = "";    
-}
- 
-$user = new User();
-$user->firstname = $_POST["firstName"];
-$user->lastname  = $_POST["lastName"];
-$user->email  = $_POST["mail@gmail.com"];
-$user->password  = $_POST["1234"];
-$user->organization  = $_POST["MAH"];
-$user->department  = $_POST["computer"];
-$user->role  = $_POST["user"];
+//Created by Kristoffer Olsson
+//Edited by Kristoffer Olsson
 
+/*
+This class is not completed. Search is to made based on just tagword in this iteration
 */
 
 //API Url

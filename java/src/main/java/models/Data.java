@@ -34,6 +34,10 @@ public class Data {
     @Column(name="revision_history")
     private List<String> revisionHistory = new ArrayList<String>();
 
+    public Data() {
+
+    }
+
     // Constructor to create an object of Data
     public Data(String content, Long created, String author, int level, List<String> tags, UUID id, String dataType,
                 String project, String name, String description, Long lastUpdate) {

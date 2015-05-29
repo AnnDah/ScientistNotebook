@@ -17,6 +17,7 @@ import org.json.simple.JSONArray;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.Exchanger;
 
 
 /**
@@ -233,9 +234,12 @@ public class UserController {
             throw new UpdateException("Invalid input data");
         } catch (GetException e) {
             throw new UpdateException("Invalid input data");
-        }finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             db.close();
         }
+        return null;
 
     }
 

@@ -21,7 +21,7 @@ import java.util.regex.PatternSyntaxException;
 import models.Data;
 
 /**
- * Controller for Data and DataTags model
+ * Class to handle CRUD operations on data to database.
  *
  * @author Annika Magnusson
  * @version 1.0, 20/04/15
@@ -116,8 +116,7 @@ public class DataController {
     @SuppressWarnings("unchecked")
     private Data getData(String id) throws GetException {
         try {
-            UUID dataId = UUID.fromString(id);
-            return mapper.get(dataId);
+            return mapper.get(UUID.fromString(id));
         } catch (IllegalArgumentException e){
             throw new GetException("Data wasn't found in database");
         }
@@ -130,15 +129,13 @@ public class DataController {
      * @throws DeletionException
      */
     public void delete(String id) throws DeletionException {
-        UUID dataId = UUID.fromString(id);
-
-        // Create a mapper for DataTags and deletes the data from data_tags and data table
         try {
+            // Create a mapper for DataTags
             Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
-            Data toDelete = mapper.get(dataId);
-            DataTags tagDelete = tagMapper.get(dataId);
-            mapper.delete(toDelete);
-            tagMapper.delete(tagDelete);
+
+            // Deletes the data from data_tags and data tables
+            mapper.delete(mapper.get(UUID.fromString(id)));
+            tagMapper.delete(tagMapper.get(UUID.fromString(id)));
         } catch (IllegalArgumentException e) {
             throw new DeletionException("Data wasn't found in database");
         } catch (Exception e){

@@ -20,8 +20,10 @@ import org.json.simple.parser.ParseException;
 import java.util.*;
 
 /**
- * Created by annikamagnusson on 20/04/15.
  * Class to handle CRUD operations on projects to database.
+ *
+ * @author Annika Magnusson
+ * @version 1.0 - 20/04/15
  */
 public class ProjectController {
     private DatabaseConnector db;
@@ -41,8 +43,10 @@ public class ProjectController {
         Project project = null;
 
         try{
+            // Parse the string into a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(projectInfo);
 
+            // Set values to the variables
             String field  = (String) jObj.get("field");
             String description = (String) jObj.get("description");
             String createdBy = (String) jObj.get("createdBy");
@@ -54,8 +58,6 @@ public class ProjectController {
             if(strPrivate.equals("true")) {
                 isPrivate = true;
             }
-
-            Long created = new Date().getTime();
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             List<String> tags = new ArrayList<String>();
@@ -99,12 +101,21 @@ public class ProjectController {
                 departments.add(aDepartmentsArray.toString());
             }
 
+            // Get the date of creation
+            Long created = new Date().getTime();
+
+            // Create the project
             project = new Project(id, field, tags, description, projectRoles, createdBy, name,
                     status, isPrivate, created, fundedBy, members, employers, funds, departments, owner);
+
+            // Save the project to database
             mapper.save(project);
 
+            // Create a mapper for DataTags
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
+            // Create a new DataTag
             ProjectTags tag = new ProjectTags(id, tags, name, status, description, isPrivate, created);
+            // Save the DataTag
             tagMapper.save(tag);
         } catch (ParseException e) {
             throw new CreationException("Invalid input data");
@@ -115,31 +126,46 @@ public class ProjectController {
         return project.toJson();
     }
 
+    /**
+     * Gets a specific project and returns it as a JSONObject
+     * @param id    id of the project to get
+     * @return  a JSONObject of the project
+     * @throws GetException
+     */
     public JSONObject get(String id)throws GetException {
         Project project = getProject(id);
         db.close();
         return project.toJson();
     }
+
+    /**
+     * Gets a specific project from database
+     * @param id    id of the project to get
+     * @return  the project
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
-    private Project getProject(String projectId) throws GetException {
+    private Project getProject(String id) throws GetException {
         try {
-            return mapper.get(UUID.fromString(projectId));
+            return mapper.get(UUID.fromString(id));
         } catch (IllegalArgumentException e) {
             throw new GetException("Project wasn't found in database");
         }
     }
 
-    public void delete(String projectId) throws DeletionException {
+    /**
+     * Removes a specific project from database
+     * @param id    id of the project to remove
+     * @throws DeletionException
+     */
+    public void delete(String id) throws DeletionException {
         try {
+            // Create a mapper for DataTags
             Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
 
-            UUID id = UUID.fromString(projectId);
-
-            Project toDelete = mapper.get(id);
-            ProjectTags tagDelete = tagMapper.get(id);
-
-            mapper.delete(toDelete);
-            tagMapper.delete(tagDelete);
+            // Delete the project from projects and project_tags tables in database
+            mapper.delete(mapper.get(UUID.fromString(id)));
+            tagMapper.delete(tagMapper.get(UUID.fromString(id)));
 
         } catch (IllegalArgumentException e) {
             throw new DeletionException("Project wasn't found in database");
@@ -148,16 +174,23 @@ public class ProjectController {
         }
     }
 
-
+    /**
+     * Search through project_tags table in database for projects matching the tags.
+     * @param tags  string of the tags to be added in the search
+     * @return  a JSONObject of the projects found in the search
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
     public JSONObject searchProjectTags(String tags) throws GetException {
-        System.out.println(tags);
-
+        // The beginning of the query
         String query = "SELECT * FROM scinote.project_tags WHERE";
+        // Set variable to see number of tags in the search
         int numberOfTags = 1;
 
         try{
+            // Splits the string of tags and goes through each tag and fills the query
             for (String s : tags.split(",")) {
+                // If there are only one tag
                 if (numberOfTags == 1) {
                     query += (" tags CONTAINS '" + s + "'");
                     numberOfTags++;
@@ -171,19 +204,23 @@ public class ProjectController {
             e.printStackTrace();
         }
 
+        // Adds the end of the query
         query += " ALLOW FILTERING;";
-        System.out.println(query);
+        // Creates the statement to be sent
         Statement statement = new SimpleStatement(query);
 
+        // Creates a json array
         JSONArray ja = new JSONArray();
 
         try{
             ResultSet results = db.getSession().execute(statement);
             for(Row row : results) {
+                // Check if there were a result
                 if (row != null) {
                     Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
                     ProjectTags projectTags = tagMapper.get(row.getUUID("id"));
 
+                    // Fills the json array
                     ja.add(projectTags.toJson());
                 }
             }
@@ -194,6 +231,7 @@ public class ProjectController {
         } finally {
             db.close();
         }
+        // Adds the json array to a json object
         JSONObject mainObj = new JSONObject();
         mainObj.put("projects", ja);
 
@@ -201,17 +239,28 @@ public class ProjectController {
 
     }
 
+    /**
+     * Adds a follower to the projects list of followers
+     * @param projectId id of the project
+     * @param userId    id of the follower to be added to the list
+     * @throws UpdateException
+     */
     public void addFollower(String projectId, String userId) throws UpdateException {
         try {
-            UUID id = UUID.fromString(projectId);
-            Project project = mapper.get(id);
+            // Get project to add a follower to
+            Project project = mapper.get(UUID.fromString(projectId));
+
+            // Check if the project is private, if so no followers are allowed
             if(project.getIsPrivate()) {
-                System.out.println("Project is private and can't be followed");
                 throw new UpdateException("Project can't be followed");
             }
+            // Get list of followers from project
             List<String> followers = project.getFollowers();
+            // Add the user id to the list
             followers.add(userId);
+            // Save the updated list in project
             project.setFollowers(followers);
+            // Save the project
             mapper.save(project);
         } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");
@@ -220,6 +269,13 @@ public class ProjectController {
         }
     }
 
+    /**
+     * 
+     * @param id
+     * @param update
+     * @return
+     * @throws UpdateException
+     */
     public JSONObject update(String id, String update) throws UpdateException {
         String field;
         String description;

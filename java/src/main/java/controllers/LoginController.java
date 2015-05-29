@@ -6,8 +6,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 /**
- * Created by annikamagnusson on 20/04/15.
+ * Class to handle login of user
  *
+ * @author Sebastian Nirfelt
+ * @version 1.0 - 20/04/15
  */
 public class LoginController {
 

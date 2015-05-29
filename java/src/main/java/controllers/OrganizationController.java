@@ -16,8 +16,10 @@ import org.json.simple.parser.ParseException;
 import java.util.*;
 
 /**
- * Created by niffe on 2015-04-27.
+ * Class to handle CRUD operations on organizations to database.
  *
+ * @author Niffe
+ *@version 1.0 - 27/04/15
  */
 public class OrganizationController {
     private DatabaseConnector db;

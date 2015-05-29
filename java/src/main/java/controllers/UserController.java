@@ -1,4 +1,5 @@
 package controllers;
+
 import utility.PasswordUtility;
 import com.datastax.driver.core.*;
 import com.datastax.driver.mapping.Mapper;
@@ -19,11 +20,12 @@ import java.util.*;
 
 
 /**
- * Created by annikamagnusson on 20/04/15.
+ * Class to handle CRUD operations on users to database.
  *
+ * @author Annika Magnusson
+ * @version 1.0 - 20/04/15
  */
 public class UserController {
-
     private Mapper<User> mapper;
     private DatabaseConnector db;
 
@@ -33,24 +35,36 @@ public class UserController {
         mapper = new MappingManager(db.getSession()).mapper(User.class);
     }
 
+    /**
+     * Creates a new User and saves it to database.
+     * @param strUser   User information to be saved in database.
+     * @return JSONObject of the User that was created
+     * @throws CreationException
+     */
     public JSONObject create(String strUser) throws CreationException {
+        // Create a random UUID
         UUID id = UUID.randomUUID();
         User user = null;
 
         try {
+            // Parse the parameter string to a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(strUser);
 
+            // Set values to the variables
             String firstName = (String) jObj.get("firstName");
             String lastName = (String) jObj.get("lastName");
             String email = (String) jObj.get("email");
             String password = PasswordUtility.generateHash((String) jObj.get("password"));
-            Long memberSince = new Date().getTime();
             String organization = (String) jObj.get("organization");
             String department = (String) jObj.get("department");
             String role = (String) jObj.get("role");
 
+            // Get the date of registration
+            Long memberSince = new Date().getTime();
 
+            // Create a new user
             user = new User(id, firstName, lastName, email, password, memberSince , organization, department, role);
+            // Save user in database
             mapper.save(user);
 
 
@@ -66,18 +80,22 @@ public class UserController {
             db.close();
         }
 
+        // Check if user is null
         if(user == null) {
             throw new CreationException("User couldn't be created");
         }
+        // return a JSONObject of the user
         return user.toJson(false);
     }
 
+    /**
+     * Deletes a user object from database.
+     * @param userId    id of the user to be deleted.
+     * @throws DeletionException
+     */
     public void delete(String userId) throws DeletionException {
         try {
-            UUID id = UUID.fromString(userId);
-            User whose = mapper.get(id);
-
-            mapper.delete(whose);
+            mapper.delete(UUID.fromString(userId));
         } catch (IllegalArgumentException e) {
             throw new DeletionException("User wasn't found in database");
         }
@@ -85,35 +103,54 @@ public class UserController {
         db.close();
     }
 
-
-
+    /**
+     * Get a specific user and return it as a JSONObject.
+     * @param id    id of the user to get.
+     * @return  a JSONObject of the user.
+     * @throws GetException
+     */
     public JSONObject get(String id) throws GetException {
         User user = getUser(id);
         db.close();
         return user.toJson(false);
     }
 
+    /**
+     *  Get a specific user from database.
+     * @param userId    id of the user to get.
+     * @return  the user
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
     private User getUser(String userId) throws GetException {
         try {
-            UUID userUuid = UUID.fromString(userId);
-            return mapper.get(userUuid);
+            return mapper.get(UUID.fromString(userId));
         } catch (IllegalArgumentException e) {
             throw new GetException("User wasn't found in database");
         }
 
     }
 
+    /**
+     * Get a specific user through user email
+     * @param inputEmail    email of the user to get
+     * @return  a JSONObject of the user
+     * @throws GetException
+     */
     public JSONObject getUserLogin(String inputEmail) throws GetException {
+        // Create the statement to be sent to database
         Statement statement = new SimpleStatement(String.format(
                 "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
 
         try{
+            // Get the result from database
             ResultSet results = db.getSession().execute(statement);
+            // Get the first result
             Row row = results.one();
+            // Check if the result is empty
             if (row != null) {
-                UUID id = row.getUUID("id");
-                User user = mapper.get(id);
+                // Get the user from the result
+                User user = mapper.get(row.getUUID("id"));
                 return user.toJson(true);
 
             }
@@ -125,6 +162,13 @@ public class UserController {
         throw new GetException("User wasn't found in database");
     }
 
+    /**
+     * Updates a specific user
+     * @param id    id of the user to be updated
+     * @param update    update information
+     * @return  a JSONObject of the updated user
+     * @throws UpdateException
+     */
     public JSONObject update(String id, String update)throws UpdateException {
         String firstName;
         String lastName;
@@ -136,8 +180,10 @@ public class UserController {
         List<String> follows;
 
         try {
+            // Parse the string to a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
 
+            // Set values to the variables
             firstName = (String) jObj.get("firstName");
             lastName = (String) jObj.get("lastName");
             email = (String) jObj.get("email");
@@ -163,8 +209,10 @@ public class UserController {
         }
 
         try {
+            // Get the user from database
             User user = getUser(id);
 
+            // Set new values to user fields
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);
@@ -174,8 +222,10 @@ public class UserController {
             user.setRole(role);
             user.setFollows(follows);
 
+            // Save user to database
             mapper.save(user);
 
+            // Return the updated user as a JSONObject
             return user.toJson(false);
         } catch (IllegalArgumentException e) {
             throw new UpdateException("User wasn't found in database");
@@ -189,13 +239,23 @@ public class UserController {
 
     }
 
+    /**
+     * Adds a project to the list of projects the user follows.
+     * @param userId    id of the user
+     * @param projectId id of the project
+     * @throws UpdateException
+     */
     public void addFollows(String userId, String projectId)throws UpdateException {
         try {
-            UUID id = UUID.fromString(userId);
-            User user = mapper.get(id);
+            // Get the user
+            User user = mapper.get(UUID.fromString(userId));
+            // Get the list of followed projects
             List<String> follows = user.getFollows();
+            // Add the project to the list
             follows.add(projectId);
+            // Save the updated list in the user object
             user.setFollows(follows);
+            // Save the user to database
             mapper.save(user);
         } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");

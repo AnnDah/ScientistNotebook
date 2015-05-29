@@ -186,17 +186,11 @@ public class DataController {
         try{
             ResultSet results = db.getSession().execute(statement);
 
-            // Check if there were a result
-            if(results.all().size() == 0){
-                throw new GetException("No data found");
-            }
-
             // Fills the json array
             for(Row row : results) {
                 if (row != null) {
-                    DataTags dataTags = new DataTags(row.getList("tags", String.class), row.getUUID("id"),
-                            row.getString("name"), row.getString("author"), row.getString("description"),
-                            row.getLong("created"));
+                    Mapper<DataTags> tagMapper = new MappingManager(db.getSession()).mapper(DataTags.class);
+                    DataTags dataTags = tagMapper.get(row.getUUID("id"));
                     ja.add(dataTags.toJson());
                 }
             }

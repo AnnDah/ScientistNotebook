@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
  * Model for DataTags
  *
  * @author Annika Magnusson
- * @version 1.0, 15/05/15
+ * @version 1.0 - 15/05/15
  */
 @Table(keyspace = "scinote", name = "data_tags")
 public class DataTags {

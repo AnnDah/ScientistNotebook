@@ -13,7 +13,7 @@ import java.util.*;
  * Model of User
  *
  * @author Annika Magnusson
- * @version 1.0, 20/04/15
+ * @version 1.0 - 20/04/15
  */
 @Table(keyspace = "scinote", name = "data")
 public class Data {

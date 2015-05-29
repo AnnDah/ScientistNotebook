@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by annikamagnusson on 08/05/15.
+ * Model of Organization
  *
+ * @author Annika Magnusson
+ * @version 1.0 - 08/05/15
  */
 @Table(keyspace = "scinote", name = "organizations")
 public class Organization {
@@ -85,6 +87,11 @@ public class Organization {
         this.departments = departments;
     }
 
+    /**
+     * Determines whether two objects are equal
+     * @param other the object to compare with
+     * @return true if they are equal, else false
+     */
     @Override
     public boolean equals(Object other) {
         if(other instanceof Organization) {
@@ -99,11 +106,19 @@ public class Organization {
         return false;
     }
 
+    /**
+     * Generates a hash value that can be used to uniquely identify a particular Object.
+     * @return a hash value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, policy, license, departments);
     }
 
+    /**
+     * Creates a JSONObject of the Organization object
+     * @return a JSONObject of the Organization object
+     */
     @SuppressWarnings("unchecked")
     public JSONObject toJson() {
         JSONObject orgJson = new JSONObject();

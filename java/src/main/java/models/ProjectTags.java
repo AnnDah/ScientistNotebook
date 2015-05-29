@@ -10,7 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by annikamagnusson on 16/05/15.
+ * Model of ProjectTags
+ *
+ * @author Annika Magnusson
+ * @version 1.0 - 16/05/15
  *
  */
 @Table(keyspace = "scinote", name = "project_tags")
@@ -98,6 +101,11 @@ public class ProjectTags {
         this.created = created;
     }
 
+    /**
+     * Determines whether two objects are equal
+     * @param other the object to compare with
+     * @return true if they are equal, else false
+     */
     @Override
     public boolean equals(Object other) {
         if(other instanceof ProjectTags) {
@@ -114,11 +122,19 @@ public class ProjectTags {
         return false;
     }
 
+    /**
+     * Generates a hash value that can be used to uniquely identify a particular Object.
+     * @return a hash value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, tags, name, status, description, isPrivate, created);
     }
 
+    /**
+     * Creates a JSONObject of the ProjectTags object
+     * @return a JSONObject of the ProjectTags object
+     */
     @SuppressWarnings("unchecked")
     public JSONObject toJson() {
         JSONObject projectJson = new JSONObject();
@@ -134,6 +150,11 @@ public class ProjectTags {
 
     }
 
+    /**
+     * Converts a Unix Timestamp to a Date in UTC
+     * @param date a Long of a Unix Timestamp
+     * @return the converted Date
+     */
     private Date getUtcDate(Long date) {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));

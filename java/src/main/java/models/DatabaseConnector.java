@@ -4,7 +4,10 @@ import com.datastax.driver.core.*;
 import com.datastax.driver.core.policies.DefaultRetryPolicy;
 
 /**
- * Created by annikamagnusson on 20/04/15.
+ * Handles the connection to the database.
+ *
+ * @author Niffe
+ * @version 1.0 - 20/04/15
  *
  */
 public class DatabaseConnector {
@@ -18,9 +21,9 @@ public class DatabaseConnector {
     }
 
     public void connectDefault(){
-        String dbaddress = "52.28.87.178";
-        int dbport = 9042;
-        connect(dbaddress, dbport);
+        String dbAddress = "52.28.87.178";
+        int dbPort = 9042;
+        connect(dbAddress, dbPort);
     }
 
     public void connect(final String node, final int port){
@@ -37,7 +40,7 @@ public class DatabaseConnector {
                 session = cluster.connect();
                 connected = true;
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
     }
@@ -56,7 +59,7 @@ public class DatabaseConnector {
                 cluster.close();
                 connected = false;
             }catch (Exception e){
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
 
@@ -72,7 +75,7 @@ public class DatabaseConnector {
                 close();
             }
         } catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }

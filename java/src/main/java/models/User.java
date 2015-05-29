@@ -3,6 +3,7 @@ package models;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Column;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -11,8 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by annikamagnusson on 20/04/15.
+ * Model of User.
  *
+ * @author Annika Magnusson
+ * @version 1.0 - 20/04/15
  */
 @Table(keyspace = "scinote", name = "users")
 public class User {
@@ -53,47 +56,47 @@ public class User {
         return this.follows;
     }
 
-    public void setFollows(List<String> follows){
+    public void setFollows(List<String> follows) {
         this.follows = follows;
     }
 
-    public UUID getId(){
+    public UUID getId() {
         return this.id;
     }
 
-    public void setId(UUID id){
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return this.email;
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getFirstName(){
+    public String getFirstName() {
         return this.firstName;
     }
 
-    public void setFirstName(String firstName){
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName(){
+    public String getLastName() {
         return this.lastName;
     }
 
-    public void setLastName(String lastName){
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -105,23 +108,23 @@ public class User {
         this.memberSince = memberSince;
     }
 
-    public String getOrganization(){
+    public String getOrganization() {
         return this.organization;
     }
 
-    public void setOrganization(String organization){
+    public void setOrganization(String organization) {
         this.organization = organization;
     }
 
-    public String getDepartment(){
+    public String getDepartment() {
         return this.department;
     }
 
-    public void setDepartment(String department){
+    public void setDepartment(String department) {
         this.department = department;
     }
 
-    public String getRole(){
+    public String getRole() {
         return this.role;
     }
 
@@ -129,6 +132,11 @@ public class User {
         this.role = role;
     }
 
+    /**
+     * Determines whether two objects are equal
+     * @param other the object to compare with
+     * @return true if they are equal, else false
+     */
     @Override
     public boolean equals(Object other) {
         if(other instanceof User) {
@@ -147,11 +155,19 @@ public class User {
         return false;
     }
 
+    /**
+     * Generates a hash value that can be used to uniquely identify a particular Object.
+     * @return a hash value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName, email, memberSince, organization, department, role, id, follows);
     }
 
+    /**
+     * Creates a JSONObject of the User object
+     * @return a JSONObject of the User object
+     */
     @SuppressWarnings("unchecked")
     public JSONObject toJson(boolean login) {
         JSONObject userJson = new JSONObject();
@@ -180,6 +196,11 @@ public class User {
 
     }
 
+    /**
+     * Converts a Unix Timestamp to a Date in UTC
+     * @param date a Long of a Unix Timestamp
+     * @return the converted Date
+     */
     private Date getUtcDate(Long date) {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));

@@ -3,7 +3,11 @@ package models;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Column;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -27,13 +31,12 @@ public class User {
     private String role;
     private List<String> follows = new ArrayList<String>();
 
-
-    public User(){
+    public User() {
 
     }
 
     public User(UUID id, String firstName, String lastName, String email, String password, Long memberSince, String organization,
-                String department, String role){
+                String department, String role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -46,7 +49,7 @@ public class User {
 
     }
 
-    public List<String> getFollows(){
+    public List<String> getFollows() {
         return this.follows;
     }
 
@@ -94,11 +97,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Long getMemberSince(){
+    public Long getMemberSince() {
         return this.memberSince;
     }
 
-    public void setMemberSince(Long memberSince){
+    public void setMemberSince(Long memberSince) {
         this.memberSince = memberSince;
     }
 
@@ -122,13 +125,13 @@ public class User {
         return this.role;
     }
 
-    public void setRole(String role){
+    public void setRole(String role) {
         this.role = role;
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof User){
+    public boolean equals(Object other) {
+        if(other instanceof User) {
             User that = (User) other;
             return Objects.equals(this.firstName, that.firstName) &&
                     Objects.equals(this.lastName, that.lastName) &&
@@ -147,5 +150,39 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName, email, memberSince, organization, department, role, id, follows);
+    }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject toJson(boolean login) {
+        JSONObject userJson = new JSONObject();
+        userJson.put("id", this.getId().toString());
+        userJson.put("firstName", this.getFirstName());
+        userJson.put("lastName", this.getLastName());
+        userJson.put("email", this.getEmail());
+        userJson.put("memberSince", getUtcDate(this.getMemberSince()).toString());
+        userJson.put("organization", this.getOrganization());
+        userJson.put("department", this.getDepartment());
+        userJson.put("role", this.getRole());
+        userJson.put("follows", this.getFollows());
+
+        if(login) {
+            userJson.put("password", this.getPassword());
+            return userJson;
+
+        }
+
+        JSONArray ja = new JSONArray();
+        ja.add(userJson);
+        JSONObject mainObj = new JSONObject();
+        mainObj.put("users", ja);
+
+        return mainObj;
+
+    }
+
+    private Date getUtcDate(Long date) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new Date(date);
     }
 }

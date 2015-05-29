@@ -15,8 +15,6 @@ import org.json.simple.JSONArray;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -29,13 +27,13 @@ public class UserController {
     private Mapper<User> mapper;
     private DatabaseConnector db;
 
-    public UserController(){
+    public UserController() {
         db = new DatabaseConnector();
         db.connectDefault();
         mapper = new MappingManager(db.getSession()).mapper(User.class);
     }
 
-    public JSONObject createUser(String strUser) throws CreationException {
+    public JSONObject create(String strUser) throws CreationException {
         UUID id = UUID.randomUUID();
         User user = null;
 
@@ -52,15 +50,15 @@ public class UserController {
             String role = (String) jObj.get("role");
 
 
-            user = new User(id, firstName, lastName, email, password, memberSince  , organization, department, role);
+            user = new User(id, firstName, lastName, email, password, memberSince , organization, department, role);
             mapper.save(user);
 
 
-        }  catch (org.json.simple.parser.ParseException e){
+        }  catch (org.json.simple.parser.ParseException e) {
             throw new CreationException("Invalid input data");
-        } catch (java.security.NoSuchAlgorithmException e){
+        } catch (java.security.NoSuchAlgorithmException e) {
             throw new CreationException("Failed to hash password");
-        } catch (java.io.IOException e){
+        } catch (java.io.IOException e) {
             throw new CreationException("Failed to hash password");
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,70 +66,39 @@ public class UserController {
             db.close();
         }
 
-        return createUserJson(user);
+        if(user == null) {
+            throw new CreationException("User couldn't be created");
+        }
+        return user.toJson(false);
     }
 
-    public void deleteUser(String userId) throws DeletionException{
+    public void delete(String userId) throws DeletionException {
         try {
             UUID id = UUID.fromString(userId);
             User whose = mapper.get(id);
 
             mapper.delete(whose);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new DeletionException("User wasn't found in database");
         }
 
         db.close();
     }
 
-    @SuppressWarnings("unchecked")
-    private JSONObject createUserJson(User whose){
-        String id = whose.getId().toString();
-        String firstName = whose.getFirstName();
-        String lastName = whose.getLastName();
-        String email = whose.getEmail();
-        String password = "OMITTED!";
-        long date = whose.getMemberSince();
-        String organization = whose.getOrganization();
-        String department = whose.getDepartment();
-        String role = whose.getRole();
-        List<String> follows = whose.getFollows();
 
-        Date utcDate= getUtcDate(date);
 
-        JSONObject userJson = new JSONObject();
-        userJson.put("id", id);
-        userJson.put("firstName", firstName);
-        userJson.put("lastName", lastName);
-        userJson.put("email", email);
-        userJson.put("password", password);
-        userJson.put("memberSince", utcDate.toString());
-        userJson.put("organization", organization);
-        userJson.put("department", department);
-        userJson.put("role", role);
-        userJson.put("follows", follows);
-
-        JSONArray ja = new JSONArray();
-        ja.add(userJson);
-        JSONObject mainObj = new JSONObject();
-        mainObj.put("users", ja);
-
-        return mainObj;
-
-    }
-
-    public JSONObject getUserJson(String id) throws GetException{
+    public JSONObject get(String id) throws GetException {
         User user = getUser(id);
         db.close();
-        return createUserJson(user);
+        return user.toJson(false);
     }
 
     @SuppressWarnings("unchecked")
-    private User getUser(String userId) throws GetException{
+    private User getUser(String userId) throws GetException {
         try {
             UUID userUuid = UUID.fromString(userId);
             return mapper.get(userUuid);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new GetException("User wasn't found in database");
         }
 
@@ -141,34 +108,24 @@ public class UserController {
         Statement statement = new SimpleStatement(String.format(
                 "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
 
-        JSONObject user = null;
-
         try{
             ResultSet results = db.getSession().execute(statement);
             Row row = results.one();
-            if (row != null){
-                user = createUserJsonLogin(
-                        row.getUUID("id"),
-                        row.getString("first_name"),
-                        row.getString("last_name"),
-                        row.getString("email"),
-                        row.getString("password"),
-                        row.getLong("member_since"),
-                        row.getString("organization"),
-                        row.getString("department"),
-                        row.getString("role"),
-                        row.getList("follows", String.class));
+            if (row != null) {
+                UUID id = row.getUUID("id");
+                User user = mapper.get(id);
+                return user.toJson(true);
+
             }
-        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e){
+        } catch (com.datastax.driver.core.exceptions.InvalidQueryException e) {
             throw new GetException("User wasn't found in database");
         } finally {
             db.close();
         }
-
-        return user;
+        throw new GetException("User wasn't found in database");
     }
 
-    public JSONObject updateUser(String id, String update)throws UpdateException{
+    public JSONObject update(String id, String update)throws UpdateException {
         String firstName;
         String lastName;
         String email;
@@ -195,13 +152,13 @@ public class UserController {
                 follows.add(aFollowsArray.toString());
             }
 
-        }  catch (org.json.simple.parser.ParseException e){
+        }  catch (org.json.simple.parser.ParseException e) {
             throw new UpdateException("Invalid input data");
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");
-        } catch (NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             throw new UpdateException("Unable to hash password");
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new UpdateException("Invalid input data");
         }
 
@@ -219,12 +176,12 @@ public class UserController {
 
             mapper.save(user);
 
-            return createUserJson(user);
-        } catch (IllegalArgumentException e){
+            return user.toJson(false);
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("User wasn't found in database");
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new UpdateException("Invalid input data");
-        } catch (GetException e){
+        } catch (GetException e) {
             throw new UpdateException("Invalid input data");
         }finally {
             db.close();
@@ -232,7 +189,7 @@ public class UserController {
 
     }
 
-    public void addFollows(String userId, String projectId)throws UpdateException{
+    public void addFollows(String userId, String projectId)throws UpdateException {
         try {
             UUID id = UUID.fromString(userId);
             User user = mapper.get(id);
@@ -240,39 +197,12 @@ public class UserController {
             follows.add(projectId);
             user.setFollows(follows);
             mapper.save(user);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new UpdateException("Invalid input data");
         } finally {
             db.close();
         }
 
-    }
-
-    @SuppressWarnings("unchecked")
-    private JSONObject createUserJsonLogin(UUID id, String firstName, String lastName, String email, String password, Long date,
-                                     String organization, String department, String role, List<String> follows){
-        // Parse date to UTC
-        Date utcDate= getUtcDate(date);
-
-        JSONObject userJson = new JSONObject();
-        userJson.put("id", id.toString());
-        userJson.put("firstName", firstName);
-        userJson.put("lastName", lastName);
-        userJson.put("email", email);
-        userJson.put("password", password);
-        userJson.put("memberSince", utcDate.toString());
-        userJson.put("organization", organization);
-        userJson.put("department", department);
-        userJson.put("role", role);
-        userJson.put("follows", follows);
-
-        return userJson;
-    }
-
-    private Date getUtcDate(Long date){
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return new Date(date);
     }
 
 }

@@ -142,7 +142,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new UserController().createUser(request.body());
+                    return new UserController().create(request.body());
                 } catch (CreationException e) {
                     response.status(400);
                 }
@@ -159,7 +159,7 @@ public class Api {
             public Object handle(Request request, Response response) {
                 response.header("Content-Type", "Application/JSON");
                 try {
-                    return new UserController().getUserJson(request.params(":id"));
+                    return new UserController().get(request.params(":id"));
                 } catch (GetException e) {
                     response.status(400);
                 }
@@ -177,7 +177,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    return new UserController().updateUser(request.params(":id"), request.body());
+                    return new UserController().update(request.params(":id"), request.body());
                 } catch (UpdateException e) {
                     response.status(400);
                 }
@@ -210,7 +210,7 @@ public class Api {
             @Override
             public Object handle(Request request, Response response) {
                 try {
-                    new UserController().deleteUser(request.params(":id"));
+                    new UserController().delete(request.params(":id"));
                 } catch (DeletionException e) {
                     response.status(400);
                 }
@@ -373,14 +373,16 @@ public class Api {
         Spark.post(new Route("/login") {
             @Override
             public Object handle(Request request, Response response) {
-                String body = request.body();
-                JSONObject user = null;
                 try {
-                    user = new LoginController().login(body);
+                    JSONObject user = new LoginController().login(request.body());
+                    if (user != null) {
+                        return user;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return user;
+                response.status(404);
+                return "Login failed";
             }
         });
 

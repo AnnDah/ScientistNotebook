@@ -59,8 +59,6 @@ public class DataController {
 
             // Fill the variables
             String content  = (String) jObj.get("content");
-            Long created = new Date().getTime();
-            Long lastUpdate = new Date().getTime();
             String author = (String) jObj.get("author");
             String strLevel = (String) jObj.get("level");
             String dataType = (String) jObj.get("dataType");
@@ -75,6 +73,10 @@ public class DataController {
             }
 
             int level = Integer.parseInt(strLevel);
+
+            // Set the date for creation of data
+            Long created = new Date().getTime();
+            Long lastUpdate = new Date().getTime();
 
             // Creates a new object of Data
             data = new Data(
@@ -110,7 +112,7 @@ public class DataController {
     /**
      * Get a specific data object from the database
      * @param id    id of the data to get
-     * @return  a Data object
+     * @return  the data object
      * @throws GetException
      */
     @SuppressWarnings("unchecked")

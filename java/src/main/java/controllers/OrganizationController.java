@@ -18,8 +18,8 @@ import java.util.*;
 /**
  * Class to handle CRUD operations on organizations to database.
  *
- * @author Niffe
- *@version 1.0 - 27/04/15
+ * @author Sebastian Nirfelt
+ * @version 1.0 - 27/04/15
  */
 public class OrganizationController {
     private DatabaseConnector db;
@@ -32,12 +32,21 @@ public class OrganizationController {
         mapper = new MappingManager(db.getSession()).mapper(Organization.class);
     }
 
+    /**
+     * Creates a new organization and saves it in database
+     * @param strOrganization Organization information to be saved
+     * @return a JSONObject of the new Organization
+     * @throws CreationException
+     */
     public JSONObject create(String strOrganization) throws CreationException {
+        // Create a random UUID
         UUID id = UUID.randomUUID();
         Organization org = null;
 
         try{
+            // Parse the string of information into a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(strOrganization);
+            // Set values to the variables
             String name = (String) jObj.get("name");
             String description = (String) jObj.get("description");
             String policy = (String) jObj.get("policy");
@@ -49,7 +58,9 @@ public class OrganizationController {
                 departments.add(aDepartmentsArray.toString());
             }
 
+            // Create the organization object
             org = new Organization(id, name, description, policy, license, departments);
+            // Save the object in database
             mapper.save(org);
 
         } catch (ParseException e) {
@@ -57,14 +68,18 @@ public class OrganizationController {
         } finally {
             db.close();
         }
+        // Return a JSONObject of the organization
         return org.toJson();
     }
 
-    public void delete(String orgId) throws DeletionException {
+    /**
+     * Removes a specific organization from database
+     * @param id    id of the organizatio to delete
+     * @throws DeletionException
+     */
+    public void delete(String id) throws DeletionException {
         try {
-            UUID id = UUID.fromString(orgId);
-            Organization whose = mapper.get(id);
-            mapper.delete(whose);
+            mapper.delete(mapper.get(UUID.fromString(id)));
 
         } catch (IllegalArgumentException e) {
             throw new DeletionException("Organization wasn't found in database");
@@ -73,21 +88,40 @@ public class OrganizationController {
         }
     }
 
+    /**
+     * Gets a specific organization and returns it as a JSONObject
+     * @param id    id of the organization to get
+     * @return      a JSONObject of the organization
+     * @throws GetException
+     */
     public JSONObject get(String id)throws GetException {
         Organization org = getOrganization(id);
         db.close();
         return org.toJson();
     }
+
+    /**
+     * Gets a specific organization from database
+     * @param id    id of the organization to get
+     * @return      the organization object
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
-    private Organization getOrganization(String orgId) throws GetException {
+    private Organization getOrganization(String id) throws GetException {
         try {
-            UUID orgUuid = UUID.fromString(orgId);
-            return mapper.get(orgUuid);
+            return mapper.get(UUID.fromString(id));
         } catch (IllegalArgumentException e) {
             throw new GetException("Organization wasn't found in database");
         }
     }
 
+    /**
+     * Updates a specific organization
+     * @param id        id of the organization to update
+     * @param update    the update information
+     * @return          a JSONObject of the updated organization
+     * @throws UpdateException
+     */
     public JSONObject update(String id, String update) throws UpdateException {
         String name;
         String description;
@@ -96,8 +130,9 @@ public class OrganizationController {
         List<String> departments;
 
         try {
+            // Parse the information string into a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
-
+            // Se values to the variables
             name = (String) jObj.get("name");
             description = (String) jObj.get("description");
             policy = (String) jObj.get("policy");
@@ -116,17 +151,20 @@ public class OrganizationController {
         }
 
         try {
+            // Get the organization to update
             Organization org = getOrganization(id);
 
+            // Set new vaules to organization fields
             org.setName(name);
             org.setDescription(description);
             org.setDepartments(departments);
             org.setLicense(license);
             org.setPolicy(policy);
 
+            // Save the updated organization
             mapper.save(org);
 
-
+            // Return a JSONObject of the updated organization
             return org.toJson();
         } catch (IllegalArgumentException e) {
             throw new UpdateException("User wasn't found in database");

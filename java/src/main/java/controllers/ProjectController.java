@@ -141,7 +141,7 @@ public class ProjectController {
     /**
      * Gets a specific project from database
      * @param id    id of the project to get
-     * @return  the project
+     * @return  the project object
      * @throws GetException
      */
     @SuppressWarnings("unchecked")
@@ -270,10 +270,10 @@ public class ProjectController {
     }
 
     /**
-     * 
-     * @param id
-     * @param update
-     * @return
+     * Updates a specific project
+     * @param id        id of the project to update
+     * @param update    the update information
+     * @return          a JSONObject of the updated project
      * @throws UpdateException
      */
     public JSONObject update(String id, String update) throws UpdateException {
@@ -294,8 +294,10 @@ public class ProjectController {
         String name;
 
         try {
+            // Parse the update information into a JSONObject
             JSONObject jObj = (JSONObject) new JSONParser().parse(update);
 
+            // Set values to the variables
             field = (String) jObj.get("field");
             description = (String) jObj.get("description");
             status = (String) jObj.get("status");
@@ -303,9 +305,7 @@ public class ProjectController {
             createdBy = (String) jObj.get("createdBy");
             name = (String) jObj.get("name");
             String strPrivate = (String) jObj.get("isPrivate");
-
             isPrivate = "true".equals(strPrivate);
-
 
             JSONArray tagsArray = (JSONArray) jObj.get("tags");
             tags = new ArrayList<String>();
@@ -362,8 +362,10 @@ public class ProjectController {
         }
 
         try {
+            // Get the project to be updated
             Project project = getProject(id);
 
+            // Set new values to project fields
             project.setField(field);
             project.setDescription(description);
             project.setStatus(status);
@@ -380,26 +382,29 @@ public class ProjectController {
             project.setCreatedBy(createdBy);
             project.setName(name);
 
+            // Save the project in database
             mapper.save(project);
 
             try {
-                UUID projectId = UUID.fromString(id);
-
+                // Create a mapper for DataTags
                 Mapper<ProjectTags> tagMapper = new MappingManager(db.getSession()).mapper(ProjectTags.class);
-                ProjectTags projectTags = tagMapper.get(projectId);
+                // Get ta data tag to update
+                ProjectTags projectTags = tagMapper.get(UUID.fromString(id));
 
+                // Set new values to data tag fields
                 projectTags.setName(name);
                 projectTags.setTags(tags);
                 projectTags.setStatus(status);
                 projectTags.setDescription(description);
                 projectTags.setIsPrivate(isPrivate);
 
+                // Save the data tag
                 tagMapper.save(projectTags);
             } catch (IllegalArgumentException e) {
                 throw new GetException("Project wasn't found in database");
             }
 
-
+            // Return a JSONObject of the updated project
             return project.toJson();
         } catch (IllegalArgumentException e) {
             throw new UpdateException("Project wasn't found in database");

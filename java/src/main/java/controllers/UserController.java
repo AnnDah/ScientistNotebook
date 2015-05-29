@@ -118,7 +118,7 @@ public class UserController {
     /**
      *  Get a specific user from database.
      * @param userId    id of the user to get.
-     * @return  the user
+     * @return  the user object
      * @throws GetException
      */
     @SuppressWarnings("unchecked")

@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Utility to hash a password
  *
- * @author niffe
+ * @author Sebastian Nirfelt
  * @version 1.0, 11/05/15
  */
 public final class PasswordUtility {

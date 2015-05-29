@@ -6,7 +6,7 @@ import com.datastax.driver.core.policies.DefaultRetryPolicy;
 /**
  * Handles the connection to the database.
  *
- * @author Niffe
+ * @author Sebastian Nirfelt
  * @version 1.0 - 20/04/15
  *
  */

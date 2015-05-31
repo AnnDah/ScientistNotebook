@@ -274,7 +274,7 @@ public class DataController {
             List<String> revision = data.getRevisionHistory();
             // Create a new revision
             String strRevision = String.format(
-                    "{\"lastUpdate\":\"%s\", \"updateMadeBy\":\"%s\", \"revisionDescription\":\"%s\"}",
+                    "date of revision: %s, revision made by: %s, description: %s}",
                     lastUpdate, user, revisionDescription);
             // Add the revision to the revision history
             revision.add(strRevision);

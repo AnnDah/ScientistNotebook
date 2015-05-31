@@ -386,17 +386,5 @@ public class Api {
             }
         });
 
-        /**
-         * Used to test api calls containing JSON in request body.
-         * Should be removed before project delivery.
-         */
-        Spark.post(new Route("/test") {
-            @Override
-            public Object handle(Request request, Response response) {
-                System.out.println("Json in body: " + request.body());
-                return request.body();
-            }
-        });
-
     }
 }

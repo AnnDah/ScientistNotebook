@@ -13,6 +13,12 @@ import org.json.simple.parser.JSONParser;
  */
 public class LoginController {
 
+    /**
+     * TAkes the users email and password and checks if they match the information stored in the database.
+     * @param strLogin the users login information
+     * @return a JSONObject of the user that has been logged in.
+     * @throws GetException
+     */
     @SuppressWarnings("unchecked")
     public JSONObject login(String strLogin) throws GetException{
         UserController uc = new UserController();

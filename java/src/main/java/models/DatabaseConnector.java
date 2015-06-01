@@ -20,12 +20,20 @@ public class DatabaseConnector {
         connected = false;
     }
 
+    /**
+     * Sets the database address and port.
+     */
     public void connectDefault(){
         String dbAddress = "52.28.87.178";
         int dbPort = 9042;
         connect(dbAddress, dbPort);
     }
 
+    /**
+     * MAkes the conection to the database.
+     * @param node
+     * @param port
+     */
     public void connect(final String node, final int port){
         if(!connected){
             try{
@@ -45,11 +53,18 @@ public class DatabaseConnector {
         }
     }
 
+    /**
+     * Returns the current session.
+     * @return the current session.
+     */
     public Session getSession()
     {
         return this.session;
     }
 
+    /**
+     * Closes the database connection.
+     */
     public void close()
     {
         if (connected){
@@ -65,6 +80,10 @@ public class DatabaseConnector {
 
     }
 
+    /**
+     * 
+     * @param query
+     */
     public void execute(String query){
         try{
             connectDefault();

@@ -81,8 +81,8 @@ public class DatabaseConnector {
     }
 
     /**
-     * 
-     * @param query
+     * Method to send queries to the database. Allows the user to send queries directly to the database.
+     * @param query statement to be sent to database
      */
     public void execute(String query){
         try{

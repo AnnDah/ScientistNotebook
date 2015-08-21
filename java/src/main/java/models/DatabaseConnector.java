@@ -24,7 +24,8 @@ public class DatabaseConnector {
      * Sets the database address and port.
      */
     public void connectDefault(){
-        String dbAddress = "52.28.87.178";
+        //String dbAddress = "52.28.87.178";
+        String dbAddress = "127.0.0.1";
         int dbPort = 9042;
         connect(dbAddress, dbPort);
     }

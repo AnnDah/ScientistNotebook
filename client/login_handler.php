@@ -32,16 +32,15 @@ if ( $status != 200 ) {
 
 session_start();
 
+
 curl_close($curl);
-
 $response = json_decode($json_response, true);
-?>
-<html>
-<head>
-	<title>Login handler</title>
-</head>
 
-<body>
-	Du ar nu inloggad. Ditt id ar <?=$response["id"]?>
-</body>
-</html>
+
+//$id = $response["id"];
+header("Location: profile.php");
+$_SESSION['loggedIn']=true;
+$_SESSION['userId']=$response["id"]
+//echo 'Hej';
+//exit();
+?>

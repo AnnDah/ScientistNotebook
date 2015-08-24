@@ -1,8 +1,14 @@
 <?php
 // This is a protected resource
-if (session_status() == PHP_SESSION_ACTIVE) {
-	echo "yabbadabbadoo";
-} else {
-	echo "pys";
-}
+session_start();
 ?>
+
+<html>
+<head>
+	<title>Profile</title>
+</head>
+
+<body>
+	<h1>Profile for <?=$_SESSION['userId']?></h1>
+</body>
+</html>

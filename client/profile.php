@@ -1,6 +1,14 @@
 <?php
 // This is a protected resource
 session_start();
+if (isset($_SESSION['loggedIn'])) {
+	if($_SESSION['loggedIn']!= true){
+		echo 'pys';
+		header('Location: login_form.php');
+		exit();
+	}
+	echo "yabbadabbadoo";
+} 
 ?>
 
 <html>

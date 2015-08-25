@@ -1,4 +1,14 @@
 <?php
+if (empty($_POST['email'])){
+	header('Location: login_form.php?error_email=true');
+	exit();
+} 
+if(empty($_POST['password'])) {
+	header('Location: login_form.php?error_password=true');
+	exit();
+}
+
+
 // Verifiera anvandaren
 $email = $_POST["email"];
 $password = $_POST["password"];

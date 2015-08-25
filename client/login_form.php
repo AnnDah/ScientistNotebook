@@ -60,10 +60,10 @@ if($_SESSION['loggedIn']!= true){
         <div id="navbar" class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" action="login_handler.php" method="POST">
             <div class="form-group">			
-              Email: <input type="text" name='email' placeholder="Email" class="form-control" id='email'>
+              <input type="text" name='email' placeholder="Email" class="form-control" <?php if(isset($_GET['error_email'])) :?>style="border-color: #FF0000" <?php endif; ?> id='email'>
             </div>
             <div class="form-group">
-              Password: <input type="password" name='password' placeholder="Password" class="form-control" id='password'>
+              <input type="password" name='password' placeholder="Password" class="form-control" <?php if(isset($_GET['error_password'])) :?>style="border-color: #FF0000" <?php endif; ?> id='password'>
             </div>
            <button type="submit" value="Log in">Log in</button>
           </form>

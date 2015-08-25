@@ -1,12 +1,13 @@
 <?php
 // This is a protected resource
 session_start();
-if (isset($_SESSION['loggedIn'])) {
-	if($_SESSION['loggedIn']!= true){
+if($_SESSION['loggedIn']!= true){
 		echo 'pys';
 		header('Location: login_form.php');
 		exit();
 	}
+if (isset($_SESSION['loggedIn'])) {
+	
 	echo "yabbadabbadoo";
 } 
 ?>
@@ -18,5 +19,10 @@ if (isset($_SESSION['loggedIn'])) {
 
 <body>
 	<h1>Profile for <?=$_SESSION['userId']?></h1>
+
+	<form action="logout_handler.php" method="POST">
+		
+		<button type="submit" value="Log out">Log out</button>
+	</form>
 </body>
 </html>

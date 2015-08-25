@@ -8,7 +8,7 @@ if($_SESSION['loggedIn']!= true){
 	}
 if (isset($_SESSION['loggedIn'])) {
 	
-	echo "yabbadabbadoo";
+
 } 
 ?>
 

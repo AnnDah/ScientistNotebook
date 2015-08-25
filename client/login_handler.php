@@ -40,7 +40,9 @@ $response = json_decode($json_response, true);
 //$id = $response["id"];
 header("Location: profile.php");
 $_SESSION['loggedIn']=true;
-$_SESSION['userId']=$response["id"]
+$_SESSION['userId']=$response["id"];
+$_SESSION['firstname']=$response['firstName'];
+$_SESSION['lastname']=$response['lastName'];
 //echo 'Hej';
 //exit();
 ?>

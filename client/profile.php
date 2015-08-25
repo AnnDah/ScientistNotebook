@@ -18,7 +18,9 @@ if (isset($_SESSION['loggedIn'])) {
 </head>
 
 <body>
-	<h1>Profile for <?=$_SESSION['userId']?></h1>
+	<h1>Profile page</h1>
+	This is the profile page for <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?>.<br> 
+	The user ID is <?=$_SESSION['userId']?>.
 
 	<form action="logout_handler.php" method="POST">
 		

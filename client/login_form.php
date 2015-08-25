@@ -1,3 +1,22 @@
+<?php
+// This is a protected resource
+//session_start();
+session_start();
+
+if (isset($_SESSION['loggedIn'])) {
+	header('Location: profile.php');
+	exit();
+} 
+
+$_SESSION['loggedIn'] = false;
+
+if($_SESSION['loggedIn']!= true){
+		session_unset();
+		session_destroy();
+		
+	}
+
+?>
 <html>
 <head>
 	<title>Login form</title>

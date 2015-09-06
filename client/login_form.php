@@ -55,7 +55,7 @@ if($_SESSION['loggedIn']!= true){
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="add_form.php">Register new user</a>
-          <a class="navbar-brand" href="add_form.php">About SciNote</a>
+          <a class="navbar-brand" href="about.php">About SciNote</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" action="login_handler.php" method="POST">

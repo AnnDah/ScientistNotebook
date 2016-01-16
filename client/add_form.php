@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,10 +14,9 @@
     <title>Create new user</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/bootstrap.min.css" type="text/css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="static/jumbotron.css" type="text/css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -25,8 +27,59 @@
 	
 
 <body>
-<div class="container" style="height:100px; length:100px;"><!-- big div-->
-	<div style="display:inline-block; float:right; background-color:white; width:50%;"><!--div to hold actual form-->	
+  <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">SciNote</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="add_form.php">New user</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <?php
+              if (isset($_SESSION['loggedIn'])) {
+                if ($_SESSION['loggedIn'] == true) {
+            ?>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['name']; ?><span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="profile.php">My profile</a></li>
+                    <li><a href="logout_handler.php">Log out</a></li>
+                  </ul>
+                </li>
+            <?php
+                }
+              } else {
+            ?>
+              <form class="navbar-form navbar-right" action="login_handler.php" method="POST">
+                <div class="form-group">      
+                  <input type="text" name='email' placeholder="Email" class="form-control" <?php if(isset($_GET['error_email'])) :?>style="border-color: #FF0000" <?php endif; ?> id='email'>
+                </div>
+                <div class="form-group">
+                  <input type="password" name='password' placeholder="Password" class="form-control" <?php if(isset($_GET['error_password'])) :?>style="border-color: #FF0000" <?php endif; ?> id='password'>
+                </div>
+               <button type="submit" value="Log in" class='btn btn-default'>Log in</button>
+              </form>
+            <?php
+              }
+            ?>
+        </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+  <div class="container" style="margin-top: 80px; height:100px; length:100px;"><!-- big div-->
+	  <div style="display:inline-block; float:right; background-color:white; width:50%;"><!--div to hold actual form-->	
 		<form role="form" action="add_user.php" method="POST">	
 			<div class="form-group">														
 				<label>First name</label>
@@ -79,34 +132,11 @@
 	</div><!-- </ of form holder-->
 
 	<div style="display:inline-block; float:left; background-color:white; width:50%; padding:50px;">		
-			
-			<h1>Here is what you get!</h1>			
-		
-			<p style="font-size:125%;">"Lorem ipsum dolor sit amet, 
-			consectetur adipiscing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua.
-			Ut enim ad minim veniam, quis nostrud exercitation <br>
-			ullamco laboris nisi ut aliquip ex ea commodo consequat.<br>
-			Duis aute irure dolor in reprehenderit in voluptate <br>
-			velit esse cillum dolore eu fugiat nulla pariatur. <br>
-			Excepteur sint occaecat cupidatat non proident, sunt in culpa
-			qui officia deserunt mollit anim id est laborum."<p>
-			<ul>
-				<li><p>A place to save you findings</p></li>
-				<li><p>Share them with colleagues</p></li>					
-			</ul>						
-			<br>
-			<h3>Use the form to the right to sign up, it's free!</h3>
-			</div>		
+		<h1>Create a new user</h1>			
+		<p>Use the form to the right to sign up, it's free!</p>
 	</div>
 	
 </div>	<!--end of big div-->
-
-<!-- Placed at the end of the document so the pages load faster -->
-    <script src="../static/jquery.min.js"></script>
-    <script src="../static/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="ie10-viewport-bug-workaround.js"></script>
 </body>
 
 </html>

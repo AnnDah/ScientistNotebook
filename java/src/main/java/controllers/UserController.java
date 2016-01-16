@@ -143,7 +143,7 @@ public class UserController {
         Statement statement = new SimpleStatement(String.format(
                 "SELECT * FROM scinote.users WHERE email = '%s' ALLOW FILTERING;", inputEmail.trim()));
 
-        try{
+        try {
             // Get the result from database
             ResultSet results = db.getSession().execute(statement);
             // Get the first result
@@ -153,7 +153,6 @@ public class UserController {
                 // Get the user from the result
                 User user = mapper.get(row.getUUID("id"));
                 return user.toJson(true);
-
             }
         } catch (com.datastax.driver.core.exceptions.InvalidQueryException e) {
             throw new GetException("User wasn't found in database");

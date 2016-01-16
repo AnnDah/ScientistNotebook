@@ -382,6 +382,7 @@ public class Api {
                     e.printStackTrace();
                 }
                 response.status(404);
+                
                 return "Login failed";
             }
         });

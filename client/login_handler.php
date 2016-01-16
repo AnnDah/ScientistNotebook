@@ -1,58 +1,45 @@
 <?php
 if (empty($_POST['email'])){
-	header('Location: login_form.php?error_email=true');
+	header('Location: index.php?error_email=true');
 	exit();
 } 
-if(empty($_POST['password'])) {
-	header('Location: login_form.php?error_password=true');
+if (empty($_POST['password'])) {
+	header('Location: index.php?error_password=true');
 	exit();
 }
 
 
-// Verifiera anvandaren
-$email = $_POST["email"];
-$password = $_POST["password"];
-
-$url = "http://localhost:9090/login";    
-$curl = curl_init($url);
+// Verify credentials
+$curl = curl_init("http://localhost:9090/login");
 
 //The JSON data.
 $jsonData = array(	   
-	"email"=>"$email",
-	"password"=>"$password"
+	"email" => $_POST["email"],
+	"password" => $_POST["password"]
 );
-
-//Encode the array into JSON.
-$jsonDataEncoded = json_encode($jsonData);
 
 curl_setopt($curl, CURLOPT_HEADER, false);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER,
-        array("Content-type: application/json"));
+curl_setopt($curl,CURLOPT_HTTPHEADER, array("Content-type: application/json"));
 curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($jsonData));
 
-$json_response = curl_exec($curl);
+$response = json_decode(curl_exec($curl), true);
 
-$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-if ( $status != 200 ) {
-    header("Location: login_form.php?failed=true");
+if (isset($response['error'])) {
+  session_start();
+  session_unset();
+  session_destroy();
+  header("Location: index.php?error_email=true&error_password=true");
+  exit();
 }
 
 session_start();
 
-
 curl_close($curl);
-$response = json_decode($json_response, true);
 
-
-//$id = $response["id"];
 header("Location: profile.php");
-$_SESSION['loggedIn']=true;
-$_SESSION['userId']=$response["id"];
-$_SESSION['firstname']=$response['firstName'];
-$_SESSION['lastname']=$response['lastName'];
-//echo 'Hej';
-//exit();
+$_SESSION['loggedIn'] = true;
+$_SESSION['userId'] = $response["id"];
+$_SESSION['name'] = $response["firstName"] . " " . $response['lastName'];
 ?>
